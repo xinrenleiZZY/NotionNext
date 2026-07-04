@@ -70,7 +70,7 @@ function getTagNames(tags) {
 export async function getStaticPaths() {
   const from = 'tag-static-path'
   const { tagOptions } = await fetchGlobalAllData({ from })
-  const tagNames = getTagNames(tagOptions)
+  const tagNames = getTagNames(tagOptions || [])
 
   return {
     paths: Object.keys(tagNames).map(index => ({
