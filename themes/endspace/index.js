@@ -27,6 +27,7 @@ import MobileNav from './components/MobileNav'
 import ArticleAdjacent from './components/ArticleAdjacent'
 import FloatingControls from './components/FloatingControls'
 import useViewportScale from './components/useViewportScale'
+import VideoBackground from './components/VideoBackground'
 import CONFIG from './config'
 import { Style } from './style'
 import { IconLoader2 } from '@tabler/icons-react'
@@ -71,6 +72,9 @@ const LayoutBase = (props) => {
       className={`${siteConfig('FONT_STYLE')} min-h-screen relative`}
     >
       <Style />
+
+      {/* Video Background (白天视频背景) */}
+      <VideoBackground />
 
       {/* Nest: mount point for public/js/nest.js (reads zIndex/opacity/color/count attributes) */}
       {siteConfig('NEST') && (
