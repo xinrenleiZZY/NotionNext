@@ -10,11 +10,14 @@ export const Style = () => {
          CSS Custom Properties - Light Industrial Theme
          ============================================ */
       :root {
-        /* Ethereal Whites & Grays */
-        --endspace-bg-base: #fafafa;
-        --endspace-bg-primary: #ffffff;
-        --endspace-bg-secondary: #f4f4f5;
-        --endspace-bg-tertiary: #e4e4e7;
+        /* Semi-transparent backgrounds to show wallpaper */
+        --endspace-bg-base: rgba(250, 250, 250, 0.85);
+        --endspace-bg-primary: rgba(255, 255, 255, 0.85);
+        --endspace-bg-secondary: rgba(244, 244, 245, 0.85);
+        --endspace-bg-tertiary: rgba(228, 228, 231, 0.85);
+        
+        /* Light Mode Background Image (二次元壁纸) - 可以换成任意图片URL */
+        --endspace-bg-image: url('https://api.dujin.org/bing/1920.php');
         
         /* Dark Text (High Contrast) */
         --endspace-text-primary: #18181b;
@@ -22,14 +25,14 @@ export const Style = () => {
         --endspace-text-muted: #a1a1aa;
         
         /* Accents (Subtle Industrialism) -> Converted to Yellow Suite */
-        --endspace-accent-yellow: #FBFB45;
+        --endspace-accent-yellow: #EC4899;
         --endspace-accent-yellow-dim: rgba(251, 251, 69, 0.15);
-        --endspace-accent-cyan: #FBFB45; /* OVERRIDE: Cyan usage -> Yellow 500 */
+        --endspace-accent-cyan: #EC4899; /* OVERRIDE: Cyan usage -> Yellow 500 */
         --endspace-accent-cyan-dim: rgba(251, 251, 69, 0.1); /* OVERRIDE: Cyan dim -> Yellow dim */
         
         /* Borders & Lines */
         --endspace-border-base: #e4e4e7;
-        --endspace-border-active: #FBFB45; /* Active border -> Yellow */
+        --endspace-border-active: #EC4899; /* Active border -> Yellow */
         --endspace-grid-color: rgba(0,0,0,0.03);
         
         /* Shadows - Enhanced 3D Depth */
@@ -46,22 +49,25 @@ export const Style = () => {
 
       /* Dark Mode Variables */
       .dark {
-        --endspace-bg-base: #09090b;
-        --endspace-bg-primary: #18181b;
-        --endspace-bg-secondary: #27272a;
-        --endspace-bg-tertiary: #3f3f46;
+        --endspace-bg-base: rgba(9, 9, 11, 0.85);
+        --endspace-bg-primary: rgba(24, 24, 27, 0.85);
+        --endspace-bg-secondary: rgba(39, 39, 42, 0.85);
+        --endspace-bg-tertiary: rgba(63, 63, 70, 0.85);
+        
+        /* Dark mode: 不设背景图，星空特效不受干扰 */
+        --endspace-bg-image: none;
         
         --endspace-text-primary: #fafafa;
         --endspace-text-secondary: #a1a1aa;
         --endspace-text-muted: #71717a;
         
-        --endspace-accent-yellow: #FBFB45;
+        --endspace-accent-yellow: #EC4899;
         --endspace-accent-yellow-dim: rgba(251, 251, 69, 0.15);
-        --endspace-accent-cyan: #FBFB45; /* Dark Mode: Yellow 600 */
+        --endspace-accent-cyan: #EC4899; /* Dark Mode: Yellow 600 */
         --endspace-accent-cyan-dim: rgba(251, 251, 69, 0.1);
         
         --endspace-border-base: #27272a;
-        --endspace-border-active: #FBFB45;
+        --endspace-border-active: #EC4899;
         --endspace-grid-color: rgba(255,255,255,0.02);
         
         --endspace-shadow-base: 
@@ -96,6 +102,10 @@ export const Style = () => {
          ============================================ */
       #theme-endspace {
         background-color: var(--endspace-bg-base);
+        background-image: var(--endspace-bg-image);
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
         color: var(--endspace-text-primary);
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         overflow-x: hidden;
@@ -140,18 +150,18 @@ export const Style = () => {
          "Float" Container Styles (Glassmorphism -> Solid Block)
          ============================================ */
       .endspace-frame {
-        background: var(--endspace-bg-primary); /* Solid background for floating block effect */
+        background: var(--endspace-bg-primary);
         border: 1px solid var(--endspace-border-base);
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 
            0 10px 30px -10px rgba(0,0,0,0.1),
-           0 4px 6px -2px rgba(0,0,0,0.05); /* Enhanced shadow for lift */
+           0 4px 6px -2px rgba(0,0,0,0.05);
         z-index: 10;
       }
 
       .dark .endspace-frame {
-        background: #18181b; /* Solid dark background */
+        background: rgba(24, 24, 27, 0.9);
         border-color: #3f3f46;
       }
 
@@ -194,7 +204,7 @@ export const Style = () => {
          Card Styles - Enhanced 3D Depth
          ============================================ */
       .endspace-card {
-        background: var(--endspace-bg-primary); /* Solid background */
+        background: var(--endspace-bg-primary);
         border: 1px solid var(--endspace-border-base);
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
