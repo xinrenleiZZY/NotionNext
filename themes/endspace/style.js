@@ -16,9 +16,6 @@ export const Style = () => {
         --endspace-bg-secondary: rgba(244, 244, 245, 0.85);
         --endspace-bg-tertiary: rgba(228, 228, 231, 0.85);
         
-        /* Light Mode Background Image (二次元壁纸) - 可以换成任意图片URL */
-        --endspace-bg-image: url('https://api.dujin.org/bing/1920.php');
-        
         /* Dark Text (High Contrast) */
         --endspace-text-primary: #18181b;
         --endspace-text-secondary: #52525b;
@@ -53,9 +50,6 @@ export const Style = () => {
         --endspace-bg-primary: rgba(24, 24, 27, 0.85);
         --endspace-bg-secondary: rgba(39, 39, 42, 0.85);
         --endspace-bg-tertiary: rgba(63, 63, 70, 0.85);
-        
-        /* Dark mode: 不设背景图，星空特效不受干扰 */
-        --endspace-bg-image: none;
         
         --endspace-text-primary: #fafafa;
         --endspace-text-secondary: #a1a1aa;
@@ -102,10 +96,6 @@ export const Style = () => {
          ============================================ */
       #theme-endspace {
         background-color: var(--endspace-bg-base);
-        background-image: var(--endspace-bg-image);
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
         color: var(--endspace-text-primary);
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         overflow-x: hidden;

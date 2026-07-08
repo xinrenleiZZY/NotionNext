@@ -15,29 +15,24 @@ const VideoBackground = () => {
     setMounted(true)
   }, [])
 
-  if (!mounted) return null
+  if (!mounted || isDarkMode) return null
 
   return (
-    <>
-      {/* 视频背景 - 只在白天模式显示 */}
-      {!isDarkMode && (
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className='pointer-events-none fixed inset-0 z-0 h-full w-full object-cover opacity-60'
-          style={{ filter: 'blur(2px)' }}
-        >
-          <source
-            src={process.env.NEXT_PUBLIC_BG_VIDEO || '/bg-video.mp4'}
-            type='video/mp4'
-          />
-        </video>
-      )}
-      {/* 暗色遮罩层 - 确保文字可读性 */}
-      <div className='pointer-events-none fixed inset-0 z-[1] h-full w-full bg-black/10' />
-    </>
+    <div className='pointer-events-none fixed inset-0 z-0 overflow-hidden'>
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className='h-full w-full object-cover opacity-40'
+        style={{ filter: 'blur(3px) scale(1.05)' }}
+      >
+        <source
+          src={process.env.NEXT_PUBLIC_BG_VIDEO || '/bg-video.mp4'}
+          type='video/mp4'
+        />
+      </video>
+    </div>
   )
 }
 
