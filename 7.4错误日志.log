@@ -1,0 +1,443 @@
+17:08:47.439 Running build in Washington, D.C., USA (East) – iad1
+17:08:47.440 Build machine configuration: 2 cores, 8 GB
+17:08:47.453 Cloning github.com/xinrenleiZZY/NotionNext (Branch: main, Commit: a475e65)
+17:08:47.454 Skipping build cache, deployment was triggered without cache.
+17:08:53.041 Cloning completed: 5.588s
+17:08:53.709 Running "vercel build"
+17:08:53.734 Vercel CLI 54.19.0
+17:08:54.424 Installing dependencies...
+17:08:54.687 yarn install v1.22.19
+17:08:54.780 [1/5] Validating package.json...
+17:08:54.784 [2/5] Resolving packages...
+17:08:55.162 [3/5] Fetching packages...
+17:08:55.169 warning Pattern ["third-party-web@latest"] is trying to unpack in the same destination "/vercel/.cache/yarn/v6/npm-third-party-web-0.26.7-integrity/node_modules/third-party-web" as pattern ["third-party-web@^0.26.6"]. This could result in non-deterministic behavior, skipping.
+17:09:53.697 warning bare-fs@4.7.1: The engine "bare" appears to be invalid.
+17:09:53.698 warning bare-os@3.9.1: The engine "bare" appears to be invalid.
+17:09:53.700 [4/5] Linking dependencies...
+17:09:53.706 warning "react-facebook > react-spinner-children@1.0.8" has incorrect peer dependency "react@15.x || 16.x".
+17:09:53.706 warning "react-notion-x > react-image@4.1.0" has unmet peer dependency "@babel/runtime@>=7".
+17:09:53.708 warning " > @testing-library/user-event@14.6.1" has unmet peer dependency "@testing-library/dom@>=7.21.4".
+17:09:53.714 warning "vitepress > @docsearch/js > @docsearch/react > @algolia/autocomplete-preset-algolia@1.17.7" has unmet peer dependency "@algolia/client-search@>= 4.9.1 < 6".
+17:09:53.715 warning "vitepress > @docsearch/js > @docsearch/react > @algolia/autocomplete-core > @algolia/autocomplete-plugin-algolia-insights@1.17.7" has unmet peer dependency "search-insights@>= 1 < 3".
+17:09:53.715 warning "vitepress > @docsearch/js > @docsearch/react > @algolia/autocomplete-core > @algolia/autocomplete-shared@1.17.7" has unmet peer dependency "@algolia/client-search@>= 4.9.1 < 6".
+17:10:10.796 [5/5] Building fresh packages...
+17:10:12.819 $ patch-package
+17:10:12.955 patch-package 8.0.1
+17:10:12.955 Applying patches...
+17:10:12.960 notion-utils@7.10.0 ✔
+17:10:12.965 Done in 78.28s.
+17:10:13.018 Detected Next.js version: 14.2.35
+17:10:13.024 Running "yarn run build"
+17:10:13.202 yarn run v1.22.19
+17:10:13.249 $ cross-env BUILD_MODE=true next build
+17:10:13.837 Preserved versioned Notion page block cache
+17:10:13.838 Prepared Notion build session build-1783156213837-507
+17:10:13.862 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+17:10:13.863 This information is used to shape Next.js' roadmap and prioritize features.
+17:10:13.863 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+17:10:13.864 https://nextjs.org/telemetry
+17:10:13.864 
+17:10:13.920   ▲ Next.js 14.2.35
+17:10:13.921   - Experiments (use with caution):
+17:10:13.922     · scrollRestoration
+17:10:13.922 
+17:10:13.922    Skipping linting
+17:10:13.922    Checking validity of types ...
+17:10:35.254    Creating an optimized production build ...
+17:10:35.870 [ThemeResolver][webpack] {"note":"Layouts load via dynamic import(@/themes/<name>). Theme folder follows runtime NEXT_PUBLIC_THEME / Notion; no compile-time @theme-components alias.","envTheme":null,"configTheme":"endspace","themeFolderPath":"/vercel/path0/themes/endspace"}
+17:11:29.903  ✓ Compiled successfully
+17:11:29.905    Collecting page data ...
+17:11:30.418 [BuildEnv] {"prefetchEnabled":false,"prefetchConcurrency":8,"notionRateMaxPerMinute":50,"notionRateMinIntervalMs":300,"staticPageGenerationTimeoutSec":300}
+17:11:30.437 [Cache][FILE][pid:752] MISS key:build_static_paths_all_pages_default_[REDACTED] cache miss, fetch from source
+17:11:30.437 [Cache][FILE][pid:752] MISS key:global_data_default_[REDACTED] cache miss, fetch from source
+17:11:30.437 [Cache][FILE][pid:752] MISS key:site_[REDACTED] cache miss, fetch from source
+17:11:30.437 获取全站数据  [REDACTED]
+17:11:30.438 [Cache][FILE][pid:752] MISS key:page_block_[REDACTED] cache miss, fetch from source
+17:11:30.438 [API-->>请求] from:slug-paths id:[REDACTED] 
+17:11:33.570 [API<<--异常]: Error: Notion page not found "[REDACTED]"
+17:11:33.571     at NotionAPI.getPage (file:///vercel/path0/node_modules/notion-client/build/index.js:76:13)
+17:11:33.571     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+17:11:33.572     at async l.processQueue (/vercel/path0/.next/server/chunks/9183.js:2:12858)
+17:11:33.572 [API-->>请求] from:slug-paths id:[REDACTED] 剩余重试次数:2
+17:11:33.693 [API<<--异常]: Error: Notion page not found "[REDACTED]"
+17:11:33.693     at NotionAPI.getPage (file:///vercel/path0/node_modules/notion-client/build/index.js:76:13)
+17:11:33.693     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+17:11:33.693     at async l.processQueue (/vercel/path0/.next/server/chunks/9183.js:2:12858)
+17:11:33.694 [API-->>请求] from:slug-paths id:[REDACTED] 剩余重试次数:1
+17:11:33.805 [API<<--异常]: Error: Notion page not found "[REDACTED]"
+17:11:33.805     at NotionAPI.getPage (file:///vercel/path0/node_modules/notion-client/build/index.js:76:13)
+17:11:33.805     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+17:11:33.806     at async l.processQueue (/vercel/path0/.next/server/chunks/9183.js:2:12858)
+17:11:33.806 [请求失败]: from:slug-paths id:[REDACTED]
+17:11:33.806 [getPage] empty pageBlock: [REDACTED]
+17:11:33.806 [1783156293805-5yyovz] can't get Notion Data ; pageId: [REDACTED]
+17:11:33.807 [1783156293805-5yyovz] 🕒 开始 convertNotionToSiteData from: slug-paths @ 2026-07-04T09:11:33.805Z
+17:11:33.807 [Cache][FILE][pid:752] SET key:site_[REDACTED] cache stored by lock holder
+17:11:33.807 Invalid input: allPages and tagOptions should be arrays.
+17:11:33.808 Invalid input: allPages and tagOptions should be arrays.
+17:11:33.808 Invalid input: allPages and tagOptions should be arrays.
+17:11:33.808 Invalid input: allPages and tagOptions should be arrays.
+17:11:33.808 Invalid input: allPages and tagOptions should be arrays.
+17:11:33.808 Invalid input: allPages and tagOptions should be arrays.
+17:11:33.809 [Cache][FILE][pid:752] SET key:global_data_default_[REDACTED] cache stored by lock holder
+17:11:33.811 [Cache][FILE][pid:752] SET key:build_static_paths_all_pages_default_[REDACTED] cache stored by lock holder
+17:11:40.112    Generating static pages (0/29) ...
+17:11:41.017    Generating static pages (7/29) 
+17:11:41.211 [dashboard-1783156301108] 🕒 开始解析文章: dashboard @ 2026-07-04T09:11:41.108Z
+17:11:41.212 [Cache][FILE][pid:752] MISS key:global_data_zh-CN_[REDACTED] cache miss, fetch from source
+17:11:41.212 [Cache][FILE][pid:752] SET key:global_data_zh-CN_[REDACTED] cache stored by lock holder
+17:11:41.212 [dashboard-1783156301108] ⏱ fetchGlobalAllData 耗时: 2ms @ 2026-07-04T09:11:41.111Z
+17:11:41.213 [dashboard-1783156301108] ✅ 完成解析文章: dashboard, 总耗时: 4ms @ 2026-07-04T09:11:41.112Z
+17:11:41.214 Invalid input: allPages and tagOptions should be arrays.
+17:11:41.215 Invalid input: allPages and tagOptions should be arrays.
+17:11:41.215 Invalid input: allPages and tagOptions should be arrays.
+17:11:41.215 Invalid input: allPages and tagOptions should be arrays.
+17:11:41.215 Invalid input: allPages and tagOptions should be arrays.
+17:11:41.215 Invalid input: allPages and tagOptions should be arrays.
+17:11:41.215 
+17:11:41.215 Error occurred prerendering page "/zh-CN/dashboard". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:41.215 
+17:11:41.215 Error: Error serializing `.categoryOptions` returned from `getStaticProps` in "/dashboard/[[...index]]".
+17:11:41.216 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:41.216     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:41.216     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:41.216     at Array.every (<anonymous>)
+17:11:41.216     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:41.216     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:41.216     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:41.216     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:41.216     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:41.217     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:41.217     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:41.316 [dashboard-1783156301233] 🕒 开始解析文章: dashboard @ 2026-07-04T09:11:41.233Z
+17:11:41.317 [dashboard-1783156301233] ⏱ fetchGlobalAllData 耗时: 1ms @ 2026-07-04T09:11:41.234Z
+17:11:41.319 [dashboard-1783156301233] ✅ 完成解析文章: dashboard, 总耗时: 1ms @ 2026-07-04T09:11:41.234Z
+17:11:41.320 
+17:11:41.320 Error occurred prerendering page "/zh-CN/dashboard/membership". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:41.321 
+17:11:41.323 Error: Error serializing `.notice` returned from `getStaticProps` in "/dashboard/[[...index]]".
+17:11:41.323 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:41.324     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:41.324     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:41.326     at Array.every (<anonymous>)
+17:11:41.326     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:41.327     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:41.327     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:41.328     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:41.328     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:41.329     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:41.329     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:41.395 [dashboard-1783156301318] 🕒 开始解析文章: dashboard @ 2026-07-04T09:11:41.318Z
+17:11:41.398 [dashboard-1783156301318] ⏱ fetchGlobalAllData 耗时: 0ms @ 2026-07-04T09:11:41.318Z
+17:11:41.398 [dashboard-1783156301318] ✅ 完成解析文章: dashboard, 总耗时: 1ms @ 2026-07-04T09:11:41.319Z
+17:11:41.399 
+17:11:41.399 Error occurred prerendering page "/zh-CN/dashboard/balance". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:41.399 
+17:11:41.400 Error: Error serializing `.notice` returned from `getStaticProps` in "/dashboard/[[...index]]".
+17:11:41.400 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:41.400     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:41.400     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:41.401     at Array.every (<anonymous>)
+17:11:41.401     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:41.401     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:41.401     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:41.402     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:41.402     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:41.402     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:41.403     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:41.488 [dashboard-1783156301396] 🕒 开始解析文章: dashboard @ 2026-07-04T09:11:41.396Z
+17:11:41.491 [dashboard-1783156301396] ⏱ fetchGlobalAllData 耗时: 1ms @ 2026-07-04T09:11:41.397Z
+17:11:41.492 [dashboard-1783156301396] ✅ 完成解析文章: dashboard, 总耗时: 1ms @ 2026-07-04T09:11:41.397Z
+17:11:41.492 
+17:11:41.492 Error occurred prerendering page "/zh-CN/dashboard/user-profile". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:41.493 
+17:11:41.494 Error: Error serializing `.notice` returned from `getStaticProps` in "/dashboard/[[...index]]".
+17:11:41.495 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:41.495     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:41.495     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:41.495     at Array.every (<anonymous>)
+17:11:41.496     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:41.496     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:41.496     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:41.496     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:41.496     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:41.496     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:41.496     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:41.595 [dashboard-1783156301490] 🕒 开始解析文章: dashboard @ 2026-07-04T09:11:41.490Z
+17:11:41.596 [dashboard-1783156301490] ⏱ fetchGlobalAllData 耗时: 0ms @ 2026-07-04T09:11:41.490Z
+17:11:41.598 [dashboard-1783156301490] ✅ 完成解析文章: dashboard, 总耗时: 0ms @ 2026-07-04T09:11:41.490Z
+17:11:41.598 
+17:11:41.598 Error occurred prerendering page "/zh-CN/dashboard/user-profile/security". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:41.599 
+17:11:41.599 Error: Error serializing `.notice` returned from `getStaticProps` in "/dashboard/[[...index]]".
+17:11:41.599 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:41.600     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:41.600     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:41.600     at Array.every (<anonymous>)
+17:11:41.600     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:41.601     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:41.601     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:41.601     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:41.602     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:41.602     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:41.602     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:41.726 [dashboard-1783156301597] 🕒 开始解析文章: dashboard @ 2026-07-04T09:11:41.597Z
+17:11:41.726 [dashboard-1783156301597] ⏱ fetchGlobalAllData 耗时: 0ms @ 2026-07-04T09:11:41.597Z
+17:11:41.726 [dashboard-1783156301597] ✅ 完成解析文章: dashboard, 总耗时: 0ms @ 2026-07-04T09:11:41.597Z
+17:11:41.727 
+17:11:41.727 Error occurred prerendering page "/zh-CN/dashboard/order". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:41.727 
+17:11:41.727 Error: Error serializing `.notice` returned from `getStaticProps` in "/dashboard/[[...index]]".
+17:11:41.727 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:41.727     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:41.728     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:41.728     at Array.every (<anonymous>)
+17:11:41.728     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:41.728     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:41.728     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:41.729     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:41.729     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:41.729     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:41.729     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:41.730    Generating static pages (14/29) 
+17:11:41.814 [dashboard-1783156301731] 🕒 开始解析文章: dashboard @ 2026-07-04T09:11:41.731Z
+17:11:41.817 [dashboard-1783156301731] ⏱ fetchGlobalAllData 耗时: 0ms @ 2026-07-04T09:11:41.731Z
+17:11:41.817 [dashboard-1783156301731] ✅ 完成解析文章: dashboard, 总耗时: 0ms @ 2026-07-04T09:11:41.731Z
+17:11:41.818 
+17:11:41.818 Error occurred prerendering page "/zh-CN/dashboard/affiliate". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:41.819 
+17:11:41.819 Error: Error serializing `.notice` returned from `getStaticProps` in "/dashboard/[[...index]]".
+17:11:41.819 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:41.819     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:41.820     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:41.820     at Array.every (<anonymous>)
+17:11:41.820     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:41.820     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:41.821     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:41.821     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:41.821     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:41.821     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:41.822     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:41.892 
+17:11:41.895 Error occurred prerendering page "/zh-CN/search/NotionNext". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:41.896 
+17:11:41.896 Error: Error serializing `.notice` returned from `getStaticProps` in "/search/[keyword]".
+17:11:41.897 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:41.897     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:41.897     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:41.897     at Array.every (<anonymous>)
+17:11:41.898     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:41.898     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:41.898     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:41.899     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:41.899     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:41.899     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:41.900     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:41.955 
+17:11:41.958 Error occurred prerendering page "/zh-CN/search/NotionNext/page/1". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:41.958 
+17:11:41.959 Error: Error serializing `.notice` returned from `getStaticProps` in "/search/[keyword]/page/[page]".
+17:11:41.959 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:41.959     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:41.960     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:41.960     at Array.every (<anonymous>)
+17:11:41.960     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:41.960     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:41.961     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:41.961     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:41.961     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:41.962     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:41.962     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:42.011 
+17:11:42.012 Error occurred prerendering page "/zh-CN/sign-in". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:42.014 
+17:11:42.015 Error: Error serializing `.notice` returned from `getStaticProps` in "/sign-in/[[...index]]".
+17:11:42.015 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:42.015     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:42.016     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:42.016     at Array.every (<anonymous>)
+17:11:42.016     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:42.017     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:42.017     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:42.017     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:42.018     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:42.018     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:42.018     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:42.092 
+17:11:42.093 Error occurred prerendering page "/zh-CN/sign-in/factor-one". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:42.094 
+17:11:42.094 Error: Error serializing `.notice` returned from `getStaticProps` in "/sign-in/[[...index]]".
+17:11:42.094 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:42.094     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:42.095     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:42.095     at Array.every (<anonymous>)
+17:11:42.096     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:42.096     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:42.096     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:42.097     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:42.097     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:42.097     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:42.098     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:42.142 
+17:11:42.143 Error occurred prerendering page "/zh-CN/sign-up". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:42.143 
+17:11:42.144 Error: Error serializing `.notice` returned from `getStaticProps` in "/sign-up/[[...index]]".
+17:11:42.144 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:42.144     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:42.145     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:42.145     at Array.every (<anonymous>)
+17:11:42.145     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:42.145     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:42.146     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:42.146     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:42.146     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:42.146     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:42.147     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:42.352 
+17:11:42.353 Error occurred prerendering page "/zh-CN/sign-up/sign-up". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:42.361 
+17:11:42.361 Error: Error serializing `.notice` returned from `getStaticProps` in "/sign-up/[[...index]]".
+17:11:42.362 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:42.362     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:42.363     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:42.363     at Array.every (<anonymous>)
+17:11:42.363     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:42.364     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:42.364     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:42.364     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:42.365     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:42.365     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:42.365     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:42.366    Generating static pages (21/29) 
+17:11:42.779 
+17:11:42.780 Error occurred prerendering page "/zh-CN/404". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:42.782 
+17:11:42.783 Error: Error serializing `.notice` returned from `getStaticProps` in "/404".
+17:11:42.784 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:42.784     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:42.784     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:42.785     at Array.every (<anonymous>)
+17:11:42.785     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:42.785     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:42.786     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:42.786     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:42.786     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:42.787     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:42.787     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:42.809 
+17:11:42.812 Error occurred prerendering page "/zh-CN/archive". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:42.812 
+17:11:42.813 Error: Error serializing `.notice` returned from `getStaticProps` in "/archive".
+17:11:42.813 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:42.813     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:42.814     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:42.814     at Array.every (<anonymous>)
+17:11:42.814     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:42.815     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:42.815     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:42.815     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:42.815     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:42.816     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:42.816     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:42.920 
+17:11:42.922 Error occurred prerendering page "/zh-CN/auth/result". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:42.923 
+17:11:42.924 Error: Error serializing `.notice` returned from `getStaticProps` in "/auth/result".
+17:11:42.924 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:42.924     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:42.925     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:42.925     at Array.every (<anonymous>)
+17:11:42.925     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:42.926     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:42.926     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:42.926     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:42.927     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:42.927     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:42.927     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:42.969 
+17:11:42.970 Error occurred prerendering page "/zh-CN/category". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:42.974 
+17:11:42.974 Error: Error serializing `.notice` returned from `getStaticProps` in "/category".
+17:11:42.975 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:42.975     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:42.975     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:42.976     at Array.every (<anonymous>)
+17:11:42.976     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:42.976     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:42.977     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:42.977     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:42.977     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:42.978     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:42.978     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:42.996 [RSS订阅] 生成/rss/feed.xml
+17:11:42.997 
+17:11:42.998 Error occurred prerendering page "/zh-CN". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:42.998 
+17:11:42.998 Error: Error serializing `.notice` returned from `getStaticProps` in "/".
+17:11:42.999 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:42.999     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:42.999     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:43.000     at Array.every (<anonymous>)
+17:11:43.000     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:43.000     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:43.001     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:43.001     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:43.001     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:43.002     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:43.002     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:43.026 
+17:11:43.027 Error occurred prerendering page "/zh-CN/search". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:43.027 
+17:11:43.028 Error: Error serializing `.notice` returned from `getStaticProps` in "/search".
+17:11:43.028 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:43.029     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:43.029     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:43.029     at Array.every (<anonymous>)
+17:11:43.030     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:43.030     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:43.031     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:43.031     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:43.032     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:43.032     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:43.033     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:43.267 
+17:11:43.268 Error occurred prerendering page "/zh-CN/tag". Read more: https://nextjs.org/docs/messages/prerender-error
+17:11:43.268 
+17:11:43.269 Error: Error serializing `.notice` returned from `getStaticProps` in "/tag".
+17:11:43.270 Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.
+17:11:43.270     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:446)
+17:11:43.271     at /vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:683
+17:11:43.272     at Array.every (<anonymous>)
+17:11:43.272     at r (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:580)
+17:11:43.272     at N (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:16:1100)
+17:11:43.272     at e3 (/vercel/path0/node_modules/next/dist/compiled/next-server/pages.runtime.prod.js:26:294)
+17:11:43.273     at async exportPages (/vercel/path0/node_modules/next/dist/export/routes/pages.js:84:28)
+17:11:43.273     at async exportPageImpl (/vercel/path0/node_modules/next/dist/export/worker.js:206:16)
+17:11:43.273     at async Span.traceAsyncFn (/vercel/path0/node_modules/next/dist/trace/trace.js:154:20)
+17:11:43.273     at async Object.exportPage (/vercel/path0/node_modules/next/dist/export/worker.js:237:20)
+17:11:43.274  ✓ Generating static pages (29/29)
+17:11:43.745 
+17:11:43.751 > Export encountered errors on following paths:
+17:11:43.751 	/404: /zh-CN/404
+17:11:43.751 	/: /zh-CN
+17:11:43.752 	/archive: /zh-CN/archive
+17:11:43.752 	/auth/result: /zh-CN/auth/result
+17:11:43.752 	/category: /zh-CN/category
+17:11:43.752 	/dashboard/[[...index]]: /zh-CN/dashboard
+17:11:43.752 	/dashboard/[[...index]]: /zh-CN/dashboard/affiliate
+17:11:43.752 	/dashboard/[[...index]]: /zh-CN/dashboard/balance
+17:11:43.752 	/dashboard/[[...index]]: /zh-CN/dashboard/membership
+17:11:43.753 	/dashboard/[[...index]]: /zh-CN/dashboard/order
+17:11:43.753 	/dashboard/[[...index]]: /zh-CN/dashboard/user-profile
+17:11:43.753 	/dashboard/[[...index]]: /zh-CN/dashboard/user-profile/security
+17:11:43.753 	/search/[keyword]/page/[page]: /zh-CN/search/NotionNext/page/1
+17:11:43.753 	/search/[keyword]: /zh-CN/search/NotionNext
+17:11:43.753 	/search: /zh-CN/search
+17:11:43.753 	/sign-in/[[...index]]: /zh-CN/sign-in
+17:11:43.754 	/sign-in/[[...index]]: /zh-CN/sign-in/factor-one
+17:11:43.754 	/sign-up/[[...index]]: /zh-CN/sign-up
+17:11:43.754 	/sign-up/[[...index]]: /zh-CN/sign-up/sign-up
+17:11:43.754 	/tag: /zh-CN/tag
+17:11:43.872 error Command failed with exit code 1.
+17:11:43.873 info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+17:11:43.903 Error: Command "yarn run build" exited with 1
