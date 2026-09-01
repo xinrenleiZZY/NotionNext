@@ -1,5 +1,75 @@
 // 注: process.env.XX是Vercel的环境变量，配置方式见：https://docs.tangly1024.com/article/how-to-config-notion-next#c4768010ae7d44609b744e79e2f9959a
 
+// ============================================================================
+// 🔒 启动期环境变量健康检查（仙帝·永恒仙庭·强校验模式）
+// ============================================================================
+(function bootSanityCheck() {
+  const PLACEHOLDER_NOTION_PAGE_ID = 'a335633a431182edbf048156d97c43eb'
+  const NOTION_PAGE_ID = (process.env.NOTION_PAGE_ID || PLACEHOLDER_NOTION_PAGE_ID).trim()
+
+  // 1) 占位符 ID 检测 + 强警告
+  if (NOTION_PAGE_ID === PLACEHOLDER_NOTION_PAGE_ID) {
+    const line = '═'.repeat(78)
+    const banner = [
+      '',
+      line,
+      ' ⚠️   NOTION_PAGE_ID 仍然使用【示例占位符】！',
+      ' ──────────────────────────────────────────────────────────────────────────',
+      '   当前值：' + PLACEHOLDER_NOTION_PAGE_ID,
+      '',
+      '   👉 Notion API 会返回 403 Forbidden，你会遇到：',
+      '      · 所有文章列表为空，点击文章"跳转后没内容"',
+      '      · 分类页/标签页/搜索页虽然 200 但没有任何博文',
+      '      · /api/rss 返回 503',
+      '',
+      '   👉 30 秒修复步骤：',
+      '      1) 打开项目根目录 → 创建/编辑 .env.local',
+      '      2) 复制官方模板  https://tanghh.notion.site/02ab3b8678004aa69e9e415905ef32a5',
+      '      3) 重复该页面到自己的 Notion 工作区后，复制新的 Page ID 粘贴进去：',
+      '          NOTION_PAGE_ID=你自己的32位Notion页面ID（可带或不带 - ）',
+      '      4) 如需解除 403，建议额外填：NOTION_TOKEN_V2=你的notion_token_v2 Cookie值',
+      '      5) 重启 npm run dev',
+      line,
+      ''
+    ].join('\n')
+    console.warn(banner)
+  }
+
+  // 2) 生产态（Vercel）下 LINK 域名必须和真实访问域名一致，避免跳转资源加载跨域
+  const LINK = process.env.NEXT_PUBLIC_LINK || 'https://jxspace.top'
+  try {
+    const url = new URL(LINK)
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      console.warn('⚠️  [blog.config] NEXT_PUBLIC_LINK 协议必须是 http:// 或 https://，当前：', LINK)
+    }
+  } catch (_) {
+    console.warn('⚠️  [blog.config] NEXT_PUBLIC_LINK 不是合法 URL：', LINK, '—— 内部拼接的 canonical 链接会出错')
+  }
+
+  // 3) NOTION_TOKEN_V2 空值 + 生产环境：给一条提醒（403 时用户才知道怎么办）
+  if (
+    process.env.NODE_ENV === 'production' &&
+    !(process.env.NOTION_TOKEN_V2 || '').trim()
+  ) {
+    console.warn(
+      'ℹ️  [blog.config] 生产环境未设置 NOTION_TOKEN_V2；若 Notion API 报 403，请在 .env.local 中填写',
+      'NOTION_TOKEN_V2=（从浏览器 Notion Cookie 中提取 token_v2 的值）'
+    )
+  }
+})()
+
+/**
+ * 布尔环境变量解析器：区分 string/false/0/off → false
+ * 避免 process.env 里的 "false"/"0"/"" 被 || 逻辑当成 truthy
+ */
+function envBool(envValue, fallback = false) {
+  if (envValue === undefined || envValue === null) return fallback
+  const v = String(envValue).trim().toLowerCase()
+  if (['', 'false', '0', 'off', 'no', 'n', 'disabled'].includes(v)) return false
+  if (['true', '1', 'on', 'yes', 'y', 'enabled'].includes(v)) return true
+  return fallback
+}
+
 const BLOG = {
   API_BASE_URL: process.env.API_BASE_URL || 'https://www.notion.so/api/v3', // API默认请求地址,可以配置成自己的地址例如：https://[xxxxx].notion.site/api/v3
   // Important page_id！！！Duplicate Template from  https://tanghh.notion.site/02ab3b8678004aa69e9e415905ef32a5
@@ -10,23 +80,23 @@ const BLOG = {
   LANG: process.env.NEXT_PUBLIC_LANG || 'zh-CN', // e.g 'zh-CN','en-US'  see /lib/lang.js for more.
   SINCE: process.env.NEXT_PUBLIC_SINCE || 2025, // e.g if leave this empty, current year will be used.
 
-  PSEUDO_STATIC: process.env.NEXT_PUBLIC_PSEUDO_STATIC || false, // 伪静态路径，开启后所有文章URL都以 .html 结尾。
+  PSEUDO_STATIC: envBool(process.env.NEXT_PUBLIC_PSEUDO_STATIC, false), // 伪静态路径，开启后所有文章URL都以 .html 结尾。
   NEXT_REVALIDATE_SECOND: process.env.NEXT_PUBLIC_REVALIDATE_SECOND || 60, // 更新缓存间隔 单位(秒)；即每个页面有60秒的纯静态期、此期间无论多少次访问都不会抓取notion数据；调大该值有助于节省Vercel资源、同时提升访问速率，但也会使文章更新有延迟。
   REVALIDATION_TOKEN: process.env.REVALIDATION_TOKEN || '', // On-Demand Revalidation Token，设置后可通过 POST /api/revalidate 立即刷新页面缓存（解决 Notion 内容更新延迟问题）
   APPEARANCE: process.env.NEXT_PUBLIC_APPEARANCE || 'light', // ['light', 'dark', 'auto'], // light 日间模式 ， dark夜间模式， auto根据时间和主题自动夜间模式
   APPEARANCE_DARK_TIME: process.env.NEXT_PUBLIC_APPEARANCE_DARK_TIME || [18, 6], // 夜间模式起至时间，false时关闭根据时间自动切换夜间模式
 
-  AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '仙帝(Zeyan)', // 您的昵称 例如 tangly1024
-  BIO: process.env.NEXT_PUBLIC_BIO || '放下本仙尊的阔乐！本仙尊乃永恒仙庭仙尊！', // 作者简介
+  AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '仙帝·Zeyan', // 您的昵称
+  BIO: process.env.NEXT_PUBLIC_BIO || '放下本仙尊的阔乐！本仙尊乃永恒仙庭仙尊·游走于数据星系与修仙世界的技术修士', // 作者简介
   LINK: process.env.NEXT_PUBLIC_LINK || 'https://jxspace.top', // 网站地址
-  KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '仙帝, Zeyan, 聚星, 知识产权, AI, 博客', // 网站关键词 英文逗号隔开
+  KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '仙帝, Zeyan, 永恒仙庭, 聚星知识产权, AI, 技术博客, Python, Docker, Next.js', // 网站关键词 英文逗号隔开
   BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon.ico', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
   BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '', // 备案号 闽ICP备XXXXXX
   BEI_AN_LINK: process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://beian.miit.gov.cn/', // 备案查询链接，如果用了萌备等备案请在这里填写
   BEI_AN_GONGAN: process.env.NEXT_PUBLIC_BEI_AN_GONGAN || '', // 公安备案号，例如 '浙公网安备3xxxxxxxx8号'
 
   // RSS订阅
-  ENABLE_RSS: process.env.NEXT_PUBLIC_ENABLE_RSS || true, // 是否开启RSS订阅功能
+  ENABLE_RSS: envBool(process.env.NEXT_PUBLIC_ENABLE_RSS, true), // 是否开启RSS订阅功能
 
   // 其它复杂配置
   // 原配置文件过长，且并非所有人都会用到，故此将配置拆分到/conf/目录下, 按需找到对应文件并修改即可
@@ -65,23 +135,23 @@ const BLOG = {
 
   // 侧栏布局 是否反转(左变右,右变左) 已支持主题: hexo next medium fukasawa example
   LAYOUT_SIDEBAR_REVERSE:
-    process.env.NEXT_PUBLIC_LAYOUT_SIDEBAR_REVERSE || false,
+    envBool(process.env.NEXT_PUBLIC_LAYOUT_SIDEBAR_REVERSE, false),
 
-  // 欢迎语打字效果,Hexo,Matery主题支持, 英文逗号隔开多个欢迎语。
+  // 欢迎语打字效果,Hexo,Matery主题支持, 英文逗号隔开多个欢迎语。（仙帝·永恒仙庭风格）
   GREETING_WORDS:
     process.env.NEXT_PUBLIC_GREETING_WORDS ||
-    'Hi，我是一个程序员, Hi，我是一个打工人,Hi，我是一个干饭人,欢迎来到我的博客🎉',
+    '道友，你来了！,放下本仙尊的阔乐！,本仙尊乃永恒仙庭仙尊,游走于数据星系的技术修士,聚星知识产权·数据确权,欢迎来到永恒仙庭 🎉',
 
   // 欢迎语打字效果类型速度
   GREETING_WORDS_TYPE_SPEED:
-    process.env.NEXT_PUBLIC_GREETING_WORDS_TYPE_SPEED || 200,
+    process.env.NEXT_PUBLIC_GREETING_WORDS_TYPE_SPEED || 120,
 
   // 欢迎语打字效果回退速度
   GREETING_WORDS_BACK_SPEED:
-    process.env.NEXT_PUBLIC_GREETING_WORDS_BACK_SPEED || 100,
+    process.env.NEXT_PUBLIC_GREETING_WORDS_BACK_SPEED || 60,
 
   // uuid重定向至 slug
-  UUID_REDIRECT: process.env.UUID_REDIRECT || false
+  UUID_REDIRECT: envBool(process.env.UUID_REDIRECT, false)
 }
 
 module.exports = BLOG

@@ -36,25 +36,25 @@ const CONFIG = {
   ENDSPACE_LOADING_COVER: true, // 是否显示加载动画
   
   // 加载动画显示的站点名称 (右侧竖排大字)
-  ENDSPACE_LOADING_SITE_NAME: 'XIANDI_SPACE', // 站点名称，显示在加载动画右侧
+  ENDSPACE_LOADING_SITE_NAME: '永恒仙庭', // 站点名称：仙帝·永恒仙庭
   
-  // 加载进度文字 (不同阶段)
-  ENDSPACE_LOADING_TEXT_INIT: 'INITIALIZING', // 初始化阶段显示的文字
-  ENDSPACE_LOADING_TEXT_LOADING: 'LOADING', // 加载阶段显示的文字
-  ENDSPACE_LOADING_TEXT_COMPLETE: 'READY', // 加载完成阶段显示的文字
-  ENDSPACE_LOADING_TEXT_SWEEPING: 'LAUNCHING', // 扫描阶段显示的文字
-  ENDSPACE_LOADING_TEXT_FADEOUT: 'WELCOME', // 淡出阶段显示的文字
+  // 加载进度文字 (仙帝人设：修仙境界)
+  ENDSPACE_LOADING_TEXT_INIT: '筑基中…', // 初始化：筑基期
+  ENDSPACE_LOADING_TEXT_LOADING: '凝气聚丹…', // 加载：金丹期
+  ENDSPACE_LOADING_TEXT_COMPLETE: '元婴已成', // 完成：元婴期
+  ENDSPACE_LOADING_TEXT_SWEEPING: '神识扫描', // 扫描：神识
+  ENDSPACE_LOADING_TEXT_FADEOUT: '恭迎仙尊', // 淡出：恭迎仙尊
   
-  // 加载动画中的图片，可以使用public目录下的图片如'/images/logo.png'，也可以使用url如https://example.com/image.png
-  ENDSPACE_LOADING_IMAGE: '/favicon.svg', // 加载动画中显示的图片（默认使用站点 favicon SVG）
+  // 加载动画中的图片
+  ENDSPACE_LOADING_IMAGE: '/favicon.svg',
 
   // ============================================
   // 水印文字配置 (Watermark Text)
   // ============================================
   // 首页标题栏背景滚动水印文字（大字循环动画）
-  ENDSPACE_BANNER_WATERMARK_TEXT: 'https://www.juxingspacestation.top/',
+  ENDSPACE_BANNER_WATERMARK_TEXT: '永恒仙庭·仙帝',
   // 文章详情页右上角水印文字
-  ENDSPACE_ARTICLE_WATERMARK_TEXT: 'ZEYAN_ZZY',
+  ENDSPACE_ARTICLE_WATERMARK_TEXT: '仙帝·ZEYAN',
 
   // ============================================
   // 菜单配置 (Menu)

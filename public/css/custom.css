@@ -1,8 +1,245 @@
-/* 静态文件导入 自定义样式*/
+/* ============================================================
+   永恒仙庭 · 仙帝 专属自定义样式
+   基调配色：#EC4899 (粉) + #FBBF24 (金) + #6366F1 (青)
+   ============================================================ */
 
-#theme-fukasawa .sideLeft hr{
-    opacity: .04;
+/* ---------- 全局 HUD 四角装饰：仙庭结界 ---------- */
+body::before {
+  content: '';
+  position: fixed;
+  top: 8px; left: 8px;
+  width: 48px; height: 48px;
+  border-top: 2px solid rgba(236, 72, 153, 0.6);
+  border-left: 2px solid rgba(236, 72, 153, 0.6);
+  pointer-events: none;
+  z-index: 9999;
+  transition: all 0.5s ease;
 }
-.fa-info:before {
-    content: "\f05a";
+body::after {
+  content: '';
+  position: fixed;
+  bottom: 8px; right: 8px;
+  width: 48px; height: 48px;
+  border-bottom: 2px solid rgba(236, 72, 153, 0.6);
+  border-right: 2px solid rgba(236, 72, 153, 0.6);
+  pointer-events: none;
+  z-index: 9999;
+  transition: all 0.5s ease;
+}
+/* 仙庭结界·对角之二：右上 + 左下（通过伪元素层实现） */
+#__next::before {
+  content: '';
+  position: fixed;
+  top: 8px; right: 8px;
+  width: 48px; height: 48px;
+  border-top: 2px solid rgba(251, 191, 36, 0.5);
+  border-right: 2px solid rgba(251, 191, 36, 0.5);
+  pointer-events: none;
+  z-index: 9999;
+}
+#__next::after {
+  content: '';
+  position: fixed;
+  bottom: 8px; left: 8px;
+  width: 48px; height: 48px;
+  border-bottom: 2px solid rgba(251, 191, 36, 0.5);
+  border-left: 2px solid rgba(251, 191, 36, 0.5);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ---------- 悬停时 HUD 膨胀效果 ---------- */
+body:hover::before { width: 72px; height: 72px; border-color: rgba(236, 72, 153, 0.9); }
+body:hover::after  { width: 72px; height: 72px; border-color: rgba(236, 72, 153, 0.9); }
+
+/* ---------- 滚动条美化：仙帝粉金渐变 ---------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, rgba(236,72,153,0.05), rgba(251,191,36,0.05));
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #EC4899 0%, #F472B6 50%, #FBBF24 100%);
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(236, 72, 153, 0.4);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #BE185D 0%, #EC4899 50%, #F59E0B 100%);
+}
+
+/* ---------- 选中文本颜色：仙庭粉 ---------- */
+::selection {
+  background: rgba(236, 72, 153, 0.25);
+  color: #831843;
+}
+.dark ::selection {
+  background: rgba(236, 72, 153, 0.35);
+  color: #FCE7F3;
+}
+
+/* ---------- 链接悬浮：粉色闪光 ---------- */
+a:not(.ef-btn):not(.endspace-btn):not(.endspace-btn-3d) {
+  position: relative;
+}
+a:not(.ef-btn):not(.endspace-btn):not(.endspace-btn-3d)::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 0; height: 2px;
+  background: linear-gradient(90deg, #EC4899, #FBBF24);
+  transition: width 0.3s ease;
+  pointer-events: none;
+}
+a:not(.ef-btn):not(.endspace-btn):not(.endspace-btn-3d):hover::after {
+  width: 100%;
+}
+
+/* ---------- 仙气流动文字动画 (给站点标题或副标题用) ---------- */
+@keyframes xianting-glow {
+  0%, 100% {
+    text-shadow:
+      0 0 4px rgba(236, 72, 153, 0.4),
+      0 0 8px rgba(251, 191, 36, 0.2);
+  }
+  50% {
+    text-shadow:
+      0 0 8px rgba(236, 72, 153, 0.8),
+      0 0 24px rgba(236, 72, 153, 0.35),
+      0 0 36px rgba(251, 191, 36, 0.25);
+  }
+}
+.xianting-title {
+  animation: xianting-glow 3s ease-in-out infinite;
+  background: linear-gradient(135deg, #EC4899 0%, #F472B6 40%, #FBBF24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+/* ---------- 标签胶囊：粉金渐变边框 ---------- */
+.tag-pill, .notion-page .tag, [class*="tag-item"] {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(251, 191, 36, 0.08));
+  border: 1px solid rgba(236, 72, 153, 0.25);
+  color: #BE185D;
+  border-radius: 9999px;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.8rem;
+  transition: all 0.25s ease;
+}
+.tag-pill:hover, .notion-page .tag:hover, [class*="tag-item"]:hover {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(251, 191, 36, 0.15));
+  border-color: #EC4899;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+}
+.dark .tag-pill, .dark .notion-page .tag {
+  color: #F9A8D4;
+}
+
+/* ---------- Notion 代码块：仙庭风格小标 + 发光 ---------- */
+#notion-article pre {
+  position: relative;
+  overflow: hidden;
+}
+#notion-article pre::before {
+  content: '// ETERNAL_COURT · 永恒仙庭 //';
+  position: absolute;
+  top: 0.4rem; right: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: rgba(236, 72, 153, 0.55);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+#notion-article code {
+  background: linear-gradient(180deg, rgba(236,72,153,0.08), rgba(251,191,36,0.05));
+  color: #9D174D;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92em;
+}
+.dark #notion-article code { color: #FBCFE8; }
+
+/* ---------- Notion 分割线：粉金渐变 ---------- */
+#notion-article hr {
+  border: none;
+  height: 3px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(236, 72, 153, 0.15) 20%,
+    #EC4899 50%,
+    rgba(251, 191, 36, 0.5) 80%,
+    transparent 100%);
+  margin: 2.5rem 0;
+}
+
+/* ---------- Dashboard 个人中心页面卡片增强 ---------- */
+[data-page="dashboard"] .card,
+[data-layout="dashboard"] .endspace-frame,
+.dashboard-card {
+  position: relative;
+  overflow: hidden;
+}
+[data-page="dashboard"] .card::before,
+[data-layout="dashboard"] .endspace-frame::before,
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(236, 72, 153, 0.08),
+    rgba(251, 191, 36, 0.08),
+    transparent);
+  transition: left 0.8s ease;
+  pointer-events: none;
+}
+[data-page="dashboard"] .card:hover::before,
+[data-layout="dashboard"] .endspace-frame:hover::before,
+.dashboard-card:hover::before {
+  left: 100%;
+}
+
+/* ---------- APlayer 音乐播放器颜色注入（粉色+金） ---------- */
+.aplayer {
+  --theme-color: #EC4899;
+  border: 1px solid rgba(236, 72, 153, 0.2) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.15) !important;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+.aplayer .aplayer-list ol li:hover {
+  background: rgba(236, 72, 153, 0.1) !important;
+}
+.aplayer .aplayer-info .aplayer-music .aplayer-title {
+  color: #831843 !important;
+  font-weight: 600;
+}
+
+/* ---------- 樱花飘落层加速（可选，更仙） ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  [id*="sakura"] { animation-duration: 8s !important; }
+}
+
+/* ---------- 空状态插图：粉金光晕 ---------- */
+.empty-state::before,
+.no-result::before {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 300px; height: 300px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle,
+    rgba(236, 72, 153, 0.18) 0%,
+    rgba(251, 191, 36, 0.08) 40%,
+    transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: -1;
 }

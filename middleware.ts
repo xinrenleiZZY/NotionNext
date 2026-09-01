@@ -8,8 +8,8 @@ import BLOG from './blog.config'
  * Clerk 身份验证中间件
  */
 export const config = {
-  // 这里设置白名单，防止静态资源被拦截
-  matcher: ['/((?!.*\\..*|_next|/sign-in|/auth).*)', '/', '/(api|trpc)(.*)']
+  // 白名单：静态资源(带.)/_next/sign-in/sign-up/dashboard/auth 不进入 matcher 首条；/与/api|trpc独立放行
+  matcher: ['/((?!.*\\..*|_next|/sign-in|/sign-up|/dashboard|/auth).*)', '/', '/(api|trpc)(.*)']
 }
 
 // 限制登录访问的路由
