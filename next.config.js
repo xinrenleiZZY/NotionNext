@@ -5,6 +5,27 @@ const { extractLangPrefix } = require('./lib/utils/pageId')
 const { isExport } = require('./lib/utils/buildMode')
 const { getStaticPageGenerationTimeoutSec } = require('./lib/build/buildEnv')
 
+/**
+ * 在 rewrites() 等回调函数内读取"最新"的 blog.config
+ * — 因为 jest 测试会清空 require.cache 后重新设置 env 变量，此时顶层 BLOG 仍是首次加载时的旧对象
+ * — 通过删除缓存并 require() 拿到新 env 值生效的对象
+ * — 生产态（测试环境外）使用内存中的 BLOG（保持零开销）
+ */
+function getBlogRuntime() {
+  if (process.env.JEST_WORKER_ID || process.env.NODE_ENV === 'test') {
+    const p = path.resolve(__dirname, 'blog.config.js')
+    // 清 conf/* 缓存（它们读取 env 后会被缓存）
+    for (const k of Object.keys(require.cache)) {
+      if (k.startsWith(path.resolve(__dirname, 'conf') + path.sep)) {
+        delete require.cache[k]
+      }
+    }
+    delete require.cache[p]
+    return require(p)
+  }
+  return BLOG
+}
+
 // 打包时是否分析代码
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: BLOG.BUNDLE_ANALYZER
@@ -266,10 +287,12 @@ const nextConfig = {
   rewrites: process.env.EXPORT
     ? undefined
     : () => {
+      // 回调内读运行时最新 config（Jest 缓存清掉后仍能拿到新 env 值）
+      const B = getBlogRuntime()
       // 处理多语言重定向
       const langsRewrites = []
-      if (BLOG.NOTION_PAGE_ID.indexOf(',') > 0) {
-        const siteIds = BLOG.NOTION_PAGE_ID.split(',')
+      if (B.NOTION_PAGE_ID.indexOf(',') > 0) {
+        const siteIds = B.NOTION_PAGE_ID.split(',')
         const langs = []
         for (const siteId of siteIds) {
           const prefix = extractLangPrefix(siteId)
@@ -315,11 +338,15 @@ const nextConfig = {
           source: '/rss/feed.json',
           destination: '/api/rss?format=json'
         },
-        // 伪静态重写
-        {
-          source: '/:path*.html',
-          destination: '/:path*'
-        }
+        // 伪静态重写（只有当 PSEUDO_STATIC=true 时才启用；否则 .html 路径可能触发重写循环导致 Empty Reply）
+        ...(B.PSEUDO_STATIC
+          ? [
+            {
+              source: '/:path*.html',
+              destination: '/:path*'
+            }
+          ]
+          : [])
       ]
     },
   headers: process.env.EXPORT
