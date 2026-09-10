@@ -4,7 +4,9 @@
 // 🔒 启动期环境变量健康检查（仙帝·永恒仙庭·强校验模式）
 // ============================================================================
 (function bootSanityCheck() {
-  const PLACEHOLDER_NOTION_PAGE_ID = 'a335633a431182edbf048156d97c43eb'
+  // 明显的占位符字符串，绝不可能是真实 Notion Page ID（32 位 hex）。
+  // 之前误把某个真实 ID 当占位符，导致用户正确配置后仍触发"占位符"警告。
+  const PLACEHOLDER_NOTION_PAGE_ID = 'REPLACE_WITH_YOUR_NOTION_PAGE_ID'
   const NOTION_PAGE_ID = (process.env.NOTION_PAGE_ID || PLACEHOLDER_NOTION_PAGE_ID).trim()
 
   // 1) 占位符 ID 检测 + 强警告
@@ -75,7 +77,7 @@ const BLOG = {
   // Important page_id！！！Duplicate Template from  https://tanghh.notion.site/02ab3b8678004aa69e9e415905ef32a5
   NOTION_PAGE_ID:
     process.env.NOTION_PAGE_ID ||
-    'a335633a431182edbf048156d97c43eb',
+    'REPLACE_WITH_YOUR_NOTION_PAGE_ID',
   THEME: process.env.NEXT_PUBLIC_THEME || 'endspace', // 当前主题，在themes文件夹下可找到所有支持的主题；主题名称就是文件夹名，例如 claude,endspace,example,fukasawa,fuwari,gitbook,heo,hexo,landing,matery,medium,next,nobelium,plog,simple
   LANG: process.env.NEXT_PUBLIC_LANG || 'zh-CN', // e.g 'zh-CN','en-US'  see /lib/lang.js for more.
   SINCE: process.env.NEXT_PUBLIC_SINCE || 2025, // e.g if leave this empty, current year will be used.
