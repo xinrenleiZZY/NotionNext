@@ -9,7 +9,7 @@ export const TitleBar = ({ post }) => {
   const marqueeText = siteConfig('ENDSPACE_BANNER_WATERMARK_TEXT', 'CLOUD09_SPACE', CONFIG)
 
   return (
-    <div className="relative py-20 md:py-28 border-b-2 border-[var(--endspace-border-base)] overflow-hidden bg-[var(--endspace-bg-base)]">
+    <div className="relative py-10 md:py-14 border-b-2 border-[var(--endspace-border-base)] overflow-hidden bg-[var(--endspace-bg-base)]">
       {/* Post Cover Image Background - shown on article pages */}
       {post && post.pageCoverThumbnail && (
         <div className="absolute inset-0">
@@ -41,7 +41,7 @@ export const TitleBar = ({ post }) => {
       {!post && (
         <div className="absolute inset-0 flex items-center opacity-[0.15] pointer-events-none overflow-hidden">
           <div className="bg-watermark-scroll whitespace-nowrap leading-none">
-            <span className="text-[10rem] md:text-[14rem] font-black text-[var(--endspace-text-primary)] select-none">
+            <span className="text-[5rem] md:text-[7rem] font-black text-[var(--endspace-text-primary)] select-none">
               {marqueeText}
               <span className="mx-[5vw] text-[var(--endspace-text-muted)]">&#x2022;</span>
               {marqueeText}

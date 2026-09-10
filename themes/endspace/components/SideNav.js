@@ -54,6 +54,23 @@ const IconComponents = {
   'Portfolio': ProfileFillIcon
 }
 
+/**
+ * 从导航文本中提取自带的 emoji 图标。
+ * 用户在 Notion 里配置的导航名形如 "🏠 首页"、"📝 修行日志"，
+ * 首字符就是 emoji，直接用它作为图标，不再用 remixicon 覆盖。
+ * 返回 { emoji, rest }：emoji 为首字符 emoji（可能为空），rest 为去掉 emoji 后的剩余文本。
+ */
+const EMOJI_LEAD_REGEX = /^(\p{Extended_Pictographic}|\p{Emoji_Presentation}|\p{Emoji})/u
+const extractLeadEmoji = (name) => {
+  if (!name || typeof name !== 'string') return { emoji: '', rest: name || '' }
+  const m = name.match(EMOJI_LEAD_REGEX)
+  if (m && m[0]) {
+    const emoji = m[0]
+    return { emoji, rest: name.slice(emoji.length).replace(/^[\s•·・]+/, '').trim() }
+  }
+  return { emoji: '', rest: name }
+}
+
 // Social icon mapping
 const SocialIconComponents = {
   'CONTACT_GITHUB': GithubFillIcon,
@@ -226,14 +243,22 @@ export const SideNav = (props) => {
                 ref={el => itemRefs.current[item.name] = el}
                 className={`nier-nav-item relative h-[3rem] flex items-center cursor-pointer group transition-colors duration-300 hover:bg-[#d4d4d8] ${isActive ? 'active bg-[#d4d4d8]' : ''}`}
               >
-                {/* Icon Container */}
-                <div className="w-[5rem] flex-shrink-0 flex items-center justify-center z-10">
-                  {item.icon ? <i className={item.icon} /> : renderIcon(item.name, isActive)}
+                {/* Icon Container - 优先用导航文本自带的 emoji，否则 fallback 到 remixicon */}
+                <div className="w-[5rem] flex-shrink-0 flex items-center justify-center z-10 text-xl">
+                  {(() => {
+                    const { emoji, rest } = extractLeadEmoji(item.name)
+                    if (emoji) return <span aria-hidden="true">{emoji}</span>
+                    if (item.icon) return <i className={item.icon} />
+                    return renderIcon(rest || item.name, isActive)
+                  })()}
                 </div>
 
-                {/* Text Label (Reveal on Hover) */}
+                {/* Text Label (Reveal on Hover) - 去掉首 emoji 后的文本 */}
                 <span className={`text-sm font-medium tracking-wide uppercase whitespace-nowrap transition-opacity duration-300 z-10 ${isHovered ? 'opacity-100 delay-75' : 'opacity-0 w-0'}`}>
-                  {item.name.toUpperCase()}
+                  {(() => {
+                    const { emoji, rest } = extractLeadEmoji(item.name)
+                    return (emoji ? rest : item.name).toUpperCase()
+                  })()}
                 </span>
                 {hasSubMenu && (
                   <span className={`ml-auto pr-4 text-xs transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
@@ -254,11 +279,19 @@ export const SideNav = (props) => {
                         target={subMenu.target || item.target}
                         className='flex h-10 items-center text-sm font-medium text-[var(--endspace-text-secondary)] transition-colors hover:bg-[#d4d4d8] hover:text-black'
                       >
-                        <span className='flex w-[5rem] flex-shrink-0 items-center justify-center text-xs'>
-                          {subMenu.icon ? <i className={subMenu.icon} /> : renderIcon(subMenu.name, false)}
+                        <span className='flex w-[5rem] flex-shrink-0 items-center justify-center text-base'>
+                          {(() => {
+                            const { emoji, rest } = extractLeadEmoji(subMenu.name)
+                            if (emoji) return <span aria-hidden="true">{emoji}</span>
+                            if (subMenu.icon) return <i className={subMenu.icon} />
+                            return renderIcon(rest || subMenu.name, false)
+                          })()}
                         </span>
                         <span className='min-w-0 flex-1 truncate pr-4 text-xs uppercase tracking-wide'>
-                          {subMenu.name}
+                          {(() => {
+                            const { emoji, rest } = extractLeadEmoji(subMenu.name)
+                            return (emoji ? rest : subMenu.name)
+                          })()}
                         </span>
                       </SmartLink>
                     ))}

@@ -176,33 +176,32 @@ export const EndspacePlayer = ({ isExpanded }) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  // Collapsed State: Rotating cover when playing, music icon when not
+  // Collapsed State: 紫色渐变播放按钮（收起态）
   if (!isExpanded) {
     return (
       <div className="endspace-player-mini flex justify-center py-2">
-        <div 
+        <div
           className={`relative w-10 h-10 cursor-pointer group flex items-center justify-center`}
           onClick={togglePlay}
         >
           {isPlaying ? (
-            // Playing: Show rotating album cover
+            // 播放中：旋转封面 + 紫色光晕
             <>
               <div className="w-full h-full rounded-full overflow-hidden endspace-player-glow endspace-player-rotating">
-                <img 
-                  src={currentAudio.cover || '/default-cover.jpg'} 
+                <img
+                  src={currentAudio.cover || '/default-cover.jpg'}
                   alt="Cover"
                   className="w-full h-full object-cover"
                 />
               </div>
-              {/* Pause overlay on hover */}
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                 <IconPlayerPause size={14} stroke={2} className="text-white" />
               </div>
             </>
           ) : (
-            // Not playing: Show music icon
-            <div className="w-full h-full rounded-lg flex items-center justify-center bg-[var(--endspace-bg-secondary)] text-[var(--endspace-text-muted)] hover:text-gray-600 hover:bg-gray-200 transition-all">
-              <IconMusic size={18} stroke={1.5} />
+            // 未播放：紫色渐变播放按钮
+            <div className="endspace-player-btn-purple w-full h-full flex items-center justify-center">
+              <IconMusic size={16} stroke={1.8} className="text-white" />
             </div>
           )}
         </div>
@@ -210,47 +209,37 @@ export const EndspacePlayer = ({ isExpanded }) => {
     )
   }
 
-  // Expanded State: Compact player with album cover as play button
+  // Expanded State: 参考图风格 - 圆角卡片 + 紫色渐变播放按钮
   return (
-    <div className="endspace-player-full px-3 py-3 relative">
-      {/* Main Content Row */}
-      <div className="flex gap-3 items-start">
-        {/* Album Cover with integrated play button */}
-        <div 
-          className={`relative flex-shrink-0 w-12 h-12 rounded cursor-pointer overflow-hidden group ${isPlaying ? 'endspace-player-glow' : ''}`}
-          onClick={togglePlay}
-        >
-          <img 
-            src={currentAudio.cover || '/default-cover.jpg'} 
+    <div className="endspace-player-card mx-2 mb-2 px-3 py-3 relative">
+      {/* 主内容行 */}
+      <div className="flex gap-3 items-center">
+        {/* 专辑封面 - 圆角矩形 */}
+        <div className="endspace-player-cover relative flex-shrink-0 w-11 h-11">
+          <img
+            src={currentAudio.cover || '/default-cover.jpg'}
             alt="Album Cover"
             className={`w-full h-full object-cover transition-transform duration-300 ${isPlaying ? 'scale-105' : ''}`}
           />
-          {/* Play/Pause Overlay */}
-          <div className={`absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
-            {isPlaying ? (
-              <IconPlayerPause size={16} stroke={2} className="text-white" />
-            ) : (
-              <IconPlayerPlay size={16} stroke={2} className="text-white ml-0.5" />
-            )}
-          </div>
         </div>
 
-        {/* Track Info */}
+        {/* 歌曲信息 */}
         <div className="flex-1 min-w-0 flex flex-col justify-center">
           <div className="text-sm font-bold text-[var(--endspace-text-primary)] truncate leading-tight">
             {currentAudio.name || 'Unknown Track'}
           </div>
-          <div className="text-xs text-[var(--endspace-text-muted)] truncate mt-0.5">
-            {currentAudio.artist || 'Unknown Artist'}
+          <div className="text-xs text-[var(--endspace-text-muted)] truncate mt-0.5 flex items-center gap-1.5">
+            <span className="truncate">{currentAudio.artist || 'Unknown Artist'}</span>
+            <span className="endspace-tag-green flex-shrink-0">FREE</span>
           </div>
-          {/* Progress Bar */}
+          {/* 进度条 */}
           <div className="mt-1.5 flex items-center gap-2">
-            <div 
-              className="flex-1 h-1 bg-[var(--endspace-bg-tertiary)] rounded-full cursor-pointer overflow-hidden"
+            <div
+              className="endspace-player-progress-track flex-1 h-1 cursor-pointer"
               onClick={handleProgressClick}
             >
-              <div 
-                className="h-full bg-[var(--endspace-accent-yellow)] transition-all duration-200"
+              <div
+                className="endspace-player-progress h-full"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -260,56 +249,65 @@ export const EndspacePlayer = ({ isExpanded }) => {
           </div>
         </div>
 
-          {/* Right side: Playlist button + Prev/Next buttons */}
-        <div className="flex flex-col items-center gap-1">
-          {/* Playlist Toggle Button */}
-          <button 
-            onClick={(e) => { e.stopPropagation(); setShowPlaylist(!showPlaylist) }}
-            className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${showPlaylist ? 'bg-black text-white' : 'text-[var(--endspace-text-muted)] hover:text-black'}`}
-            title="Playlist"
-          >
-            <IconList size={12} stroke={1.5} />
-          </button>
-          
-          {/* Prev/Next Buttons (horizontal) */}
-          <div className="flex items-center gap-0.5">
-            <button 
-              onClick={playPrev}
-              className="w-5 h-5 flex items-center justify-center text-[var(--endspace-text-muted)] hover:text-black transition-colors"
-              title="Previous"
-            >
-              <IconPlayerTrackPrev size={11} stroke={1.5} />
-            </button>
-            <button 
-              onClick={playNext}
-              className="w-5 h-5 flex items-center justify-center text-[var(--endspace-text-muted)] hover:text-black transition-colors"
-              title="Next"
-            >
-              <IconPlayerTrackNext size={11} stroke={1.5} />
-            </button>
-          </div>
-        </div>
+        {/* 紫色渐变播放按钮（参考图核心视觉） */}
+        <button
+          onClick={togglePlay}
+          className="endspace-player-btn-purple flex-shrink-0 w-10 h-10 flex items-center justify-center"
+          title={isPlaying ? 'Pause' : 'Play'}
+        >
+          {isPlaying ? (
+            <IconPlayerPause size={16} stroke={2} className="text-white" />
+          ) : (
+            <IconPlayerPlay size={16} stroke={2} className="text-white ml-0.5" />
+          )}
+        </button>
       </div>
 
-      {/* Playlist Dropdown */}
+      {/* 次级操作行：列表 + 上下首 */}
+      <div className="mt-2 flex items-center justify-between px-1">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={playPrev}
+            className="w-6 h-6 flex items-center justify-center text-[var(--endspace-text-muted)] hover:text-[var(--endspace-text-primary)] transition-colors"
+            title="Previous"
+          >
+            <IconPlayerTrackPrev size={12} stroke={1.5} />
+          </button>
+          <button
+            onClick={playNext}
+            className="w-6 h-6 flex items-center justify-center text-[var(--endspace-text-muted)] hover:text-[var(--endspace-text-primary)] transition-colors"
+            title="Next"
+          >
+            <IconPlayerTrackNext size={12} stroke={1.5} />
+          </button>
+        </div>
+        <button
+          onClick={(e) => { e.stopPropagation(); setShowPlaylist(!showPlaylist) }}
+          className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${showPlaylist ? 'bg-[var(--endspace-text-primary)] text-white' : 'text-[var(--endspace-text-muted)] hover:text-[var(--endspace-text-primary)]'}`}
+          title="Playlist"
+        >
+          <IconList size={13} stroke={1.5} />
+        </button>
+      </div>
+
+      {/* 播放列表下拉 */}
       {showPlaylist && (
-        <div className="mt-2 max-h-36 overflow-y-auto bg-[var(--endspace-bg-secondary)] rounded">
+        <div className="mt-2 max-h-36 overflow-y-auto bg-[var(--endspace-bg-secondary)] rounded-lg">
           {audioList.map((audio, index) => (
-            <div 
+            <div
               key={index}
               onClick={() => selectTrack(index)}
               className={`px-3 py-1.5 cursor-pointer transition-colors ${
-                index === currentTrack 
-                  ? 'bg-black text-white' 
+                index === currentTrack
+                  ? 'bg-[var(--endspace-bg-tertiary)]'
                   : 'hover:bg-[var(--endspace-bg-tertiary)]'
               }`}
             >
-              {/* Song name line */}
               <div className={`text-xs truncate flex items-center gap-1.5 ${
-                index === currentTrack ? 'text-white font-medium' : 'text-[var(--endspace-text-secondary)]'
+                index === currentTrack ? 'text-[var(--endspace-text-primary)] font-medium' : 'text-[var(--endspace-text-secondary)]'
               }`}>
                 {index === currentTrack && isPlaying && (
-                  <IconVolume size={11} stroke={1.5} className="flex-shrink-0" />
+                  <IconVolume size={11} stroke={1.5} className="flex-shrink-0 text-[var(--endspace-brand-purple-to)]" />
                 )}
                 {index === currentTrack && !isPlaying && (
                   <IconPlayerPause size={11} stroke={1.5} className="flex-shrink-0" />
@@ -319,7 +317,6 @@ export const EndspacePlayer = ({ isExpanded }) => {
                 )}
                 <span className="truncate">{audio.name}</span>
               </div>
-              {/* Artist name line (smaller) */}
               <div className="text-[10px] text-[var(--endspace-text-muted)] truncate pl-4 mt-0.5">
                 {audio.artist}
               </div>

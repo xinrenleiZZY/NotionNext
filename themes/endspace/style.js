@@ -21,15 +21,19 @@ export const Style = () => {
         --endspace-text-secondary: #52525b;
         --endspace-text-muted: #a1a1aa;
         
-        /* Accents (Subtle Industrialism) -> Converted to Yellow Suite */
-        --endspace-accent-yellow: #EC4899;
-        --endspace-accent-yellow-dim: rgba(251, 251, 69, 0.15);
-        --endspace-accent-cyan: #EC4899; /* OVERRIDE: Cyan usage -> Yellow 500 */
-        --endspace-accent-cyan-dim: rgba(251, 251, 69, 0.1); /* OVERRIDE: Cyan dim -> Yellow dim */
+        /* Accents - 参考图紫色品牌强调色 */
+        --endspace-accent-yellow: #8B5CF6;
+        --endspace-accent-yellow-dim: rgba(139, 92, 246, 0.15);
+        --endspace-accent-cyan: #8B5CF6;
+        --endspace-accent-cyan-dim: rgba(139, 92, 246, 0.1);
+        /* 播放器专用：紫色渐变 + 状态绿 */
+        --endspace-brand-purple-from: #7C3AED;
+        --endspace-brand-purple-to: #A855F7;
+        --endspace-status-green: #10B981;
         
         /* Borders & Lines */
         --endspace-border-base: #e4e4e7;
-        --endspace-border-active: #EC4899; /* Active border -> Yellow */
+        --endspace-border-active: #8B5CF6;
         --endspace-grid-color: rgba(0,0,0,0.03);
         
         /* Shadows - Enhanced 3D Depth */
@@ -55,13 +59,16 @@ export const Style = () => {
         --endspace-text-secondary: #a1a1aa;
         --endspace-text-muted: #71717a;
         
-        --endspace-accent-yellow: #EC4899;
-        --endspace-accent-yellow-dim: rgba(251, 251, 69, 0.15);
-        --endspace-accent-cyan: #EC4899; /* Dark Mode: Yellow 600 */
-        --endspace-accent-cyan-dim: rgba(251, 251, 69, 0.1);
+        --endspace-accent-yellow: #8B5CF6;
+        --endspace-accent-yellow-dim: rgba(139, 92, 246, 0.15);
+        --endspace-accent-cyan: #8B5CF6;
+        --endspace-accent-cyan-dim: rgba(139, 92, 246, 0.1);
+        --endspace-brand-purple-from: #7C3AED;
+        --endspace-brand-purple-to: #A855F7;
+        --endspace-status-green: #34D399;
         
         --endspace-border-base: #27272a;
-        --endspace-border-active: #EC4899;
+        --endspace-border-active: #8B5CF6;
         --endspace-grid-color: rgba(255,255,255,0.02);
         
         --endspace-shadow-base: 
@@ -471,8 +478,71 @@ export const Style = () => {
       }
 
       /* ============================================
-         Player Styles
+         Player Styles - 参考图风格：圆角卡片 + 紫色渐变按钮 + 绿色标签
          ============================================ */
+      /* 播放器浮层卡片：圆角 + 白底 + 向上柔和阴影 */
+      .endspace-player-card {
+        background: var(--endspace-bg-primary);
+        border-radius: 14px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+        border: 1px solid var(--endspace-border-base);
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .endspace-player-card:hover {
+        box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+      }
+      .dark .endspace-player-card {
+        background: rgba(39, 39, 42, 0.9);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* 紫色渐变播放按钮（参考图核心视觉） */
+      .endspace-player-btn-purple {
+        background: linear-gradient(135deg, var(--endspace-brand-purple-from), var(--endspace-brand-purple-to));
+        color: #fff;
+        border-radius: 9999px;
+        box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .endspace-player-btn-purple:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+      }
+      .endspace-player-btn-purple:active {
+        transform: scale(0.96);
+      }
+
+      /* 专辑封面圆角矩形 */
+      .endspace-player-cover {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 进度条紫色填充 */
+      .endspace-player-progress {
+        background: linear-gradient(90deg, var(--endspace-brand-purple-from), var(--endspace-brand-purple-to));
+        border-radius: 9999px;
+        transition: width 0.2s linear;
+      }
+      .endspace-player-progress-track {
+        background: var(--endspace-bg-tertiary);
+        border-radius: 9999px;
+        overflow: hidden;
+      }
+
+      /* 绿色"免费/状态"胶囊标签 */
+      .endspace-tag-green {
+        background: var(--endspace-status-green);
+        color: #fff;
+        border-radius: 9999px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        padding: 0.1rem 0.5rem;
+        letter-spacing: 0.05em;
+      }
+
       .endspace-player-glow {
         box-shadow: 0 0 10px var(--endspace-accent-yellow);
       }
