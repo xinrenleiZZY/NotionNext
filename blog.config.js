@@ -1,64 +1,12 @@
 // 注: process.env.XX是Vercel的环境变量，配置方式见：https://docs.tangly1024.com/article/how-to-config-notion-next#c4768010ae7d44609b744e79e2f9959a
 
-// ============================================================================
-// 🔒 启动期环境变量健康检查（仙帝·永恒仙庭·强校验模式）
-// ============================================================================
-(function bootSanityCheck() {
-  // 明显的占位符字符串，绝不可能是真实 Notion Page ID（32 位 hex）。
-  // 之前误把某个真实 ID 当占位符，导致用户正确配置后仍触发"占位符"警告。
-  const PLACEHOLDER_NOTION_PAGE_ID = 'REPLACE_WITH_YOUR_NOTION_PAGE_ID'
-  const NOTION_PAGE_ID = (process.env.NOTION_PAGE_ID || PLACEHOLDER_NOTION_PAGE_ID).trim()
+// 注：曾在此处放置"启动期环境变量健康检查" IIFE，但它存在两个缺陷：
+//   1) 把用户的真实 Notion Page ID 误判为官方占位符（官方模板 ID 实为 02ab3b8678004aa69e9e415905ef32a5）；
+//   2) 该 IIFE 在客户端也会执行，而 process.env.NOTION_PAGE_ID 没有 NEXT_PUBLIC_ 前缀，
+//      客户端拿不到值会 fallback 到占位符并误触发警告，让用户以为配置没生效。
+//   因此整体移除，回归 NotionNext 上游的简洁默认值处理逻辑。
+//   若 Notion API 报 403，请在 Vercel / .env.local 设置 NOTION_TOKEN_V2（从浏览器 Notion Cookie 提取 token_v2）。
 
-  // 1) 占位符 ID 检测 + 强警告
-  if (NOTION_PAGE_ID === PLACEHOLDER_NOTION_PAGE_ID) {
-    const line = '═'.repeat(78)
-    const banner = [
-      '',
-      line,
-      ' ⚠️   NOTION_PAGE_ID 仍然使用【示例占位符】！',
-      ' ──────────────────────────────────────────────────────────────────────────',
-      '   当前值：' + PLACEHOLDER_NOTION_PAGE_ID,
-      '',
-      '   👉 Notion API 会返回 403 Forbidden，你会遇到：',
-      '      · 所有文章列表为空，点击文章"跳转后没内容"',
-      '      · 分类页/标签页/搜索页虽然 200 但没有任何博文',
-      '      · /api/rss 返回 503',
-      '',
-      '   👉 30 秒修复步骤：',
-      '      1) 打开项目根目录 → 创建/编辑 .env.local',
-      '      2) 复制官方模板  https://tanghh.notion.site/02ab3b8678004aa69e9e415905ef32a5',
-      '      3) 重复该页面到自己的 Notion 工作区后，复制新的 Page ID 粘贴进去：',
-      '          NOTION_PAGE_ID=你自己的32位Notion页面ID（可带或不带 - ）',
-      '      4) 如需解除 403，建议额外填：NOTION_TOKEN_V2=你的notion_token_v2 Cookie值',
-      '      5) 重启 npm run dev',
-      line,
-      ''
-    ].join('\n')
-    console.warn(banner)
-  }
-
-  // 2) 生产态（Vercel）下 LINK 域名必须和真实访问域名一致，避免跳转资源加载跨域
-  const LINK = process.env.NEXT_PUBLIC_LINK || 'https://jxspace.top'
-  try {
-    const url = new URL(LINK)
-    if (!['http:', 'https:'].includes(url.protocol)) {
-      console.warn('⚠️  [blog.config] NEXT_PUBLIC_LINK 协议必须是 http:// 或 https://，当前：', LINK)
-    }
-  } catch (_) {
-    console.warn('⚠️  [blog.config] NEXT_PUBLIC_LINK 不是合法 URL：', LINK, '—— 内部拼接的 canonical 链接会出错')
-  }
-
-  // 3) NOTION_TOKEN_V2 空值 + 生产环境：给一条提醒（403 时用户才知道怎么办）
-  if (
-    process.env.NODE_ENV === 'production' &&
-    !(process.env.NOTION_TOKEN_V2 || '').trim()
-  ) {
-    console.warn(
-      'ℹ️  [blog.config] 生产环境未设置 NOTION_TOKEN_V2；若 Notion API 报 403，请在 .env.local 中填写',
-      'NOTION_TOKEN_V2=（从浏览器 Notion Cookie 中提取 token_v2 的值）'
-    )
-  }
-})()
 
 /**
  * 布尔环境变量解析器：区分 string/false/0/off → false
