@@ -25,7 +25,7 @@ const VideoBackground = () => {
         loop
         playsInline
         className='h-full w-full object-cover opacity-40'
-        style={{ filter: 'blur(3px) scale(1.05)' }}
+        style={{ filter: 'scale(1.05)' }}
       >
         <source
           src={process.env.NEXT_PUBLIC_BG_VIDEO || '/bg-video.mp4'}

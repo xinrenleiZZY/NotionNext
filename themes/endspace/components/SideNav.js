@@ -31,7 +31,7 @@ import Compass3FillIcon from 'remixicon-react/Compass3FillIcon'
 import EarthFillIcon from 'remixicon-react/EarthFillIcon'
 import ProfileFillIcon from 'remixicon-react/ProfileFillIcon'
 
-  // Social Icons (Solid)
+// Social Icons (Solid)
 import GithubFillIcon from 'remixicon-react/GithubFillIcon'
 import WeiboFillIcon from 'remixicon-react/WeiboFillIcon'
 import BilibiliFillIcon from 'remixicon-react/BilibiliFillIcon'
@@ -45,13 +45,13 @@ import MailFillIcon from 'remixicon-react/MailFillIcon'
 
 // Icon mapping (Conceptual Remix Icons)
 const IconComponents = {
-  'Home': AppsFillIcon,
-  'Category': FolderFillIcon,
-  'Tag': BarcodeFillIcon,
-  'Archive': StackFillIcon,
-  'Search': Compass3FillIcon,
-  'Friends': EarthFillIcon,
-  'Portfolio': ProfileFillIcon
+  Home: AppsFillIcon,
+  Category: FolderFillIcon,
+  Tag: BarcodeFillIcon,
+  Archive: StackFillIcon,
+  Search: Compass3FillIcon,
+  Friends: EarthFillIcon,
+  Portfolio: ProfileFillIcon
 }
 
 /**
@@ -60,32 +60,39 @@ const IconComponents = {
  * 首字符就是 emoji，直接用它作为图标，不再用 remixicon 覆盖。
  * 返回 { emoji, rest }：emoji 为首字符 emoji（可能为空），rest 为去掉 emoji 后的剩余文本。
  */
-const EMOJI_LEAD_REGEX = /^(\p{Extended_Pictographic}|\p{Emoji_Presentation}|\p{Emoji})/u
-const extractLeadEmoji = (name) => {
+const EMOJI_LEAD_REGEX =
+  /^(\p{Extended_Pictographic}|\p{Emoji_Presentation}|\p{Emoji})/u
+const extractLeadEmoji = name => {
   if (!name || typeof name !== 'string') return { emoji: '', rest: name || '' }
   const m = name.match(EMOJI_LEAD_REGEX)
   if (m && m[0]) {
     const emoji = m[0]
-    return { emoji, rest: name.slice(emoji.length).replace(/^[\s•·・]+/, '').trim() }
+    return {
+      emoji,
+      rest: name
+        .slice(emoji.length)
+        .replace(/^[\s•·・]+/, '')
+        .trim()
+    }
   }
   return { emoji: '', rest: name }
 }
 
 // Social icon mapping
 const SocialIconComponents = {
-  'CONTACT_GITHUB': GithubFillIcon,
-  'CONTACT_TWITTER': IconBrandX,
-  'CONTACT_WEIBO': WeiboFillIcon,
-  'CONTACT_BILIBILI': BilibiliFillIcon,
-  'CONTACT_TELEGRAM': TelegramFillIcon,
-  'CONTACT_INSTAGRAM': InstagramFillIcon,
-  'CONTACT_YOUTUBE': YoutubeFillIcon,
-  'CONTACT_LINKEDIN': LinkedinBoxFillIcon,
-  'CONTACT_WEHCHAT_PUBLIC': WechatFillIcon,
-  'CONTACT_ZHISHIXINGQIU': GlobeFillIcon
+  CONTACT_GITHUB: GithubFillIcon,
+  CONTACT_TWITTER: IconBrandX,
+  CONTACT_WEIBO: WeiboFillIcon,
+  CONTACT_BILIBILI: BilibiliFillIcon,
+  CONTACT_TELEGRAM: TelegramFillIcon,
+  CONTACT_INSTAGRAM: InstagramFillIcon,
+  CONTACT_YOUTUBE: YoutubeFillIcon,
+  CONTACT_LINKEDIN: LinkedinBoxFillIcon,
+  CONTACT_WEHCHAT_PUBLIC: WechatFillIcon,
+  CONTACT_ZHISHIXINGQIU: GlobeFillIcon
 }
 
-export const SideNav = (props) => {
+export const SideNav = props => {
   const router = useRouter()
   const { siteInfo } = useGlobal()
   const { customNav, customMenu } = props
@@ -95,9 +102,10 @@ export const SideNav = (props) => {
   const navRef = useRef(null)
   const itemRefs = useRef({})
   const emailIcon = useRef(null)
-  
+
   // Get avatar from props or global context (Hexo way uses props)
-  const avatarUrl = props?.siteInfo?.icon || siteInfo?.icon || siteConfig('AVATAR')
+  const avatarUrl =
+    props?.siteInfo?.icon || siteInfo?.icon || siteConfig('AVATAR')
 
   const menuItems = useMemo(
     () => buildMenuItems({ customNav, customMenu }),
@@ -113,22 +121,26 @@ export const SideNav = (props) => {
     { key: 'CONTACT_TELEGRAM', label: 'Telegram' },
     { key: 'CONTACT_INSTAGRAM', label: 'Instagram' },
     { key: 'CONTACT_YOUTUBE', label: 'YouTube' },
-    { key: 'CONTACT_XIAOHONGSHU', svg: '/svg/xiaohongshu.svg', label: 'Xiaohongshu' },
+    {
+      key: 'CONTACT_XIAOHONGSHU',
+      svg: '/svg/xiaohongshu.svg',
+      label: 'Xiaohongshu'
+    },
     { key: 'CONTACT_LINKEDIN', label: 'LinkedIn' },
     { key: 'CONTACT_ZHISHIXINGQIU', label: 'Zhishixingqiu' },
-    { key: 'CONTACT_WEHCHAT_PUBLIC', label: 'WeChat' },
+    { key: 'CONTACT_WEHCHAT_PUBLIC', label: 'WeChat' }
   ]
 
   const CONTACT_EMAIL = siteConfig('CONTACT_EMAIL')
 
   // Update indicator position - with validation to prevent stuck indicator
-  const updateIndicatorPosition = (tabName) => {
+  const updateIndicatorPosition = tabName => {
     const itemEl = itemRefs.current[tabName]
     const navEl = navRef.current
     if (itemEl && navEl) {
       const navRect = navEl.getBoundingClientRect()
       const itemRect = itemEl.getBoundingClientRect()
-      
+
       // Validate that elements have proper dimensions (not zero-height)
       if (itemRect.height > 0 && navRect.height > 0) {
         setIndicatorStyle({
@@ -144,7 +156,7 @@ export const SideNav = (props) => {
     const path = router.asPath
     const activeItem = menuItems.find(item => isMenuItemActive(item, path))
     const newTab = activeItem?.name || 'Home'
-    
+
     setActiveTab(newTab)
   }, [router.asPath, menuItems])
 
@@ -156,7 +168,7 @@ export const SideNav = (props) => {
     })
     return () => cancelAnimationFrame(rafId)
   }, [activeTab])
-  
+
   // Also update on window resize to prevent stuck indicator
   useEffect(() => {
     const handleResize = () => {
@@ -170,8 +182,8 @@ export const SideNav = (props) => {
   const renderIcon = (name, isActive) => {
     const IconComponent = IconComponents[name] || BookMarkFillIcon
     return (
-      <IconComponent 
-        size={20} 
+      <IconComponent
+        size={20}
         stroke={1.5}
         className={`transition-all duration-300 ${isActive ? 'scale-110' : ''}`}
       />
@@ -181,7 +193,13 @@ export const SideNav = (props) => {
   // Render social icon
   const renderSocialIcon = (key, svg, label) => {
     if (svg) {
-      return <img src={svg} alt={label} className="w-3 h-3 opacity-60 hover:opacity-100" />
+      return (
+        <img
+          src={svg}
+          alt={label}
+          className='w-3 h-3 opacity-60 hover:opacity-100'
+        />
+      )
     }
     const IconComponent = SocialIconComponents[key]
     if (IconComponent) {
@@ -191,31 +209,36 @@ export const SideNav = (props) => {
   }
 
   return (
-    <div 
+    <div
       className={`fixed left-0 top-0 bottom-0 z-40 hidden md:flex flex-col bg-[var(--endspace-bg-base)] border-r border-[var(--endspace-border-base)] transition-all duration-300 ease-in-out shadow-md ${isHovered ? 'w-[16rem]' : 'w-[5rem]'}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Avatar Section - Top of sidebar, clickable to personal page */}
       {/* Fixed height container to prevent layout shift when expanded */}
-      <div className="flex-shrink-0 h-[10rem] py-6 flex flex-col items-center">
-        <SmartLink href="/aboutme" title="Profile">
-          <div className="w-[3rem] h-[3rem] flex-shrink-0 transition-transform duration-300 cursor-pointer hover:scale-105">
-            <img 
+      <div className='flex-shrink-0 h-[10rem] py-6 flex flex-col items-center'>
+        <SmartLink href='/aboutme' title='Profile'>
+          <div className='w-[3rem] h-[3rem] flex-shrink-0 transition-transform duration-300 cursor-pointer hover:scale-105'>
+            <img
               src={avatarUrl}
-              alt="Avatar"
-              className="w-full h-full rounded-full object-cover shadow-lg transition-colors"
+              alt='Avatar'
+              className='w-full h-full rounded-full object-cover shadow-lg transition-colors'
             />
           </div>
         </SmartLink>
         {/* Author Info - shown when expanded, fills the reserved space below avatar */}
-        <div className={`mt-3 text-center transition-all duration-300 overflow-hidden ${isHovered ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0'}`}>
-          <SmartLink href="/aboutme" className="hover:text-[var(--endspace-accent-yellow)] transition-colors">
-            <div className="text-sm font-bold text-[var(--endspace-text-primary)] uppercase tracking-wider">
+        <div
+          className={`mt-3 text-center transition-all duration-300 overflow-hidden ${isHovered ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0'}`}
+        >
+          <SmartLink
+            href='/aboutme'
+            className='hover:text-[var(--endspace-accent-yellow)] transition-colors'
+          >
+            <div className='text-sm font-bold text-[var(--endspace-text-primary)] uppercase tracking-wider'>
               {siteConfig('AUTHOR') || ''}
             </div>
           </SmartLink>
-          <div className="text-xs text-[var(--endspace-text-muted)] mt-1 px-3 line-clamp-3 leading-relaxed">
+          <div className='text-xs text-[var(--endspace-text-muted)] mt-1 px-3 line-clamp-3 leading-relaxed'>
             {siteConfig('BIO') || ''}
           </div>
         </div>
@@ -223,14 +246,17 @@ export const SideNav = (props) => {
 
       {/* MIDDLE SECTION - Navigation Items */}
       {/* Reverted to flex-1 as requested to restore original behavior */}
-      <div ref={navRef} className="flex-1 py-4 flex flex-col gap-2 overflow-y-auto overflow-x-hidden relative">
+      <div
+        ref={navRef}
+        className='flex-1 py-4 flex flex-col gap-2 overflow-y-auto overflow-x-hidden relative'
+      >
         {/* Animated Active Indicator Bar - Higher z-index */}
-        <div 
-          className="absolute left-0 w-1.5 h-[3rem] bg-[var(--endspace-text-primary)] transition-all duration-300 ease-out z-10"
+        <div
+          className='absolute left-0 w-1.5 h-[3rem] bg-[var(--endspace-text-primary)] transition-all duration-300 ease-out z-10'
           style={{ top: indicatorStyle.top, opacity: indicatorStyle.opacity }}
         />
-        
-        {menuItems.map((item) => {
+
+        {menuItems.map(item => {
           const hasSubMenu = item.subMenus?.length > 0
           const isActive = activeTab === item.name
           return (
@@ -239,33 +265,37 @@ export const SideNav = (props) => {
               className='group/menu relative'
             >
               <SmartLink href={item.path} target={item.target}>
-              <div 
-                ref={el => itemRefs.current[item.name] = el}
-                className={`nier-nav-item relative h-[3rem] flex items-center cursor-pointer group transition-colors duration-300 hover:bg-[#d4d4d8] ${isActive ? 'active bg-[#d4d4d8]' : ''}`}
-              >
-                {/* Icon Container - 优先用导航文本自带的 emoji，否则 fallback 到 remixicon */}
-                <div className="w-[5rem] flex-shrink-0 flex items-center justify-center z-10 text-xl">
-                  {(() => {
-                    const { emoji, rest } = extractLeadEmoji(item.name)
-                    if (emoji) return <span aria-hidden="true">{emoji}</span>
-                    if (item.icon) return <i className={item.icon} />
-                    return renderIcon(rest || item.name, isActive)
-                  })()}
-                </div>
+                <div
+                  ref={el => (itemRefs.current[item.name] = el)}
+                  className={`nier-nav-item relative h-[3rem] flex items-center cursor-pointer group transition-colors duration-300 hover:bg-[var(--endspace-accent-yellow-dim)] ${isActive ? 'active bg-[var(--endspace-accent-yellow-dim)]' : ''}`}
+                >
+                  {/* Icon Container - 优先用导航文本自带的 emoji，否则 fallback 到 remixicon */}
+                  <div className='w-[5rem] flex-shrink-0 flex items-center justify-center z-10 text-xl'>
+                    {(() => {
+                      const { emoji, rest } = extractLeadEmoji(item.name)
+                      if (emoji) return <span aria-hidden='true'>{emoji}</span>
+                      if (item.icon) return <i className={item.icon} />
+                      return renderIcon(rest || item.name, isActive)
+                    })()}
+                  </div>
 
-                {/* Text Label (Reveal on Hover) - 去掉首 emoji 后的文本 */}
-                <span className={`text-sm font-medium tracking-wide uppercase whitespace-nowrap transition-opacity duration-300 z-10 ${isHovered ? 'opacity-100 delay-75' : 'opacity-0 w-0'}`}>
-                  {(() => {
-                    const { emoji, rest } = extractLeadEmoji(item.name)
-                    return (emoji ? rest : item.name).toUpperCase()
-                  })()}
-                </span>
-                {hasSubMenu && (
-                  <span className={`ml-auto pr-4 text-xs transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-                    &rsaquo;
+                  {/* Text Label (Reveal on Hover) - 去掉首 emoji 后的文本 */}
+                  <span
+                    className={`text-sm font-medium tracking-wide uppercase whitespace-nowrap transition-opacity duration-300 z-10 ${isHovered ? 'opacity-100 delay-75' : 'opacity-0 w-0'}`}
+                  >
+                    {(() => {
+                      const { emoji, rest } = extractLeadEmoji(item.name)
+                      return (emoji ? rest : item.name).toUpperCase()
+                    })()}
                   </span>
-                )}
-              </div>
+                  {hasSubMenu && (
+                    <span
+                      className={`ml-auto pr-4 text-xs transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                    >
+                      &rsaquo;
+                    </span>
+                  )}
+                </div>
               </SmartLink>
               {hasSubMenu && (
                 <div
@@ -277,20 +307,26 @@ export const SideNav = (props) => {
                         key={`${subMenu.name}-${subMenu.path}`}
                         href={subMenu.path}
                         target={subMenu.target || item.target}
-                        className='flex h-10 items-center text-sm font-medium text-[var(--endspace-text-secondary)] transition-colors hover:bg-[#d4d4d8] hover:text-black'
+                        className='flex h-10 items-center text-sm font-medium text-[var(--endspace-text-secondary)] transition-colors hover:bg-[var(--endspace-accent-yellow-dim)] hover:text-[var(--endspace-accent-yellow)]'
                       >
                         <span className='flex w-[5rem] flex-shrink-0 items-center justify-center text-base'>
                           {(() => {
-                            const { emoji, rest } = extractLeadEmoji(subMenu.name)
-                            if (emoji) return <span aria-hidden="true">{emoji}</span>
-                            if (subMenu.icon) return <i className={subMenu.icon} />
+                            const { emoji, rest } = extractLeadEmoji(
+                              subMenu.name
+                            )
+                            if (emoji)
+                              return <span aria-hidden='true'>{emoji}</span>
+                            if (subMenu.icon)
+                              return <i className={subMenu.icon} />
                             return renderIcon(rest || subMenu.name, false)
                           })()}
                         </span>
                         <span className='min-w-0 flex-1 truncate pr-4 text-xs uppercase tracking-wide'>
                           {(() => {
-                            const { emoji, rest } = extractLeadEmoji(subMenu.name)
-                            return (emoji ? rest : subMenu.name)
+                            const { emoji, rest } = extractLeadEmoji(
+                              subMenu.name
+                            )
+                            return emoji ? rest : subMenu.name
                           })()}
                         </span>
                       </SmartLink>
@@ -305,50 +341,51 @@ export const SideNav = (props) => {
 
       {/* BOTTOM SECTION - Tools & Config */}
       {/* Music Player, Contact, and Toggle */}
-      <div className="flex-shrink-0 flex flex-col justify-end h-auto pb-4">
-        
+      <div className='flex-shrink-0 flex flex-col justify-end h-auto pb-4'>
         {/* Music Player Section */}
         <EndspacePlayer isExpanded={isHovered} />
 
         {/* Contact Links Section */}
-        <div className="py-3 transition-all duration-300">
-          
+        <div className='py-3 transition-all duration-300'>
           {/* Collapsed State: Contact Button with light gray background */}
-          <div className={`flex justify-center transition-all duration-300 ${isHovered ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}>
-            <div className="w-[2.5rem] h-[2.5rem] flex items-center justify-center bg-gray-200 text-gray-500 rounded-full cursor-pointer hover:text-white hover:bg-gray-600 transition-colors">
+          <div
+            className={`flex justify-center transition-all duration-300 ${isHovered ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}
+          >
+            <div className='w-[2.5rem] h-[2.5rem] flex items-center justify-center bg-[var(--endspace-accent-yellow-dim)] text-[var(--endspace-text-secondary)] rounded-full cursor-pointer hover:text-white hover:bg-[var(--endspace-accent-yellow)] transition-colors'>
               <RadarFillIcon size={18} />
             </div>
           </div>
 
           {/* Expanded State: Horizontal Icon Row - Single line */}
-          <div className={`px-3 transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
-              {/* Social Icons - Horizontal Layout, single row with light gray background */}
-              <div className="flex items-center justify-center gap-1.5 flex-nowrap">
-                {/* Email Icon */}
-                {CONTACT_EMAIL && (
-                  <a
-                    onClick={e =>
-                      handleEmailClick(e, emailIcon, CONTACT_EMAIL)
-                    }
-                    title='email'
-                    className='w-[1.75rem] h-[1.75rem] flex cursor-pointer items-center justify-center rounded-full bg-gray-200 text-gray-500 transition-colors hover:bg-gray-600 hover:text-white flex-shrink-0'
-                    ref={emailIcon}>
-                    <MailFillIcon size={14} />
-                  </a>
-                )}
-              
+          <div
+            className={`px-3 transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}
+          >
+            {/* Social Icons - Horizontal Layout, single row with light gray background */}
+            <div className='flex items-center justify-center gap-1.5 flex-nowrap'>
+              {/* Email Icon */}
+              {CONTACT_EMAIL && (
+                <a
+                  onClick={e => handleEmailClick(e, emailIcon, CONTACT_EMAIL)}
+                  title='email'
+                  className='w-[1.75rem] h-[1.75rem] flex cursor-pointer items-center justify-center rounded-full bg-[var(--endspace-accent-yellow-dim)] text-[var(--endspace-text-secondary)] transition-colors hover:bg-[var(--endspace-accent-yellow)] hover:text-white flex-shrink-0'
+                  ref={emailIcon}
+                >
+                  <MailFillIcon size={14} />
+                </a>
+              )}
+
               {/* Social Links */}
               {socialLinks.map(({ key, svg, label }) => {
                 const url = siteConfig(key)
                 if (!url) return null
                 return (
-                  <a 
+                  <a
                     key={key}
-                    href={url} 
-                    target="_blank" 
-                    rel="noreferrer"
+                    href={url}
+                    target='_blank'
+                    rel='noreferrer'
                     title={label}
-                    className="w-[1.75rem] h-[1.75rem] flex items-center justify-center bg-gray-200 text-gray-500 rounded-full hover:text-white hover:bg-gray-600 transition-colors flex-shrink-0"
+                    className='w-[1.75rem] h-[1.75rem] flex items-center justify-center bg-[var(--endspace-accent-yellow-dim)] text-[var(--endspace-text-secondary)] rounded-full hover:text-white hover:bg-[var(--endspace-accent-yellow)] transition-colors flex-shrink-0'
                   >
                     {renderSocialIcon(key, svg, label)}
                   </a>
@@ -359,17 +396,17 @@ export const SideNav = (props) => {
         </div>
 
         {/* Bottom Toggle Button - Simple Black Triangle */}
-        <div className="py-4">
-          <div className="flex justify-center">
-            <div 
-              className="w-[2rem] h-[2rem] flex items-center justify-center cursor-pointer"
+        <div className='py-4'>
+          <div className='flex justify-center'>
+            <div
+              className='w-[2rem] h-[2rem] flex items-center justify-center cursor-pointer'
               title={isHovered ? 'Collapse' : 'Expand'}
             >
               {/* Simple Black Triangle */}
-              <div 
+              <div
                 className={`w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent transition-transform duration-300 ${
-                  isHovered 
-                    ? 'border-r-[10px] border-r-[var(--endspace-text-primary)] border-l-0' 
+                  isHovered
+                    ? 'border-r-[10px] border-r-[var(--endspace-text-primary)] border-l-0'
                     : 'border-l-[10px] border-l-[var(--endspace-text-primary)] border-r-0'
                 }`}
               />
