@@ -148,7 +148,7 @@ export const Style = () => {
         text-rendering: optimizeLegibility;
         /* Custom Cute Cursor - Pink Spearhead */
         cursor:
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M6 6 L16 32 L20 22 L30 18 L6 6 Z' fill='%23FF7FA8' opacity='0.35'/%3E%3Cpath d='M2 2 L12 28 L16 18 L26 14 L2 2 Z' fill='%23FF7FA8' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E")
+          url("data:image/svg+xml,%3Csvg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M6 6 L16 32 L20 22 L30 18 L6 6 Z' fill='%23FF7FA8' opacity='0.35'/%3E%3Cpath d='M2 2 L12 28 L16 18 L26 14 L2 2 Z' fill='%23FF7FA8' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E")
             2 2,
           auto;
       }
@@ -159,7 +159,7 @@ export const Style = () => {
       #theme-endspace .cursor-pointer {
         /* Pointer Cursor - Pink Reticle */
         cursor:
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M6 6 L16 32 L20 22 L30 18 L6 6 Z' fill='%23FF6FA5' opacity='0.35'/%3E%3Cpath d='M2 2 L12 28 L16 18 L26 14 L2 2 Z' fill='%23FF6FA5' stroke='%23ffffff' stroke-width='1.5'/%3E%3Ccircle cx='24' cy='24' r='4' fill='none' stroke='%23FFA8CB' stroke-width='2'/%3E%3C/svg%3E")
+          url("data:image/svg+xml,%3Csvg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M6 6 L16 32 L20 22 L30 18 L6 6 Z' fill='%23FF6FA5' opacity='0.35'/%3E%3Cpath d='M2 2 L12 28 L16 18 L26 14 L2 2 Z' fill='%23FF6FA5' stroke='%23ffffff' stroke-width='1.5'/%3E%3Ccircle cx='24' cy='24' r='4' fill='none' stroke='%23FFA8CB' stroke-width='2'/%3E%3C/svg%3E")
             2 2,
           pointer;
       }
