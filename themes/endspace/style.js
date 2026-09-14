@@ -670,6 +670,142 @@ export const Style = () => {
         animation: rotate 8s linear infinite;
       }
 
+      /* 加载中旋转指示器 */
+      @keyframes endspace-player-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .endspace-player-spinner {
+        width: 14px;
+        height: 14px;
+        border-radius: 9999px;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #fff;
+        animation: endspace-player-spin 0.7s linear infinite;
+      }
+
+      /* ============================================
+         Rotating Disc (旋转圆盘 / 黑胶唱片)
+         ============================================ */
+      .endspace-player-disc-wrap {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        transition:
+          transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+          filter 0.25s ease;
+      }
+      .endspace-player-disc-wrap:hover {
+        transform: scale(1.08);
+        filter: drop-shadow(0 0 10px rgba(255, 111, 165, 0.7));
+      }
+      .endspace-player-disc {
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        overflow: hidden;
+        background: #2a1b24;
+        box-shadow:
+          0 0 0 2px rgba(255, 255, 255, 0.85),
+          0 0 0 3px rgba(255, 111, 165, 0.35),
+          0 0 14px rgba(255, 127, 168, 0.7);
+      }
+      .endspace-player-disc img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 9999px;
+        opacity: 0.95;
+      }
+      /* 黑胶纹理环 */
+      .endspace-player-disc::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        background: repeating-radial-gradient(
+          circle at 50% 50%,
+          rgba(0, 0, 0, 0) 0 3px,
+          rgba(0, 0, 0, 0.18) 3px 4px
+        );
+        pointer-events: none;
+      }
+      /* 中心轴孔 */
+      .endspace-player-disc-hole {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 9px;
+        height: 9px;
+        border-radius: 9999px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+          circle,
+          #ffffff 0 32%,
+          var(--endspace-brand-purple-to) 33% 100%
+        );
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.7),
+          0 0 6px rgba(0, 0, 0, 0.35);
+      }
+      /* 悬停/加载浮层（不随圆盘旋转） */
+      .endspace-player-disc-overlay {
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.42);
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+      }
+
+      /* ============================================
+         横幅 Banner (首页/内页)：高度为原来的 1/3 + 粉色背景
+         ============================================ */
+      .endspace-hero-banner {
+        height: 11.11vh;
+        min-height: 72px;
+        background: linear-gradient(160deg, #fff2f8 0%, #ffd6e7 42%, #ff9fc4 100%);
+      }
+      .endspace-hero-banner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 80%,
+          rgba(255, 255, 255, 0.6),
+          transparent 62%
+        );
+        pointer-events: none;
+      }
+      .dark .endspace-hero-banner {
+        background: linear-gradient(160deg, #3a2731 0%, #56303f 48%, #7a3a56 100%);
+      }
+      .dark .endspace-hero-banner::before {
+        background: radial-gradient(
+          circle at 50% 80%,
+          rgba(255, 158, 196, 0.18),
+          transparent 62%
+        );
+      }
+
+      /* 水印滚动条（首页 Hero / 普通横幅共用） */
+      .endspace-watermark-scroll {
+        display: inline-block;
+        animation: endspace-watermark-marquee 30s linear infinite;
+      }
+      @keyframes endspace-watermark-marquee {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
       /* ============================================
          Scan Line & HUD Animations
          ============================================ */
@@ -975,10 +1111,10 @@ export const Style = () => {
         /* Default Text Color */
         color: var(--endspace-text-secondary);
         border-radius: 14px;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
       }
 
-      /* Sliding Background Layer (soft pink) */
+      /* Sliding Background Layer (soft pink gradient) */
       .nier-nav-item::before {
         content: '';
         position: absolute;
@@ -986,9 +1122,13 @@ export const Style = () => {
         left: 0;
         width: 0%;
         height: 100%;
-        background: rgba(255, 127, 168, 0.16);
+        background: linear-gradient(
+          90deg,
+          rgba(255, 127, 168, 0.26),
+          rgba(255, 158, 196, 0.14)
+        );
         border-radius: 14px;
-        transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transition: width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         z-index: -1;
       }
 
@@ -1006,7 +1146,29 @@ export const Style = () => {
       /* Active State: Always full width with Distinct Color */
       .nier-nav-item.active::before {
         width: 100%;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 127, 168, 0.34),
+          rgba(255, 158, 196, 0.2)
+        );
+      }
+
+      /* Icon chip - rounded highlight that reacts to hover/active */
+      .nier-nav-item .nier-icon-chip {
+        color: inherit;
+        transition:
+          background 0.3s ease,
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .nier-nav-item:hover .nier-icon-chip {
+        background: rgba(255, 127, 168, 0.16);
+        transform: translateY(-1px) scale(1.08);
+        box-shadow: 0 4px 10px rgba(255, 127, 168, 0.18);
+      }
+      .nier-nav-item.active .nier-icon-chip {
         background: rgba(255, 127, 168, 0.24);
+        box-shadow: 0 4px 12px rgba(255, 127, 168, 0.26);
       }
 
       /* Target the icon specifically if needed to ensure color fill */
@@ -1017,7 +1179,22 @@ export const Style = () => {
       }
 
       .dark .nier-nav-item::before {
-        background: rgba(255, 143, 181, 0.22);
+        background: linear-gradient(
+          90deg,
+          rgba(255, 143, 181, 0.26),
+          rgba(255, 168, 203, 0.14)
+        );
+      }
+      .dark .nier-nav-item.active::before {
+        background: linear-gradient(
+          90deg,
+          rgba(255, 143, 181, 0.34),
+          rgba(255, 168, 203, 0.2)
+        );
+      }
+      .dark .nier-nav-item:hover .nier-icon-chip,
+      .dark .nier-nav-item.active .nier-icon-chip {
+        background: rgba(255, 143, 181, 0.24);
       }
       .dark .nier-nav-item:hover,
       .dark .nier-nav-item.active {

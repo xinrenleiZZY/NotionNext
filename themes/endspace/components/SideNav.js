@@ -183,7 +183,7 @@ export const SideNav = props => {
     const IconComponent = IconComponents[name] || BookMarkFillIcon
     return (
       <IconComponent
-        size={20}
+        size={17}
         stroke={1.5}
         className={`transition-all duration-300 ${isActive ? 'scale-110' : ''}`}
       />
@@ -218,11 +218,11 @@ export const SideNav = props => {
       {/* Fixed height container to prevent layout shift when expanded */}
       <div className='flex-shrink-0 h-[10rem] py-6 flex flex-col items-center'>
         <SmartLink href='/aboutme' title='Profile'>
-          <div className='w-[3rem] h-[3rem] flex-shrink-0 transition-transform duration-300 cursor-pointer hover:scale-105'>
+          <div className='w-[3rem] h-[3rem] flex-shrink-0 p-[2px] rounded-full bg-gradient-to-br from-[var(--endspace-brand-purple-from)] to-[var(--endspace-brand-purple-to)] shadow-[0_4px_14px_var(--endspace-accent-yellow-dim)] transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-[0_0_18px_var(--endspace-accent-yellow)]'>
             <img
               src={avatarUrl}
               alt='Avatar'
-              className='w-full h-full rounded-full object-cover shadow-lg transition-colors'
+              className='w-full h-full rounded-full object-cover bg-[var(--endspace-bg-primary)]'
             />
           </div>
         </SmartLink>
@@ -234,7 +234,7 @@ export const SideNav = props => {
             href='/aboutme'
             className='hover:text-[var(--endspace-accent-yellow)] transition-colors'
           >
-            <div className='text-sm font-bold text-[var(--endspace-text-primary)] uppercase tracking-wider'>
+            <div className='text-xs font-bold text-[var(--endspace-text-primary)] uppercase tracking-wider'>
               {siteConfig('AUTHOR') || ''}
             </div>
           </SmartLink>
@@ -252,7 +252,7 @@ export const SideNav = props => {
       >
         {/* Animated Active Indicator Bar - Higher z-index */}
         <div
-          className='absolute left-0 w-1.5 h-[3rem] bg-[var(--endspace-text-primary)] transition-all duration-300 ease-out z-10'
+          className='absolute left-0 w-[4px] h-[3rem] rounded-r-full bg-gradient-to-b from-[var(--endspace-brand-purple-from)] to-[var(--endspace-brand-purple-to)] shadow-[0_0_12px_var(--endspace-accent-yellow)] transition-all duration-300 ease-out z-10'
           style={{ top: indicatorStyle.top, opacity: indicatorStyle.opacity }}
         />
 
@@ -267,21 +267,23 @@ export const SideNav = props => {
               <SmartLink href={item.path} target={item.target}>
                 <div
                   ref={el => (itemRefs.current[item.name] = el)}
-                  className={`nier-nav-item relative h-[3rem] flex items-center cursor-pointer group transition-colors duration-300 hover:bg-[var(--endspace-accent-yellow-dim)] ${isActive ? 'active bg-[var(--endspace-accent-yellow-dim)]' : ''}`}
+                  className={`nier-nav-item relative h-[3rem] flex items-center cursor-pointer group ${isActive ? 'active' : ''}`}
                 >
                   {/* Icon Container - 优先用导航文本自带的 emoji，否则 fallback 到 remixicon */}
-                  <div className='w-[5rem] flex-shrink-0 flex items-center justify-center z-10 text-xl'>
-                    {(() => {
-                      const { emoji, rest } = extractLeadEmoji(item.name)
-                      if (emoji) return <span aria-hidden='true'>{emoji}</span>
-                      if (item.icon) return <i className={item.icon} />
-                      return renderIcon(rest || item.name, isActive)
-                    })()}
+                  <div className='w-[5rem] flex-shrink-0 flex items-center justify-center z-10 text-base'>
+                    <span className='nier-icon-chip w-9 h-9 flex items-center justify-center rounded-xl'>
+                      {(() => {
+                        const { emoji, rest } = extractLeadEmoji(item.name)
+                        if (emoji) return <span aria-hidden='true'>{emoji}</span>
+                        if (item.icon) return <i className={item.icon} />
+                        return renderIcon(rest || item.name, isActive)
+                      })()}
+                    </span>
                   </div>
 
                   {/* Text Label (Reveal on Hover) - 去掉首 emoji 后的文本 */}
                   <span
-                    className={`text-sm font-medium tracking-wide uppercase whitespace-nowrap transition-opacity duration-300 z-10 ${isHovered ? 'opacity-100 delay-75' : 'opacity-0 w-0'}`}
+                    className={`text-xs font-medium tracking-wide uppercase whitespace-nowrap transition-opacity duration-300 z-10 ${isHovered ? 'opacity-100 delay-75' : 'opacity-0 w-0'}`}
                   >
                     {(() => {
                       const { emoji, rest } = extractLeadEmoji(item.name)
@@ -307,9 +309,9 @@ export const SideNav = props => {
                         key={`${subMenu.name}-${subMenu.path}`}
                         href={subMenu.path}
                         target={subMenu.target || item.target}
-                        className='flex h-10 items-center text-sm font-medium text-[var(--endspace-text-secondary)] transition-colors hover:bg-[var(--endspace-accent-yellow-dim)] hover:text-[var(--endspace-accent-yellow)]'
+                        className='flex h-10 items-center text-xs font-medium text-[var(--endspace-text-secondary)] transition-colors hover:bg-[var(--endspace-accent-yellow-dim)] hover:text-[var(--endspace-accent-yellow)]'
                       >
-                        <span className='flex w-[5rem] flex-shrink-0 items-center justify-center text-base'>
+                        <span className='flex w-[5rem] flex-shrink-0 items-center justify-center text-sm'>
                           {(() => {
                             const { emoji, rest } = extractLeadEmoji(
                               subMenu.name
@@ -321,7 +323,7 @@ export const SideNav = props => {
                             return renderIcon(rest || subMenu.name, false)
                           })()}
                         </span>
-                        <span className='min-w-0 flex-1 truncate pr-4 text-xs uppercase tracking-wide'>
+                        <span className='min-w-0 flex-1 truncate pr-4 text-[0.7rem] uppercase tracking-wide'>
                           {(() => {
                             const { emoji, rest } = extractLeadEmoji(
                               subMenu.name
@@ -399,15 +401,15 @@ export const SideNav = props => {
         <div className='py-4'>
           <div className='flex justify-center'>
             <div
-              className='w-[2rem] h-[2rem] flex items-center justify-center cursor-pointer'
+              className='group/toggle w-[2rem] h-[2rem] flex items-center justify-center cursor-pointer rounded-full bg-[var(--endspace-accent-yellow-dim)] hover:bg-[var(--endspace-accent-yellow)] transition-colors duration-300'
               title={isHovered ? 'Collapse' : 'Expand'}
             >
               {/* Simple Black Triangle */}
               <div
-                className={`w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent transition-transform duration-300 ${
+                className={`w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent transition-all duration-300 ${
                   isHovered
-                    ? 'border-r-[10px] border-r-[var(--endspace-text-primary)] border-l-0'
-                    : 'border-l-[10px] border-l-[var(--endspace-text-primary)] border-r-0'
+                    ? 'border-r-[10px] border-r-[var(--endspace-text-primary)] group-hover/toggle:border-r-white border-l-0'
+                    : 'border-l-[10px] border-l-[var(--endspace-text-primary)] group-hover/toggle:border-l-white border-r-0'
                 }`}
               />
             </div>

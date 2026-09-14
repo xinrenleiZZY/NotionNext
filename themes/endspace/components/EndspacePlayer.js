@@ -5,7 +5,6 @@ import {
   IconPlayerPause,
   IconPlayerTrackPrev,
   IconPlayerTrackNext,
-  IconMusic,
   IconList,
   IconVolume,
 } from '@tabler/icons-react'
@@ -23,61 +22,94 @@ export const EndspacePlayer = ({ isExpanded }) => {
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [showPlaylist, setShowPlaylist] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [hasError, setHasError] = useState(false)
   const audioRef = useRef(null)
   const progressIntervalRef = useRef(null)
+  const playOrderRef = useRef('random')
+  const handleTrackEndRef = useRef(null)
 
   // Get configuration from widget.config.js
   const musicPlayerEnabled = siteConfig('MUSIC_PLAYER')
   const playOrder = siteConfig('MUSIC_PLAYER_ORDER')
   const audioList = siteConfig('MUSIC_PLAYER_AUDIO_LIST') || []
 
-  // Don't render if disabled or no audio
-  if (!musicPlayerEnabled || audioList.length === 0) {
-    return null
-  }
-
   const currentAudio = audioList[currentTrack] || {}
+  playOrderRef.current = playOrder
 
   // Initialize audio element
   useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio()
-      audioRef.current.volume = 0.7
-      
-      audioRef.current.addEventListener('ended', handleTrackEnd)
-      audioRef.current.addEventListener('loadedmetadata', () => {
-        setDuration(audioRef.current.duration)
-      })
-      audioRef.current.addEventListener('error', (e) => {
-        console.error('Audio load error:', e)
-      })
+    if (!musicPlayerEnabled || audioList.length === 0) return
+    const audio = new Audio()
+    audio.volume = 0.7
+    audio.preload = 'metadata'
+    audioRef.current = audio
+
+    const onLoadedMetadata = () => {
+      setIsLoading(false)
+      setDuration(audio.duration || 0)
     }
+    const onError = () => {
+      console.error('Audio load error:', audio.error)
+      setIsLoading(false)
+      setHasError(true)
+      setIsPlaying(false)
+    }
+    const onPlay = () => setIsLoading(false)
+    const onWaiting = () => setIsLoading(true)
+    const onCanPlay = () => setIsLoading(false)
+    const onEnded = () => handleTrackEndRef.current?.()
+
+    audio.addEventListener('ended', onEnded)
+    audio.addEventListener('loadedmetadata', onLoadedMetadata)
+    audio.addEventListener('error', onError)
+    audio.addEventListener('play', onPlay)
+    audio.addEventListener('waiting', onWaiting)
+    audio.addEventListener('canplay', onCanPlay)
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current.removeEventListener('ended', handleTrackEnd)
-      }
+      audio.pause()
+      audio.removeEventListener('ended', onEnded)
+      audio.removeEventListener('loadedmetadata', onLoadedMetadata)
+      audio.removeEventListener('error', onError)
+      audio.removeEventListener('play', onPlay)
+      audio.removeEventListener('waiting', onWaiting)
+      audio.removeEventListener('canplay', onCanPlay)
       if (progressIntervalRef.current) {
         clearInterval(progressIntervalRef.current)
       }
     }
   }, [])
 
-  // Load track when currentTrack changes
+  // Load new track only when the track changes (不随 播放/暂停 重新加载)
   useEffect(() => {
-    if (audioRef.current && currentAudio.url) {
-      audioRef.current.src = currentAudio.url
-      audioRef.current.load()
-      setProgress(0)
-      setCurrentTime(0)
-      
-      // Only auto-play on track switch if currently playing
-      if (isPlaying) {
-        audioRef.current.play().catch(e => console.log('Autoplay prevented:', e))
-      }
+    const audio = audioRef.current
+    const track = audioList[currentTrack]
+    if (!audio || !track?.url) return
+    audio.src = track.url
+    audio.load()
+    setProgress(0)
+    setCurrentTime(0)
+    setDuration(0)
+    setHasError(false)
+    setIsLoading(true)
+  }, [currentTrack])
+
+  // 播放/暂停状态与 audio 元素同步（不会重头播放）
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio || !audioList[currentTrack]?.url) return
+    if (isPlaying) {
+      setIsLoading(true)
+      audio.play().catch(e => {
+        console.log('Play prevented:', e)
+        setIsPlaying(false)
+        setIsLoading(false)
+      })
+    } else {
+      audio.pause()
     }
-  }, [currentTrack, currentAudio.url, isPlaying])
+  }, [isPlaying, currentTrack])
 
 
 
@@ -112,32 +144,36 @@ export const EndspacePlayer = ({ isExpanded }) => {
   }, [isExpanded])
 
   const handleTrackEnd = () => {
-    if (playOrder === 'random') {
-      const randomIndex = Math.floor(Math.random() * audioList.length)
-      setCurrentTrack(randomIndex)
+    if (audioList.length <= 1) {
+      audioRef.current?.pause()
+      setIsPlaying(false)
+      return
+    }
+    if (playOrderRef.current === 'random') {
+      let next = Math.floor(Math.random() * audioList.length)
+      if (next === currentTrack) {
+        next = (next + 1) % audioList.length
+      }
+      setCurrentTrack(next)
     } else {
       setCurrentTrack((prev) => (prev + 1) % audioList.length)
     }
   }
+  handleTrackEndRef.current = handleTrackEnd
 
   const togglePlay = (e) => {
-    e.stopPropagation()
-    if (!audioRef.current) return
-    
-    if (isPlaying) {
-      audioRef.current.pause()
-    } else {
-      audioRef.current.muted = false
-      audioRef.current.play().catch(e => console.log('Play prevented:', e))
-    }
-    setIsPlaying(!isPlaying)
+    e?.stopPropagation()
+    setIsPlaying(prev => !prev)
   }
 
   const playNext = (e) => {
     e?.stopPropagation()
-    if (playOrder === 'random') {
-      const randomIndex = Math.floor(Math.random() * audioList.length)
-      setCurrentTrack(randomIndex)
+    if (playOrderRef.current === 'random') {
+      let next = Math.floor(Math.random() * audioList.length)
+      if (next === currentTrack) {
+        next = (next + 1) % audioList.length
+      }
+      setCurrentTrack(next)
     } else {
       setCurrentTrack((prev) => (prev + 1) % audioList.length)
     }
@@ -149,14 +185,12 @@ export const EndspacePlayer = ({ isExpanded }) => {
   }
 
   const selectTrack = (index) => {
-    setCurrentTrack(index)
     setShowPlaylist(false)
-    if (!isPlaying) {
-      setTimeout(() => {
-        if (audioRef.current) audioRef.current.muted = false
-        audioRef.current?.play().catch(e => console.log('Play prevented:', e))
-        setIsPlaying(true)
-      }, 100)
+    if (index === currentTrack) {
+      setIsPlaying(true)
+    } else {
+      setCurrentTrack(index)
+      setIsPlaying(true)
     }
   }
 
@@ -164,8 +198,10 @@ export const EndspacePlayer = ({ isExpanded }) => {
     if (!audioRef.current || !audioRef.current.duration) return
     const rect = e.currentTarget.getBoundingClientRect()
     const clickX = e.clientX - rect.left
-    const percentage = clickX / rect.width
-    audioRef.current.currentTime = percentage * audioRef.current.duration
+    const percentage = Math.min(Math.max(clickX / rect.width, 0), 1)
+    const target = percentage * audioRef.current.duration
+    audioRef.current.currentTime = target
+    setCurrentTime(target)
     setProgress(percentage * 100)
   }
 
@@ -176,34 +212,42 @@ export const EndspacePlayer = ({ isExpanded }) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  // Collapsed State: 紫色渐变播放按钮（收起态）
+  // Don't render if disabled or no audio
+  if (!musicPlayerEnabled || audioList.length === 0) {
+    return null
+  }
+
+  // Collapsed State: 旋转圆盘（黑胶唱片）— 播放时旋转，悬停显示暂停/播放
   if (!isExpanded) {
     return (
       <div className="endspace-player-mini flex justify-center py-2">
         <div
-          className={`relative w-10 h-10 cursor-pointer group flex items-center justify-center`}
+          className="endspace-player-disc-wrap cursor-pointer group"
           onClick={togglePlay}
+          title={isPlaying ? 'Pause' : 'Play'}
         >
-          {isPlaying ? (
-            // 播放中：旋转封面 + 紫色光晕
-            <>
-              <div className="w-full h-full rounded-full overflow-hidden endspace-player-glow endspace-player-rotating">
-                <img
-                  src={currentAudio.cover || '/default-cover.jpg'}
-                  alt="Cover"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                <IconPlayerPause size={14} stroke={2} className="text-white" />
-              </div>
-            </>
-          ) : (
-            // 未播放：紫色渐变播放按钮
-            <div className="endspace-player-btn-purple w-full h-full flex items-center justify-center">
-              <IconMusic size={16} stroke={1.8} className="text-white" />
-            </div>
-          )}
+          {/* 旋转圆盘本体（封面 + 中心孔） */}
+          <div
+            className={`endspace-player-disc ${isPlaying ? 'endspace-player-rotating' : ''}`}
+          >
+            <img
+              src={currentAudio.cover || '/default-cover.jpg'}
+              alt="Cover"
+            />
+            <span className="endspace-player-disc-hole" />
+          </div>
+          {/* 悬停/加载浮层（不随圆盘旋转） */}
+          <div
+            className={`endspace-player-disc-overlay ${isLoading ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+          >
+            {isLoading ? (
+              <span className="endspace-player-spinner" />
+            ) : isPlaying ? (
+              <IconPlayerPause size={14} stroke={2} className="text-white" />
+            ) : (
+              <IconPlayerPlay size={14} stroke={2} className="text-white ml-0.5" />
+            )}
+          </div>
         </div>
       </div>
     )
@@ -221,6 +265,11 @@ export const EndspacePlayer = ({ isExpanded }) => {
             alt="Album Cover"
             className={`w-full h-full object-cover transition-transform duration-300 ${isPlaying ? 'scale-105' : ''}`}
           />
+          {hasError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/55 rounded-[inherit]">
+              <span className="text-[9px] leading-tight text-white/90 text-center px-0.5">加载失败</span>
+            </div>
+          )}
         </div>
 
         {/* 歌曲信息 */}
@@ -243,8 +292,8 @@ export const EndspacePlayer = ({ isExpanded }) => {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <span className="text-[9px] font-mono text-[var(--endspace-text-muted)] w-8 text-right">
-              {formatTime(currentTime)}
+            <span className="text-[9px] font-mono text-[var(--endspace-text-muted)] whitespace-nowrap">
+              {formatTime(currentTime)} / {formatTime(duration)}
             </span>
           </div>
         </div>
@@ -255,7 +304,9 @@ export const EndspacePlayer = ({ isExpanded }) => {
           className="endspace-player-btn-purple flex-shrink-0 w-10 h-10 flex items-center justify-center"
           title={isPlaying ? 'Pause' : 'Play'}
         >
-          {isPlaying ? (
+          {isLoading && isPlaying ? (
+            <span className="endspace-player-spinner" />
+          ) : isPlaying ? (
             <IconPlayerPause size={16} stroke={2} className="text-white" />
           ) : (
             <IconPlayerPlay size={16} stroke={2} className="text-white ml-0.5" />

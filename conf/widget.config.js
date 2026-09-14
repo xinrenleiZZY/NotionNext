@@ -1,6 +1,19 @@
 /**
  * 悬浮在网页上的挂件
  */
+
+// 网易云歌曲信息构造器
+// 说明：music.163.com 的 outer/url 直链在 Vercel 等海外/无 Cookie 环境经常返回 404（版权/风控），
+//       因此统一改用 Meting 代理解析真实音频地址，播放更稳定。
+// 换歌只需替换 id（歌曲页 https://music.163.com/song?id=xxxxx 里的数字）与封面 picId。
+const NETEASE = 'https://api.injahow.cn/meting/'
+const song = (id, name, artist, picId) => ({
+  name,
+  artist,
+  url: `${NETEASE}?server=netease&type=url&id=${id}`,
+  cover: `${NETEASE}?server=netease&type=pic&id=${picId}`
+})
+
 module.exports = {
   THEME_SWITCH: process.env.NEXT_PUBLIC_THEME_SWITCH || true, // 是否显示切换主题按钮
   // AI 聊天机器人相关配置已迁移至 conf/ai.config.js
@@ -26,37 +39,18 @@ module.exports = {
     'https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.js',
   MUSIC_PLAYER_ORDER: process.env.NEXT_PUBLIC_MUSIC_PLAYER_ORDER || 'random', // 默认播放方式：随机
   MUSIC_PLAYER_AUDIO_LIST: [
-    // 永恒仙庭仙尊 专属歌单：古风+国风+二次元
-    {
-      name: '广寒宫',
-      artist: '吴琼 / 平生不晚',
-      url: 'https://music.163.com/song/media/outer/url?id=1488358212.mp3',
-      cover: 'https://p1.music.126.net/2w-57f6L6aRXX0cBc8Z7SQ==/109951165212817022.jpg'
-    },
-    {
-      name: '赤伶',
-      artist: 'HITA',
-      url: 'https://music.163.com/song/media/outer/url?id=1330348068.mp3',
-      cover: 'https://p2.music.126.net/QF-RfV290Rr5aV1d6JcKdQ==/109951163871312354.jpg'
-    },
-    {
-      name: '踏山河',
-      artist: '是七叔呢',
-      url: 'https://music.163.com/song/media/outer/url?id=1490156730.mp3',
-      cover: 'https://p1.music.126.net/DcVATKQp2QpM8Yp_Y8sLpA==/109951165248384863.jpg'
-    },
-    {
-      name: '崩坏星穹铁道-啁啾小调',
-      artist: 'HOYO-MiX',
-      url: 'https://music.163.com/song/media/outer/url?id=2101290513.mp3',
-      cover: 'https://p1.music.126.net/BQvFv3U0V2w204f-P_2n4Q==/109951168836270357.jpg'
-    },
-    {
-      name: '仙瑶',
-      artist: '叶里',
-      url: 'https://music.163.com/song/media/outer/url?id=1830131947.mp3',
-      cover: 'https://p2.music.126.net/CG56Jq2oT0eDwQ5Fh4d8Xw==/109951166059442198.jpg'
-    }
+    // 仙庭 BGM 歌单：古风 / 国风
+    // 注：网易云对部分歌曲只放 30 秒试听（fee=1 VIP），下列曲目均已实测为完整版
+    song('1454730043', '赤伶', '李玉刚', '109951165054951989'),
+    song('30352891', '牵丝戏', '银临 / Aki阿杰', '7725168696876736'),
+    song('1330348068', '起风了', '冯沁苑(买辣椒也用券)', '109951163699673355'),
+    song('1332489493', '不染', '毛不易', '109951163718627428'),
+    song('28754846', '卷珠帘', '霍尊', '19202970579205912'),
+    song('33162226', '悟空', '戴荃', '3333719255417035'),
+    song('478693748', '琵琶行', '奇然 / 沈谧仁', '109951162929107589'),
+    song('416385506', '大鱼 (Cover 周深)', '双笙（陈元汐）', '109951167829176428'),
+    song('28496172', '山鬼', '赵景旭（Winky诗）', '109951164503300910'),
+    song('2045806409', '野火 Wildfire', 'HOYO-MiX / Jonathan Steingard', '109951168599498949')
   ],
   MUSIC_PLAYER_METING: process.env.NEXT_PUBLIC_MUSIC_PLAYER_METING || false, // 是否要开启 MetingJS，从平台获取歌单
   MUSIC_PLAYER_METING_SERVER:
