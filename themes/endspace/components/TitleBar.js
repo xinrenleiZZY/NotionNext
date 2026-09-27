@@ -80,7 +80,7 @@ export const TitleBar = ({ post }) => {
 
           {/* Site title - placed at the lower part of the banner */}
           <div className='relative z-10 w-full max-w-screen-xl mx-auto px-6 pb-3 md:pb-4 flex flex-col items-center text-center'>
-            <h1 className='artistic-title text-sm md:text-xl font-black tracking-tight uppercase break-words max-w-full'>
+            <h1 className='artistic-title text-base md:text-2xl font-black tracking-tight uppercase break-words max-w-full'>
               {siteTitle.split('').map((ch, i) => (
                 <span
                   key={`${ch}-${i}`}

@@ -38,15 +38,15 @@ export const BlogListArchive = ({ archiveTitle, archivePosts }) => {
             <SmartLink href={`/${post.slug}`}>
               <div className='endspace-frame p-4 flex flex-col md:flex-row md:items-center gap-4 hover:bg-[var(--endspace-accent-yellow-dim)] transition-all group'>
                 {/* Date Badge */}
-                <div className='flex-shrink-0 flex items-center gap-2 text-xs tech-text text-[var(--endspace-text-secondary)] md:w-32 border-r border-[var(--endspace-border-base)] pr-4 group-hover:text-black group-hover:border-black/20 transition-colors'>
-                  <span className='text-[var(--endspace-accent-cyan)] opacity-70 group-hover:text-black group-hover:opacity-100 transition-colors'>
+                <div className='flex-shrink-0 flex items-center gap-2 text-xs tech-text text-[var(--endspace-text-secondary)] md:w-32 border-r border-[var(--endspace-border-base)] pr-4 group-hover:text-[var(--endspace-accent-yellow)] group-hover:border-[var(--endspace-accent-yellow)]/40 transition-colors'>
+                  <span className='text-[var(--endspace-accent-cyan)] opacity-70 group-hover:text-[var(--endspace-accent-yellow)] group-hover:opacity-100 transition-colors'>
                     [{post.publishDay || post.date?.start_date}]
                   </span>
                 </div>
 
                 {/* Title */}
                 <div className='flex-1 min-w-0'>
-                  <h3 className='text-sm md:text-base font-bold text-black group-hover:text-black truncate transition-colors'>
+                  <h3 className='text-sm md:text-base font-bold text-[var(--endspace-text-primary)] group-hover:text-[var(--endspace-accent-yellow)] truncate transition-colors'>
                     {post.title}
                   </h3>
                   {/* Tags as tiny indicators */}
@@ -65,7 +65,7 @@ export const BlogListArchive = ({ archiveTitle, archivePosts }) => {
                 </div>
 
                 {/* Arrow Action */}
-                <div className='hidden md:block text-[var(--endspace-text-muted)] group-hover:text-black transition-transform group-hover:translate-x-1 font-mono text-xs'>
+                <div className='hidden md:block text-[var(--endspace-text-muted)] group-hover:text-[var(--endspace-accent-yellow)] transition-transform group-hover:translate-x-1 font-mono text-xs'>
                   &gt;&gt; LOG_ACCESS
                 </div>
               </div>

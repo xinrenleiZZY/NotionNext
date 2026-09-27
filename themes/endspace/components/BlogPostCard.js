@@ -38,18 +38,18 @@ export const BlogPostCard = ({ post, showSummary = true }) => {
         <div
           className={`flex-1 flex flex-col justify-center relative z-10 p-5 md:p-6 overflow-hidden`}
         >
-          {/* Hover Effect: Yellow Swoosh Background (Now confined to text area) */}
-          <div className='absolute inset-0 bg-[var(--endspace-accent-yellow)] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out z-0' />
-          {/* Hover Effect: Horizontal Black Bar (Top of text area) */}
-          <div className='absolute top-0 left-0 right-0 h-1.5 bg-black opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20' />
-          {/* Wrapper for content to ensure it sits above the yellow background */}
+          {/* Hover Effect: Soft Pink Gradient Fade (Kawaii style, no industrial sweep) */}
+          <div className='absolute inset-0 bg-gradient-to-br from-[var(--endspace-accent-cyan-dim)] to-[var(--endspace-accent-yellow-dim)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out z-0' />
+          {/* Hover Effect: Soft Pink Top Accent Line (replaces harsh black bar) */}
+          <div className='absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--endspace-brand-purple-from)] to-[var(--endspace-brand-purple-to)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 rounded-full' />
+          {/* Wrapper for content to ensure it sits above the pink background */}
           <div className='relative z-10'>
             {/* Top Meta */}
-            <div className='flex items-center gap-3 text-xs font-mono text-[var(--endspace-text-muted)] mb-3 group-hover:text-black/60 transition-colors'>
-              <span className='text-[var(--endspace-text-primary)] font-bold group-hover:text-black transition-colors'>
+            <div className='flex items-center gap-3 text-xs font-mono text-[var(--endspace-text-muted)] mb-3 group-hover:text-[var(--endspace-text-secondary)] transition-colors'>
+              <span className='text-[var(--endspace-text-primary)] font-bold group-hover:text-[var(--endspace-accent-yellow)] transition-colors'>
                 {post.publishDay}
               </span>
-              <span className='w-px h-3 bg-[var(--endspace-border-base)] group-hover:bg-black/30 transition-colors' />
+              <span className='w-px h-3 bg-[var(--endspace-border-base)] group-hover:bg-[var(--endspace-accent-yellow)]/40 transition-colors' />
               {post.category && (
                 <span className='tracking-wider'>
                   {post.category.toUpperCase()}
@@ -58,13 +58,13 @@ export const BlogPostCard = ({ post, showSummary = true }) => {
             </div>
 
             {/* Title */}
-            <h2 className='text-2xl md:text-3xl font-black text-[var(--endspace-text-primary)] mb-4 leading-tight group-hover:text-black transition-colors'>
+            <h2 className='text-2xl md:text-3xl font-black text-[var(--endspace-text-primary)] mb-4 leading-tight group-hover:text-[var(--endspace-accent-yellow)] transition-colors'>
               {post.title}
             </h2>
 
             {/* Summary */}
             {showSummary && showPreview && post.summary && (
-              <p className='text-[var(--endspace-text-secondary)] text-sm leading-relaxed line-clamp-2 md:line-clamp-3 mb-6 font-medium group-hover:text-black/70 transition-colors'>
+              <p className='text-[var(--endspace-text-secondary)] text-sm leading-relaxed line-clamp-2 md:line-clamp-3 mb-6 font-medium group-hover:text-[var(--endspace-text-primary)] transition-colors'>
                 {post.summary}
               </p>
             )}
@@ -75,19 +75,19 @@ export const BlogPostCard = ({ post, showSummary = true }) => {
                 {post.tags?.slice(0, 3).map(tag => (
                   <span
                     key={tag}
-                    className='text-[10px] text-[var(--endspace-text-muted)] bg-[var(--endspace-bg-secondary)] px-1.5 py-0.5 rounded group-hover:bg-black group-hover:text-white transition-colors'
+                    className='text-[10px] text-[var(--endspace-text-muted)] bg-[var(--endspace-bg-secondary)] px-1.5 py-0.5 rounded-full group-hover:bg-[var(--endspace-accent-yellow)] group-hover:text-white transition-colors'
                   >
                     #{tag}
                   </span>
                 ))}
               </div>
 
-              <div className='flex items-center gap-2 text-[var(--endspace-text-primary)] text-xs font-bold uppercase tracking-wider group-hover:gap-3 transition-all group-hover:text-black'>
+              <div className='flex items-center gap-2 text-[var(--endspace-text-primary)] text-xs font-bold uppercase tracking-wider group-hover:gap-3 transition-all group-hover:text-[var(--endspace-accent-yellow)]'>
                 <span>Access</span>
                 <IconArrowRight
                   size={12}
                   stroke={2}
-                  className='group-hover:translate-x-1 transition-transform group-hover:text-black'
+                  className='group-hover:translate-x-1 transition-transform group-hover:text-[var(--endspace-accent-yellow)]'
                 />
               </div>
             </div>

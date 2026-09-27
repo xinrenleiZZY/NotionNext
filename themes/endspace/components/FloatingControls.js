@@ -131,7 +131,7 @@ const FloatingControls = ({ toc, ...props }) => {
         {showPercent ? (
           <div className='relative w-full h-full flex items-center justify-center'>
             <span
-              className={`text-[10px] font-bold font-mono ${active ? 'text-black hidden' : 'text-[var(--endspace-text-secondary)] group-hover:hidden'}`}
+              className={`text-[10px] font-bold font-mono ${active ? 'text-white hidden' : 'text-[var(--endspace-text-secondary)] group-hover:hidden'}`}
             >
               {Math.round(percent)}%
             </span>
