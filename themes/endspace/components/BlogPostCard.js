@@ -15,7 +15,7 @@ export const BlogPostCard = ({ post, showSummary = true }) => {
   return (
     <SmartLink href={`/${post.slug}`}>
       <article
-        className={`endspace-frame group mb-6 flex flex-col overflow-hidden relative transition-all duration-300`}
+        className={`endspace-frame group mb-6 flex flex-col overflow-hidden relative transition-all duration-300 rounded-[var(--endspace-radius-card)] bg-[var(--endspace-bg-primary)] border border-[var(--endspace-border-base)] backdrop-blur-[14px] shadow-[var(--endspace-shadow-base)] hover:shadow-[var(--endspace-shadow-hover)]`}
       >
         {/* Cover Image - Top (Full Width) */}
         {hasCover && (

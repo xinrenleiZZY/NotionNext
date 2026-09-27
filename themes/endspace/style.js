@@ -10,70 +10,76 @@ export const Style = () => {
          CSS Custom Properties - Pastel Pink / Cute Theme
          ============================================ */
       :root {
-        /* Semi-transparent backgrounds to show wallpaper (kept fairly opaque for crisp text) */
-        --endspace-bg-base: rgba(255, 246, 250, 0.94);
-        --endspace-bg-primary: rgba(255, 255, 255, 0.94);
-        --endspace-bg-secondary: rgba(255, 240, 246, 0.92);
-        --endspace-bg-tertiary: rgba(255, 227, 239, 0.92);
+        /* 淡紫背景 + 毛玻璃半透明 (参考 LyuTing 学习小站) */
+        --endspace-bg-base: rgba(250, 247, 255, 0.80);
+        --endspace-bg-primary: rgba(255, 255, 255, 0.55);
+        --endspace-bg-secondary: rgba(255, 255, 255, 0.45);
+        --endspace-bg-tertiary: rgba(245, 240, 252, 0.50);
 
-        /* Warm Text (High Contrast, pink-tinted neutrals) */
-        --endspace-text-primary: #4b3a43;
-        --endspace-text-secondary: #8a7280;
-        --endspace-text-muted: #bca6b1;
+        /* 深紫文字 (参考 rgb(44,36,64)) */
+        --endspace-text-primary: #2c2440;
+        --endspace-text-secondary: #6b5d80;
+        --endspace-text-muted: #a89bb8;
 
-        /* Accents - 粉色调品牌强调色 */
-        --endspace-accent-yellow: #ff7fa8;
-        --endspace-accent-yellow-dim: rgba(255, 127, 168, 0.18);
-        --endspace-accent-cyan: #ff9ec4;
-        --endspace-accent-cyan-dim: rgba(255, 158, 196, 0.14);
-        /* 播放器专用：粉色渐变 + 柔和薄荷绿 */
-        --endspace-brand-purple-from: #ffa8cb;
-        --endspace-brand-purple-to: #ff6fa5;
+        /* 品牌强调色 - 粉紫 oklch(.7 .14 345) */
+        --endspace-accent-yellow: #e05a9c;
+        --endspace-accent-yellow-dim: rgba(224, 90, 156, 0.15);
+        --endspace-accent-cyan: #d94f8e;
+        --endspace-accent-cyan-dim: rgba(217, 79, 142, 0.12);
+        /* 播放器专用：粉紫渐变 */
+        --endspace-brand-purple-from: #e05a9c;
+        --endspace-brand-purple-to: #b04a7d;
         --endspace-status-green: #7fd8a6;
 
-        /* Borders & Lines */
-        --endspace-border-base: #ffdce8;
-        --endspace-border-active: #ff7fa8;
-        --endspace-grid-color: rgba(255, 127, 168, 0.06);
+        /* 边框 - 白色半透 (毛玻璃风) */
+        --endspace-border-base: rgba(255, 255, 255, 0.65);
+        --endspace-border-active: #e05a9c;
+        --endspace-grid-color: rgba(180, 160, 200, 0.06);
 
-        /* Shadows - soft pink glow */
+        /* 阴影 - 紫调柔光 (参考 rgba(180,160,200,0.15)) */
         --endspace-shadow-base:
-          0 2px 6px rgba(255, 127, 168, 0.1),
-          0 6px 16px rgba(255, 127, 168, 0.08);
+          0 2px 8px rgba(180, 160, 200, 0.10),
+          0 8px 24px rgba(180, 160, 200, 0.08);
         --endspace-shadow-hover:
-          0 6px 14px rgba(255, 127, 168, 0.18),
-          0 14px 30px rgba(255, 127, 168, 0.14),
-          0 0 0 1px var(--endspace-accent-yellow);
+          0 8px 32px rgba(180, 160, 200, 0.18),
+          0 2px 8px rgba(180, 160, 200, 0.12),
+          0 0 0 1px rgba(255, 255, 255, 0.8);
+
+        /* 毛玻璃参数 */
+        --endspace-glass-blur: blur(14px);
+        --endspace-glass-border: 1px solid rgba(255, 255, 255, 0.65);
+        --endspace-radius-card: 16px;
+        --endspace-radius-hero: 20px;
       }
 
       /* Dark Mode Variables */
       .dark {
-        --endspace-bg-base: rgba(38, 26, 33, 0.92);
-        --endspace-bg-primary: rgba(48, 33, 41, 0.92);
-        --endspace-bg-secondary: rgba(60, 42, 52, 0.92);
-        --endspace-bg-tertiary: rgba(76, 52, 64, 0.92);
+        --endspace-bg-base: rgba(30, 24, 40, 0.85);
+        --endspace-bg-primary: rgba(45, 35, 58, 0.55);
+        --endspace-bg-secondary: rgba(50, 40, 65, 0.45);
+        --endspace-bg-tertiary: rgba(55, 42, 70, 0.50);
 
-        --endspace-text-primary: #fff1f6;
-        --endspace-text-secondary: #e3c2d0;
-        --endspace-text-muted: #b78ca1;
+        --endspace-text-primary: #f0e8ff;
+        --endspace-text-secondary: #c4b5d8;
+        --endspace-text-muted: #8e7fa8;
 
-        --endspace-accent-yellow: #ff8fb5;
-        --endspace-accent-yellow-dim: rgba(255, 143, 181, 0.22);
-        --endspace-accent-cyan: #ffa8cb;
-        --endspace-accent-cyan-dim: rgba(255, 168, 203, 0.16);
-        --endspace-brand-purple-from: #ff9ec4;
-        --endspace-brand-purple-to: #ff6fa5;
+        --endspace-accent-yellow: #e87bb8;
+        --endspace-accent-yellow-dim: rgba(232, 123, 184, 0.18);
+        --endspace-accent-cyan: #d96aaa;
+        --endspace-accent-cyan-dim: rgba(217, 106, 170, 0.14);
+        --endspace-brand-purple-from: #e87bb8;
+        --endspace-brand-purple-to: #b85a96;
         --endspace-status-green: #7fd8a6;
 
-        --endspace-border-base: #5b3f4b;
-        --endspace-border-active: #ff8fb5;
-        --endspace-grid-color: rgba(255, 143, 181, 0.05);
+        --endspace-border-base: rgba(255, 255, 255, 0.12);
+        --endspace-border-active: #e87bb8;
+        --endspace-grid-color: rgba(180, 160, 200, 0.04);
 
         --endspace-shadow-base:
-          0 2px 6px rgba(0, 0, 0, 0.25), 0 6px 16px rgba(0, 0, 0, 0.2);
+          0 2px 8px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
         --endspace-shadow-hover:
-          0 6px 14px rgba(0, 0, 0, 0.35), 0 14px 30px rgba(0, 0, 0, 0.3),
-          0 0 0 1px var(--endspace-accent-yellow);
+          0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.15);
       }
 
       /* ============================================
@@ -133,7 +139,7 @@ export const Style = () => {
         background-color: var(--endspace-bg-base);
         color: var(--endspace-text-primary);
         font-family:
-          'Quicksand',
+          'ui-sans-serif',
           'PingFang SC',
           -apple-system,
           BlinkMacSystemFont,
@@ -185,14 +191,14 @@ export const Style = () => {
          Typography & Technical Text
          ============================================ */
       .tech-text {
-        font-family: 'Quicksand', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        font-family: 'ui-sans-serif', 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', sans-serif;
         letter-spacing: 0.5px;
         text-transform: uppercase;
         font-weight: 600;
       }
 
       .tech-num {
-        font-family: 'Quicksand', 'PingFang SC', sans-serif;
+        font-family: 'ui-sans-serif', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
         letter-spacing: 1px;
       }
 
@@ -414,7 +420,7 @@ export const Style = () => {
         color: var(--endspace-accent-yellow);
         border-radius: 9999px;
         padding: 0.6rem 1.5rem;
-        font-family: 'Quicksand', 'PingFang SC', sans-serif;
+        font-family: 'ui-sans-serif', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
         font-weight: 700;
         text-transform: uppercase;
         font-size: 0.85em;
@@ -441,7 +447,7 @@ export const Style = () => {
         color: white;
         border-radius: 9999px;
         padding: 0.75rem 1.5rem;
-        font-family: 'Quicksand', 'PingFang SC', sans-serif;
+        font-family: 'ui-sans-serif', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
         font-weight: 700;
         text-transform: uppercase;
         font-size: 0.85em;
@@ -768,7 +774,7 @@ export const Style = () => {
       .endspace-hero-banner {
         height: 11.11vh;
         min-height: 72px;
-        background: linear-gradient(160deg, rgba(255, 242, 248, 0.2) 0%, rgba(255, 214, 231, 0.2) 42%, rgba(255, 159, 196, 0.2) 100%);
+        background: linear-gradient(160deg, rgba(250, 247, 255, 0.3) 0%, rgba(232, 220, 248, 0.3) 42%, rgba(224, 90, 156, 0.15) 100%);
         backdrop-filter: blur(8px);
       }
       .endspace-hero-banner::before {
@@ -783,7 +789,7 @@ export const Style = () => {
         pointer-events: none;
       }
       .dark .endspace-hero-banner {
-        background: linear-gradient(160deg, rgba(58, 39, 49, 0.2) 0%, rgba(86, 48, 63, 0.2) 48%, rgba(122, 58, 86, 0.2) 100%);
+        background: linear-gradient(160deg, rgba(30, 24, 40, 0.3) 0%, rgba(50, 40, 65, 0.3) 48%, rgba(120, 50, 90, 0.2) 100%);
       }
       .dark .endspace-hero-banner::before {
         background: radial-gradient(
@@ -909,7 +915,7 @@ export const Style = () => {
         border: 1px solid var(--endspace-border-base);
         border-radius: 9999px;
         padding: 0.75rem 1.5rem 0.75rem 2rem;
-        font-family: 'Quicksand', 'PingFang SC', sans-serif;
+        font-family: 'ui-sans-serif', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
         font-weight: 600;
         text-transform: uppercase;
         font-size: 0.85em;
@@ -970,7 +976,7 @@ export const Style = () => {
         background: var(--endspace-accent-yellow);
         color: #fff;
         border-radius: 9999px;
-        font-family: 'Quicksand', 'PingFang SC', sans-serif;
+        font-family: 'ui-sans-serif', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
         font-size: 0.7rem;
         font-weight: 700;
         letter-spacing: 0.5px;
@@ -1348,7 +1354,7 @@ export const Style = () => {
         border: 1.5px solid var(--endspace-accent-yellow);
         color: var(--endspace-accent-yellow);
         padding: 0.5rem 1.25rem;
-        font-family: 'Quicksand', 'PingFang SC', sans-serif;
+        font-family: 'ui-sans-serif', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
         font-weight: 600;
         font-size: 0.85em;
         border-radius: 10px;
