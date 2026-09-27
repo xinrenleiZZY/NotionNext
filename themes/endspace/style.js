@@ -768,7 +768,8 @@ export const Style = () => {
       .endspace-hero-banner {
         height: 11.11vh;
         min-height: 72px;
-        background: linear-gradient(160deg, #fff2f8 0%, #ffd6e7 42%, #ff9fc4 100%);
+        background: linear-gradient(160deg, rgba(255, 242, 248, 0.55) 0%, rgba(255, 214, 231, 0.55) 42%, rgba(255, 159, 196, 0.55) 100%);
+        backdrop-filter: blur(8px);
       }
       .endspace-hero-banner::before {
         content: '';
@@ -782,7 +783,7 @@ export const Style = () => {
         pointer-events: none;
       }
       .dark .endspace-hero-banner {
-        background: linear-gradient(160deg, #3a2731 0%, #56303f 48%, #7a3a56 100%);
+        background: linear-gradient(160deg, rgba(58, 39, 49, 0.55) 0%, rgba(86, 48, 63, 0.55) 48%, rgba(122, 58, 86, 0.55) 100%);
       }
       .dark .endspace-hero-banner::before {
         background: radial-gradient(
