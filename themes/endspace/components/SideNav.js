@@ -210,7 +210,7 @@ export const SideNav = props => {
 
   return (
     <div
-      className={`fixed left-0 top-0 bottom-0 z-40 hidden md:flex flex-col bg-[var(--endspace-bg-base)] border-r border-[var(--endspace-border-base)] transition-all duration-300 ease-in-out shadow-md ${isHovered ? 'w-[16rem]' : 'w-[5rem]'}`}
+      className={`fixed left-0 top-0 z-40 hidden md:flex flex-col bg-[var(--endspace-bg-base)] border-r border-[var(--endspace-border-base)] transition-all duration-300 ease-in-out shadow-md scale-[0.7] origin-top-left h-[143vh] ${isHovered ? 'w-[16rem]' : 'w-[5rem]'}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

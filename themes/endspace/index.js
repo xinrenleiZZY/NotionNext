@@ -107,7 +107,7 @@ const LayoutBase = props => {
       <MobileNav {...props} />
 
       {/* Main content area - using flex layout for sticky footer */}
-      <div className='md:ml-[5rem] flex flex-col min-h-screen'>
+      <div className='md:ml-[3.5rem] flex flex-col min-h-screen'>
         {/* Title bar */}
         {!fullWidth && <TitleBar {...props} />}
 
@@ -119,7 +119,7 @@ const LayoutBase = props => {
           >
             {/* Main content - Centered */}
             <div
-              className={`${fullWidth ? 'w-full' : 'max-w-4xl w-full mx-auto'}`}
+              className={`${fullWidth ? 'w-full' : 'max-w-[60%] w-full mx-auto'}`}
             >
               <Transition
                 show={!onLoading}
