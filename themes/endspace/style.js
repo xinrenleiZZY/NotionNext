@@ -10,76 +10,90 @@ export const Style = () => {
          CSS Custom Properties - Pastel Pink / Cute Theme
          ============================================ */
       :root {
+        /* fuwari 风格：基于 hue 的 oklch 色相系统（粉紫色相 hue≈345） */
+        --endspace-hue: 345;
+
         /* 淡紫背景 + 毛玻璃半透明 (参考 LyuTing 学习小站) */
-        --endspace-bg-base: rgba(250, 247, 255, 0.80);
-        --endspace-bg-primary: rgba(255, 255, 255, 0.55);
-        --endspace-bg-secondary: rgba(255, 255, 255, 0.45);
-        --endspace-bg-tertiary: rgba(245, 240, 252, 0.50);
+        --endspace-bg-base: oklch(0.95 0.012 var(--endspace-hue));
+        --endspace-bg-primary: rgba(255, 255, 255, 0.65);
+        --endspace-bg-secondary: rgba(255, 255, 255, 0.50);
+        --endspace-bg-tertiary: oklch(0.93 0.02 var(--endspace-hue));
 
         /* 深紫文字 (参考 rgb(44,36,64)) */
-        --endspace-text-primary: #2c2440;
-        --endspace-text-secondary: #6b5d80;
-        --endspace-text-muted: #a89bb8;
+        --endspace-text-primary: oklch(0.25 0.03 var(--endspace-hue));
+        --endspace-text-secondary: oklch(0.45 0.03 var(--endspace-hue));
+        --endspace-text-muted: oklch(0.60 0.025 var(--endspace-hue));
 
-        /* 品牌强调色 - 粉紫 oklch(.7 .14 345) */
-        --endspace-accent-yellow: #e05a9c;
-        --endspace-accent-yellow-dim: rgba(224, 90, 156, 0.15);
-        --endspace-accent-cyan: #d94f8e;
-        --endspace-accent-cyan-dim: rgba(217, 79, 142, 0.12);
+        /* 品牌强调色 - 粉紫 oklch(.7 .14 345) - 对齐 fuwari --primary */
+        --endspace-accent-yellow: oklch(0.70 0.14 var(--endspace-hue));
+        --endspace-accent-yellow-dim: oklch(0.70 0.14 var(--endspace-hue) / 0.15);
+        --endspace-accent-cyan: oklch(0.65 0.15 var(--endspace-hue));
+        --endspace-accent-cyan-dim: oklch(0.65 0.15 var(--endspace-hue) / 0.12);
         /* 播放器专用：粉紫渐变 */
-        --endspace-brand-purple-from: #e05a9c;
-        --endspace-brand-purple-to: #b04a7d;
-        --endspace-status-green: #7fd8a6;
+        --endspace-brand-purple-from: oklch(0.70 0.14 var(--endspace-hue));
+        --endspace-brand-purple-to: oklch(0.55 0.16 var(--endspace-hue));
+        --endspace-status-green: oklch(0.75 0.14 160);
 
         /* 边框 - 白色半透 (毛玻璃风) */
         --endspace-border-base: rgba(255, 255, 255, 0.65);
-        --endspace-border-active: #e05a9c;
-        --endspace-grid-color: rgba(180, 160, 200, 0.06);
-
-        /* 阴影 - 紫调柔光 (参考 rgba(180,160,200,0.15)) */
-        --endspace-shadow-base:
-          0 2px 8px rgba(180, 160, 200, 0.10),
-          0 8px 24px rgba(180, 160, 200, 0.08);
-        --endspace-shadow-hover:
-          0 8px 32px rgba(180, 160, 200, 0.18),
-          0 2px 8px rgba(180, 160, 200, 0.12),
-          0 0 0 1px rgba(255, 255, 255, 0.8);
-
-        /* 毛玻璃参数 */
-        --endspace-glass-blur: blur(14px);
-        --endspace-glass-border: 1px solid rgba(255, 255, 255, 0.65);
-        --endspace-radius-card: 16px;
-        --endspace-radius-hero: 20px;
-      }
-
-      /* Dark Mode Variables */
-      .dark {
-        --endspace-bg-base: rgba(30, 24, 40, 0.85);
-        --endspace-bg-primary: rgba(45, 35, 58, 0.55);
-        --endspace-bg-secondary: rgba(50, 40, 65, 0.45);
-        --endspace-bg-tertiary: rgba(55, 42, 70, 0.50);
-
-        --endspace-text-primary: #f0e8ff;
-        --endspace-text-secondary: #c4b5d8;
-        --endspace-text-muted: #8e7fa8;
-
-        --endspace-accent-yellow: #e87bb8;
-        --endspace-accent-yellow-dim: rgba(232, 123, 184, 0.18);
-        --endspace-accent-cyan: #d96aaa;
-        --endspace-accent-cyan-dim: rgba(217, 106, 170, 0.14);
-        --endspace-brand-purple-from: #e87bb8;
-        --endspace-brand-purple-to: #b85a96;
-        --endspace-status-green: #7fd8a6;
-
-        --endspace-border-base: rgba(255, 255, 255, 0.12);
-        --endspace-border-active: #e87bb8;
+        --endspace-border-active: oklch(0.70 0.14 var(--endspace-hue));
         --endspace-grid-color: rgba(180, 160, 200, 0.04);
 
+        /* fuwari 风格：极简阴影（几乎不可见的轻微投影） */
         --endspace-shadow-base:
-          0 2px 8px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+          0 1px 2px rgba(180, 160, 200, 0.04),
+          0 2px 4px rgba(180, 160, 200, 0.03);
         --endspace-shadow-hover:
-          0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3),
-          0 0 0 1px rgba(255, 255, 255, 0.15);
+          0 2px 8px rgba(180, 160, 200, 0.08),
+          0 4px 12px rgba(180, 160, 200, 0.05);
+
+        /* 毛玻璃参数 - fuwari 使用 1rem 圆角 */
+        --endspace-glass-blur: blur(14px);
+        --endspace-glass-border: 1px solid rgba(255, 255, 255, 0.65);
+        --endspace-radius-card: 1rem;
+        --endspace-radius-hero: 1.25rem;
+
+        /* fuwari 风格：按钮背景色变量 */
+        --endspace-btn-regular-bg: oklch(0.95 0.025 var(--endspace-hue));
+        --endspace-btn-regular-bg-hover: oklch(0.90 0.05 var(--endspace-hue));
+        --endspace-btn-plain-bg-hover: oklch(0.95 0.025 var(--endspace-hue));
+        --endspace-line-divider: rgba(0, 0, 0, 0.06);
+        --endspace-selection-bg: oklch(0.90 0.05 var(--endspace-hue));
+      }
+
+      /* Dark Mode Variables - 对齐 fuwari dark 配色 */
+      .dark {
+        --endspace-bg-base: oklch(0.16 0.014 var(--endspace-hue));
+        --endspace-bg-primary: oklch(0.23 0.015 var(--endspace-hue) / 0.65);
+        --endspace-bg-secondary: oklch(0.25 0.015 var(--endspace-hue) / 0.50);
+        --endspace-bg-tertiary: oklch(0.22 0.015 var(--endspace-hue));
+
+        --endspace-text-primary: oklch(0.95 0.005 var(--endspace-hue));
+        --endspace-text-secondary: oklch(0.75 0.02 var(--endspace-hue));
+        --endspace-text-muted: oklch(0.60 0.02 var(--endspace-hue));
+
+        --endspace-accent-yellow: oklch(0.75 0.14 var(--endspace-hue));
+        --endspace-accent-yellow-dim: oklch(0.75 0.14 var(--endspace-hue) / 0.18);
+        --endspace-accent-cyan: oklch(0.70 0.15 var(--endspace-hue));
+        --endspace-accent-cyan-dim: oklch(0.70 0.15 var(--endspace-hue) / 0.14);
+        --endspace-brand-purple-from: oklch(0.75 0.14 var(--endspace-hue));
+        --endspace-brand-purple-to: oklch(0.60 0.16 var(--endspace-hue));
+        --endspace-status-green: oklch(0.75 0.14 160);
+
+        --endspace-border-base: rgba(255, 255, 255, 0.10);
+        --endspace-border-active: oklch(0.75 0.14 var(--endspace-hue));
+        --endspace-grid-color: rgba(255, 255, 255, 0.03);
+
+        --endspace-shadow-base:
+          0 1px 2px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.15);
+        --endspace-shadow-hover:
+          0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+
+        --endspace-btn-regular-bg: oklch(0.33 0.035 var(--endspace-hue));
+        --endspace-btn-regular-bg-hover: oklch(0.38 0.04 var(--endspace-hue));
+        --endspace-btn-plain-bg-hover: oklch(0.30 0.035 var(--endspace-hue));
+        --endspace-line-divider: rgba(255, 255, 255, 0.08);
+        --endspace-selection-bg: oklch(0.40 0.08 var(--endspace-hue));
       }
 
       /* ============================================
@@ -203,12 +217,30 @@ export const Style = () => {
       }
 
       /* ============================================
-         "Float" Container Styles
+         fuwari 风格：文字透明度层级（黑/白随暗色模式自动切换）
+         ============================================ */
+      .text-90 { color: rgba(0, 0, 0, 0.90); }
+      .text-75 { color: rgba(0, 0, 0, 0.75); }
+      .text-50 { color: rgba(0, 0, 0, 0.50); }
+      .text-30 { color: rgba(0, 0, 0, 0.30); }
+      .dark .text-90 { color: rgba(255, 255, 255, 0.90); }
+      .dark .text-75 { color: rgba(255, 255, 255, 0.75); }
+      .dark .text-50 { color: rgba(255, 255, 255, 0.50); }
+      .dark .text-30 { color: rgba(255, 255, 255, 0.30); }
+
+      /* fuwari 风格：选中色 */
+      ::selection {
+        background-color: var(--endspace-selection-bg);
+      }
+
+      /* ============================================
+         "Float" Container Styles - fuwari card-base 风格
+         统一 1rem 圆角 + 极简阴影 + 克制悬停
          ============================================ */
       .endspace-frame {
         background: var(--endspace-bg-primary);
         border: 1px solid var(--endspace-border-base);
-        border-radius: 20px;
+        border-radius: var(--endspace-radius-card);
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: var(--endspace-shadow-base);
@@ -216,60 +248,24 @@ export const Style = () => {
       }
 
       .dark .endspace-frame {
-        background: rgba(48, 33, 41, 0.92);
+        background: var(--endspace-bg-primary);
         border-color: var(--endspace-border-base);
       }
 
-      /* Corner Accents (soft rounded pink markers) */
-      .endspace-frame::before {
-        content: '';
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        width: 0;
-        height: 0;
-        border-top: 3px solid var(--endspace-accent-yellow);
-        border-left: 3px solid var(--endspace-accent-yellow);
-        border-top-left-radius: 8px;
-        transition: all 0.3s ease;
-        opacity: 0;
-        z-index: 20;
-      }
-      .endspace-frame::after {
-        content: '';
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        width: 0;
-        height: 0;
-        border-bottom: 3px solid var(--endspace-accent-yellow);
-        border-right: 3px solid var(--endspace-accent-yellow);
-        border-bottom-right-radius: 8px;
-        transition: all 0.3s ease;
-        opacity: 0;
-        z-index: 20;
-      }
-
-      /* Active State: corners appear */
+      /* fuwari 风格：悬停仅轻微抬升 + 阴影加深，无角标装饰 */
       .endspace-frame:hover {
         border-color: var(--endspace-border-active);
         box-shadow: var(--endspace-shadow-hover);
         transform: translateY(-2px);
       }
-      .endspace-frame:hover::before,
-      .endspace-frame:hover::after {
-        opacity: 1;
-        width: 16px;
-        height: 16px;
-      }
 
       /* ============================================
-         Card Styles - Soft Rounded
+         Card Styles - Soft Rounded (fuwari card-base)
          ============================================ */
       .endspace-card {
         background: var(--endspace-bg-primary);
         border: 1px solid var(--endspace-border-base);
-        border-radius: 20px;
+        border-radius: var(--endspace-radius-card);
         position: relative;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: var(--endspace-shadow-base);
@@ -277,16 +273,12 @@ export const Style = () => {
 
       .endspace-card:hover {
         border-color: var(--endspace-border-active);
-        box-shadow:
-          0 20px 30px -8px rgba(255, 127, 168, 0.2),
-          0 10px 12px -6px rgba(255, 127, 168, 0.12),
-          0 0 0 1px var(--endspace-accent-yellow);
-        transform: translateY(-4px) scale(1.01);
-        z-index: 20;
+        box-shadow: var(--endspace-shadow-hover);
+        transform: translateY(-2px);
       }
 
       .dark .endspace-card {
-        background: rgba(48, 33, 41, 0.95);
+        background: var(--endspace-bg-primary);
       }
 
       /* ============================================
