@@ -62,3 +62,7 @@ package-lock.json
 .perf/
 tsconfig.tsbuildinfo
 webpack-internal:/
+
+# local-only: 截图与临时脚本
+.tmp-shots/
+screenshots/
