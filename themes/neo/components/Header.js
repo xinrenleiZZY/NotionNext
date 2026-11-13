@@ -50,18 +50,18 @@ export default function Header(props) {
           <SmartLink
             href='/'
             className='flex shrink-0 items-center gap-2 no-underline'>
-            <span className='neo-chip neo-chip-yellow text-[13px]'>
+            <span className='neo-chip neo-chip-yellow max-w-[150px] truncate text-[13px] lg:max-w-[240px]'>
               {siteConfig('TITLE') || 'NEO'}
             </span>
           </SmartLink>
 
-          <nav className='ml-auto hidden items-center gap-1.5 md:flex'>
+          <nav className='ml-auto hidden min-w-0 items-center justify-end gap-1.5 overflow-x-auto md:flex'>
             {links.map((link, index) => (
               <SmartLink
                 key={`${link.href || link.name}-${index}`}
                 href={link.href}
                 target={link.target}
-                className='neo-chip neo-hover no-underline'
+                className='neo-chip neo-hover shrink-0 no-underline'
                 style={{ fontSize: '12px' }}>
                 {link.name}
               </SmartLink>
