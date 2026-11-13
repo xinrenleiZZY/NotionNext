@@ -110,6 +110,24 @@ export const THEME_SWITCH_MANIFEST = {
   thoughtlite: {
     name: 'ThoughtLite',
     summary: '轻阅读向时间线与 Latest 卡片，单列列表与文章卡片排版。'
+  },
+  aurora: {
+    name: 'Aurora',
+    summary: '极光玻璃：深空底 + 极光渐变 + 半透明玻璃卡片，首页视频背景。',
+    cover: '/bg_image.jpg',
+    coverWebp: ''
+  },
+  neo: {
+    name: 'Neo Brutal',
+    summary: '贴纸粗野风：3px 硬黑边 + 硬投影 + 高饱和色块 + 纸感网点。',
+    cover: '/bg_image.jpg',
+    coverWebp: ''
+  },
+  mizuki: {
+    name: 'Mizuki',
+    summary: '二次元 MD3：樱花粉紫 + 大圆角玻璃卡 + 封面轮播 banner + SVG 水波纹。',
+    cover: '/bg_image.jpg',
+    coverWebp: ''
   }
 }
 

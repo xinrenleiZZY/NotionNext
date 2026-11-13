@@ -53,6 +53,18 @@ export const LoadingCover = () => {
 
   // Resource loading tracking and smooth animation
   useEffect(() => {
+    // 性能优化：同一会话只播放一次，避免每次进站都被全屏遮罩挡住 LCP
+    try {
+      if (sessionStorage.getItem('endspace:cover-seen') === '1') {
+        setIsVisible(false)
+        document.body.style.overflow = ''
+        return () => {}
+      }
+      sessionStorage.setItem('endspace:cover-seen', '1')
+    } catch (e) {
+      // 隐私模式下 sessionStorage 不可用，忽略
+    }
+
     // Prevent body scroll during loading
     document.body.style.overflow = 'hidden'
 
@@ -127,11 +139,12 @@ export const LoadingCover = () => {
     }, 30)
 
     // Max wait timer - force complete after timeout
+    // 性能优化：原来 5s 太久，会直接拖垮 LCP，收到 1.5s
     const maxWaitTimer = setTimeout(() => {
       if (!hasCompletedRef.current) {
         targetProgressRef.current = 100
       }
-    }, 5000)
+    }, 1500)
 
     return () => {
       clearTimeout(initTimer)
@@ -154,8 +167,8 @@ export const LoadingCover = () => {
         setPhase('sweeping')
         setTimeout(() => {
           setPhase('fadeout')
-          setTimeout(() => setIsVisible(false), 300)
-        }, 400)
+          setTimeout(() => setIsVisible(false), 220)
+        }, 220)
       }, 100)
 
       return () => clearTimeout(sweepTimer)

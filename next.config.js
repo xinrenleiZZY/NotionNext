@@ -353,6 +353,43 @@ const nextConfig = {
     ? undefined
     : () => {
       return [
+        // 静态资源长缓存：背景视频/图片/字体下载一次即可，减少重复请求
+        {
+          source: '/bg-video.mp4',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable'
+            }
+          ]
+        },
+        {
+          source: '/bg_image.jpg',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable'
+            }
+          ]
+        },
+        {
+          source: '/videos/:path*',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable'
+            }
+          ]
+        },
+        {
+          source: '/fonts/:path*',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable'
+            }
+          ]
+        },
         {
           source: '/vendor/fontawesome/:path*',
           headers: [
@@ -464,7 +501,11 @@ const nextConfig = {
     // cpus: 1,
     scrollRestoration: true,
     // 性能优化实验性功能
-    optimizePackageImports: ['@heroicons/react', 'lodash']
+    optimizePackageImports: [
+      '@heroicons/react',
+      'lodash',
+      '@tabler/icons-react'
+    ]
   },
   exportPathMap: function (
     defaultPathMap,

@@ -56,6 +56,23 @@ const SEO = props => {
     url = `${url}/${meta.slug}`
     image = meta.image || '/bg_image.jpg'
   }
+
+  // canonical / OG 统一以站点主域名（LINK）为准
+  const SITE_BASE = String(
+    PATH?.length ? `${LINK}/${SUB_PATH}` : LINK || ''
+  ).replace(/\/+$/, '')
+  const asPath = String(router.asPath || '/')
+    .split('#')[0]
+    .split('?')[0]
+  const canonicalPath =
+    asPath.replace(/\/index\.html$/, '/').replace(/\.html$/, '').replace(/\/+$/, '') ||
+    '/'
+  const canonicalUrl = `${SITE_BASE}${canonicalPath}`
+  // OG/Twitter 图片必须是绝对地址，社交平台不解析相对路径
+  const ogImage =
+    image && /^https?:\/\//i.test(image)
+      ? image
+      : `${SITE_BASE}${image || '/bg_image.jpg'}`
   const TITLE = siteConfig('TITLE')
   const title = meta?.title || TITLE
   const description = meta?.description || `${siteInfo?.description}`
@@ -107,6 +124,7 @@ const SEO = props => {
   return (
     <Head>
       <link rel='icon' href={favicon} />
+      <link rel='canonical' href={canonicalUrl} />
       <title>{title}</title>
       <meta name='theme-color' content={BACKGROUND_DARK} />
       <meta
@@ -149,8 +167,8 @@ const SEO = props => {
       <meta property='og:locale' content={lang} />
       <meta property='og:title' content={title} />
       <meta property='og:description' content={description} />
-      <meta property='og:url' content={url} />
-      <meta property='og:image' content={image} />
+      <meta property='og:url' content={canonicalUrl} />
+      <meta property='og:image' content={ogImage} />
       <meta property='og:image:width' content='1200' />
       <meta property='og:image:height' content='630' />
       <meta property='og:image:alt' content={title} />
@@ -163,7 +181,7 @@ const SEO = props => {
       <meta name='twitter:creator' content={siteConfig('TWITTER_CREATOR', '@NotionNext')} />
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={description} />
-      <meta name='twitter:image' content={image} />
+      <meta name='twitter:image' content={ogImage} />
       <meta name='twitter:image:alt' content={title} />
 
       <link rel='icon' href={BLOG_FAVICON} />
@@ -203,7 +221,7 @@ const SEO = props => {
       <script
         type='application/ld+json'
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generateStructuredData(meta, siteInfo, url, image, AUTHOR))
+          __html: JSON.stringify(generateStructuredData(meta, siteInfo, canonicalUrl, ogImage, AUTHOR))
         }}
       />
 

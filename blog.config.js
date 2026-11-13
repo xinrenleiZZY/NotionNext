@@ -38,7 +38,7 @@ const BLOG = {
 
   AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '仙帝·Zeyan', // 您的昵称
   BIO: process.env.NEXT_PUBLIC_BIO || '放下本仙尊的阔乐！本仙尊乃永恒仙庭仙尊·游走于数据星系与修仙世界的技术修士', // 作者简介
-  LINK: process.env.NEXT_PUBLIC_LINK || 'https://jxspace.top', // 网站地址
+  LINK: process.env.NEXT_PUBLIC_LINK || 'https://www.juxingspacestation.top', // 网站地址（个人博客主域名；jxspace.top 为公司站，勿混用）
   KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '仙帝, Zeyan, 永恒仙庭, 聚星知识产权, AI, 技术博客, Python, Docker, Next.js', // 网站关键词 英文逗号隔开
   BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon.ico', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
   BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '', // 备案号 闽ICP备XXXXXX

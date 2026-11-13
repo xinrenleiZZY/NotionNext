@@ -1,3 +1,4 @@
+import LazyImage from '@/components/LazyImage'
 import SmartLink from '@/components/SmartLink'
 import { siteConfig } from '@/lib/config'
 import CONFIG from '../config'
@@ -20,13 +21,11 @@ export const BlogPostCard = ({ post, showSummary = true }) => {
         {/* Cover Image - Top (Full Width) */}
         {hasCover && (
           <div className='w-full aspect-video flex-shrink-0 relative overflow-hidden z-10 bg-black/5'>
-            <img
+            <LazyImage
               src={post.pageCoverThumbnail}
               alt={post.title}
               width={1200}
               height={675}
-              loading='lazy'
-              decoding='async'
               className='w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700'
             />
             {/* Minimalist marker overlay */}

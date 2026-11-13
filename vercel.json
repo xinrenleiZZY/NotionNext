@@ -1,5 +1,13 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "juxingspacestation.top" }],
+      "destination": "https://www.juxingspacestation.top/$1",
+      "permanent": true
+    }
+  ],
   "headers": []
 }
