@@ -36,7 +36,9 @@ const Header = ({ locale, customNav, customMenu, searchModal }) => {
   return (
     <header className='max-w-6xl mx-auto px-4 pt-0 pb-3 sticky top-0 z-40'>
       <div className='fuwari-card fuwari-navbar relative px-4 py-2.5 flex items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr]'>
-        <SmartLink href='/' className='text-[1.35rem] md:text-[1.45rem] font-bold fuwari-title-gradient text-left'>
+        <SmartLink
+          href='/'
+          className='fuwari-title-gradient max-w-[45vw] truncate whitespace-nowrap text-left text-[1.05rem] font-bold md:max-w-[260px] md:text-[1.15rem]'>
           {siteConfig('TITLE')}
         </SmartLink>
         <MenuList locale={locale} customNav={customNav} customMenu={customMenu} />

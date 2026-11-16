@@ -81,8 +81,8 @@ const CONFIG = {
   FUWARI_WIDGET_ANALYTICS: true,
   /** 顶栏调色板内的色相滑块等；false 时展开调色板无控件 */
   FUWARI_WIDGET_THEME_COLOR_SWITCHER: true,
-  /** 默认品牌色相 0–360 */
-  FUWARI_THEME_COLOR_HUE: 52,
+  /** 默认品牌色相 0–360（官方 Fuwari 默认 250 青蓝；345 粉 / 0 红 / 165 青绿） */
+  FUWARI_THEME_COLOR_HUE: 250,
   /** true：隐藏顶栏调色盘按钮，无法在站内改色相 */
   FUWARI_THEME_COLOR_FIXED: false,
   /** 文章页右侧浮动区：跳转评论区按钮 */
