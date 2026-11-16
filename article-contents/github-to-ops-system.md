@@ -1,8 +1,8 @@
 ---
 title: 90 个仓库之后：我把个人 GitHub 练成了一套「运维系统」
 date: 2026-11-16
-category: 工程札记
-tags: GitHub, 架构设计, FastAPI, Next.js, Docker, 自动化, 爬虫, 可观测性
+category: 技术分享
+tags: GitHub, 架构, FastAPI, Next.js, Docker, 自动化, 爬虫, 可观测性
 summary: 从亚马逊爬虫到模型用量监控中心，从自动补货决策到飞书定时任务——复盘 90 个公开仓库背后的一条主线：每个项目只解决一个真实痛点，最后拼成一套能自我运转的个人工程体系。
 author: 仙帝·Zeyan
 slug: github-to-ops-system

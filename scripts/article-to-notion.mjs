@@ -758,8 +758,32 @@ function printSummary({ file, data, warnings, blockStats, mapped, dryRun }) {
   console.log(lines.join('\n'))
 }
 
-function summarizeBlocks(blocks) {
-  const counter = {}
+function normalizeTitleText(text) {
+  return String(text || '')
+    .replace(/[\s`*_#>「」『』"'"'—–-]/g, '')
+    .toLowerCase()
+}
+
+/**
+ * 正文第一个 H1 如果就是 front-matter 的 title，就删掉它，
+ * 避免「页面标题 + 正文标题」重复渲染两遍。
+ */
+function stripDuplicateTitle(blocks, title) {
+  if (!Array.isArray(blocks) || !blocks.length || !title) return blocks
+  const first = blocks[0]
+  if (!first || first.type !== 'heading_1') return blocks
+  const actual = (first.heading_1?.rich_text || [])
+    .map(item => item.text?.content || '')
+    .join('')
+  const expected = normalizeTitleText(title)
+  const got = normalizeTitleText(actual)
+  if (got && (got === expected || expected.includes(got) || got.includes(expected))) {
+    blocks.shift()
+  }
+  return blocks
+}
+
+function summarizeBlocks(blocks) {  const counter = {}
   for (const block of blocks) {
     counter[block.type] = (counter[block.type] || 0) + 1
   }
@@ -780,6 +804,7 @@ async function publishFile(file, options, context) {
   if (!data.slug) throw new Error(`${file} 缺少 front-matter 字段 slug`)
 
   const blocks = markdownToBlocks(body)
+  stripDuplicateTitle(blocks, data.title)
   const blockStats = summarizeBlocks(blocks)
 
   // dry-run：无 Token 也能看解析结果
