@@ -27,8 +27,11 @@
 
 ## 启用方式
 
-1. 预览（无需改配置）：`https://www.juxingspacestation.top/?theme=firefly`
-2. 设为默认：Notion Config 表 `THEME` = `firefly`，或环境变量 `NEXT_PUBLIC_THEME=firefly`
+**本站已设为默认主题**（`blog.config.js` 的 `THEME` = `firefly`）。
+
+1. 预览/临时切换：`https://www.juxingspacestation.top/?theme=endspace`（其它主题同理）
+2. 改默认：编辑 `blog.config.js:29` 的 `THEME`，或设置环境变量 `NEXT_PUBLIC_THEME`
+3. ⚠️ 2026-11-16 起主题优先级改为：**`?theme=` 查询参数 > 代码配置（`NEXT_PUBLIC_THEME` / `blog.config.js`）> Notion Config 表 `THEME`**。原因：Notion 表里的历史值 `endspace` 会覆盖代码默认主题。涉及 `pages/_app.js`、`lib/config.js`、`lib/global.js` 三处。
 
 ## 配置项（`themes/firefly/config.js`）
 
