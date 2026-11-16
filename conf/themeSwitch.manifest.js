@@ -128,6 +128,12 @@ export const THEME_SWITCH_MANIFEST = {
     summary: '二次元 MD3：樱花粉紫 + 大圆角玻璃卡 + 封面轮播 banner + SVG 水波纹。',
     cover: '/bg_image.jpg',
     coverWebp: ''
+  },
+  firefly: {
+    name: 'Firefly',
+    summary: 'Firefly 复刻：OKLCH hue 驱动 + 玻璃胶囊导航 + 三栏（资料卡/文章流/动态）+ 水波纹 banner。',
+    cover: '/bg_image.jpg',
+    coverWebp: ''
   }
 }
 
