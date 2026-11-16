@@ -43,6 +43,8 @@
     "docs:site:build": "vitepress build",
     "docs:site:preview": "vitepress preview",
     "check-updates": "node scripts/dev-tools.js check-updates",
+    "article:publish": "node scripts/article-to-notion.mjs",
+    "article:dry": "node scripts/article-to-notion.mjs --dry-run",
     "setup-hooks": "node scripts/setup-git-hooks.js install",
     "remove-hooks": "node scripts/setup-git-hooks.js remove",
     "check-hooks": "node scripts/setup-git-hooks.js check",
