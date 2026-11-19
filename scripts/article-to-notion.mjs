@@ -407,15 +407,27 @@ async function notionRequest(method, endpoint, body, retries = 3) {
   }
   const url = endpoint.startsWith('http') ? endpoint : `${API}${endpoint}`
   for (let attempt = 0; attempt <= retries; attempt++) {
-    const response = await fetch(url, {
-      method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Notion-Version': NOTION_VERSION,
-        'Content-Type': 'application/json'
-      },
-      body: body ? JSON.stringify(body) : undefined
-    })
+    let response
+    try {
+      response = await fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Notion-Version': NOTION_VERSION,
+          'Content-Type': 'application/json'
+        },
+        body: body ? JSON.stringify(body) : undefined
+      })
+    } catch (networkError) {
+      // 网络层失败（DNS / TLS / 连接重置）也重试，常见于国内访问 Notion
+      if (attempt < retries) {
+        await sleep(1000 * (attempt + 1))
+        continue
+      }
+      throw new Error(
+        `Notion API ${method} ${endpoint} 网络请求失败（已重试 ${retries} 次）：${networkError.message}`
+      )
+    }
     if (response.status === 429 || response.status >= 500) {
       const retryAfter = Number(response.headers.get('retry-after')) || 1
       if (attempt < retries) {
