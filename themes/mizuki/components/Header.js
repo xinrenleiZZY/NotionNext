@@ -56,12 +56,14 @@ export default function Header(props) {
         className='mx-auto flex h-[4.5rem] items-center justify-between px-4'
         style={{ maxWidth: 'var(--layout-page-width)' }}>
         <SmartLink href='/' className='flex min-w-0 items-center gap-2 no-underline'>
-          <span
-            className='h-8 w-8 shrink-0 rounded-lg'
-            style={{
-              background:
-                'linear-gradient(135deg, var(--primary), var(--btn-regular-bg-hover))'
-            }}
+          <img
+            src={siteConfig('BLOG_LOGO')}
+            alt=''
+            width={32}
+            height={32}
+            draggable={false}
+            className='h-8 w-8 shrink-0 rounded-full object-cover'
+            style={{ boxShadow: '0 0 0 1px var(--line-divider)' }}
           />
           <span
             className='truncate text-[15px] font-bold'

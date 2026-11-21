@@ -117,6 +117,23 @@ function parseFrontMatter(text) {
 
 const INLINE_PATTERN = /(\*\*[^*]+\*\*|`[^`]+`|\*[^*\n]+\*|_[^_\n]+_|\[[^\]]+\]\([^)]+\))/g
 
+/**
+ * 只允许 http(s) / mailto / tel 链接；其余（相对路径、"github.com/x" 这种缺协议的）返回 null。
+ * Notion API 会校验 link.url，非法 URL 会直接 400 整块失败。
+ */
+function sanitizeUrl(raw) {
+  const url = String(raw || '').trim()
+  if (!url || /\s/.test(url)) return null
+  if (!/^(https?:\/\/|mailto:|tel:)/i.test(url)) return null
+  try {
+    // eslint-disable-next-line no-new
+    new URL(url)
+    return url
+  } catch (e) {
+    return null
+  }
+}
+
 function richText(text, options = {}) {
   const source = String(text ?? '')
   if (!source) return []
@@ -133,7 +150,9 @@ function richText(text, options = {}) {
       result.push(rt(chunk.slice(1, -1), { italic: true }, options))
     } else if (/^\[[^\]]+\]\([^)]+\)$/.test(chunk)) {
       const m = chunk.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
-      result.push(rt(m[1], {}, { ...options, link: m[2] }))
+      const url = sanitizeUrl(m[2])
+      // 非法链接（相对路径 / 无协议 / 含空格）降级为纯文本，否则 Notion 会整块拒收
+      result.push(url ? rt(m[1], {}, { ...options, link: url }) : rt(m[1], {}, options))
     } else {
       result.push(rt(chunk, {}, options))
     }
@@ -216,12 +235,15 @@ function blockDivider() {
 }
 
 function blockImage(url, alt) {
+  const safe = sanitizeUrl(url)
+  // 非法图片地址降级成文字，避免整篇写入失败
+  if (!safe) return blockParagraph(alt ? `[图片] ${alt}` : '[图片]')
   return {
     object: 'block',
     type: 'image',
     image: {
       type: 'external',
-      external: { url },
+      external: { url: safe },
       caption: alt ? richText(alt) : []
     }
   }
@@ -717,6 +739,7 @@ function parseArgs(argv) {
     else if (arg === '--list-databases') options.flags.listDatabases = true
     else if (arg === '--help' || arg === '-h') options.flags.help = true
     else if (arg === '--database') options.flags.database = argv[++i]
+    else if (arg === '--page') options.flags.page = argv[++i]
     else if (arg === '--status') options.flags.status = argv[++i]
     else if (arg === '--type') options.flags.type = argv[++i]
     else if (arg.startsWith('--')) options.flags[arg.slice(2)] = true
@@ -735,6 +758,7 @@ function printHelp() {
   --update            按 slug 查找已存在页面并更新属性
   --replace           配合 --update：先删除旧正文再重写（危险，默认只更新属性）
   --database <id>     指定 Notion 数据库 ID（默认自动查找）
+  --page <id>         只把正文写入已存在的页面（不改属性），用于补全空文章
   --status <值>       发布状态，默认 Published
   --type <值>         文章类型，默认 Post
   --list-databases    列出站点根页面下的 child_database
@@ -779,11 +803,17 @@ function normalizeTitleText(text) {
 /**
  * 正文第一个 H1 如果就是 front-matter 的 title，就删掉它，
  * 避免「页面标题 + 正文标题」重复渲染两遍。
+ * force=true 时（写入已有页面）无条件去掉首个 H1，因为页面自身已有标题。
  */
-function stripDuplicateTitle(blocks, title) {
-  if (!Array.isArray(blocks) || !blocks.length || !title) return blocks
+function stripDuplicateTitle(blocks, title, force = false) {
+  if (!Array.isArray(blocks) || !blocks.length) return blocks
   const first = blocks[0]
   if (!first || first.type !== 'heading_1') return blocks
+  if (force) {
+    blocks.shift()
+    return blocks
+  }
+  if (!title) return blocks
   const actual = (first.heading_1?.rich_text || [])
     .map(item => item.text?.content || '')
     .join('')
@@ -795,7 +825,8 @@ function stripDuplicateTitle(blocks, title) {
   return blocks
 }
 
-function summarizeBlocks(blocks) {  const counter = {}
+function summarizeBlocks(blocks) {
+  const counter = {}
   for (const block of blocks) {
     counter[block.type] = (counter[block.type] || 0) + 1
   }
@@ -816,7 +847,7 @@ async function publishFile(file, options, context) {
   if (!data.slug) throw new Error(`${file} 缺少 front-matter 字段 slug`)
 
   const blocks = markdownToBlocks(body)
-  stripDuplicateTitle(blocks, data.title)
+  stripDuplicateTitle(blocks, data.title, Boolean(options.flags.page))
   const blockStats = summarizeBlocks(blocks)
 
   // dry-run：无 Token 也能看解析结果
@@ -831,6 +862,21 @@ async function publishFile(file, options, context) {
       dryRun: true
     })
     return { file: absolute, status: 'dry-run', blocks: blockStats.total }
+  }
+
+  // 仅把正文写入已存在页面（补全空文章用，不改属性）
+  if (options.flags.page) {
+    const pageId = options.flags.page
+    let replaced = 0
+    if (options.flags.replace) {
+      replaced = await deleteChildren(pageId)
+    }
+    await appendBlocks(pageId, blocks)
+    printSummary({ file: absolute, data, warnings: [], blockStats, mapped: null })
+    console.log(
+      `   ✅ 已写入页面 ${pageId}${replaced ? `（清空 ${replaced} 个旧 block）` : ''}`
+    )
+    return { file: absolute, status: 'appended', pageId }
   }
 
   const databaseId = context.databaseId
@@ -909,7 +955,8 @@ async function main() {
   }
 
   let context = {}
-  if (needsNotion) {
+  // --page 模式只写正文，不需要解析数据库/属性
+  if (needsNotion && !options.flags.page) {
     const databaseId = await resolveDatabase(options.flags.database, blogConfig)
     const schema = await getSchema(databaseId)
     context = { databaseId, schema }

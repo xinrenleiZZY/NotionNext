@@ -63,12 +63,14 @@ export default function Navbar(props) {
             href='/'
             className='ff-btn-plain shrink-0 px-2 py-1.5 no-underline'
             style={{ color: overlay && !scrolled ? '#fff' : 'var(--deep-text)' }}>
-            <span
-              className='h-6 w-6 rounded-md'
-              style={{
-                background:
-                  'linear-gradient(135deg, var(--primary), var(--btn-regular-bg-hover))'
-              }}
+            <img
+              src={siteConfig('BLOG_LOGO')}
+              alt=''
+              width={24}
+              height={24}
+              draggable={false}
+              className='h-6 w-6 shrink-0 rounded-full object-cover'
+              style={{ boxShadow: '0 0 0 1px var(--line-divider)' }}
             />
             <span className='max-w-[38vw] truncate text-[0.9rem] font-bold'>
               {title}

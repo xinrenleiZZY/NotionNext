@@ -41,6 +41,7 @@ const BLOG = {
   LINK: process.env.NEXT_PUBLIC_LINK || 'https://www.juxingspacestation.top', // 网站地址（个人博客主域名；jxspace.top 为公司站，勿混用）
   KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '仙帝, Zeyan, 永恒仙庭, 聚星知识产权, AI, 技术博客, Python, Docker, Next.js', // 网站关键词 英文逗号隔开
   BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon.ico', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
+  BLOG_LOGO: process.env.NEXT_PUBLIC_LOGO || '/brand/zenyth-avatar-64.png', // 顶栏站点标识（头像），建议正方形图片；可用 NEXT_PUBLIC_LOGO 覆盖
   BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '', // 备案号 闽ICP备XXXXXX
   BEI_AN_LINK: process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://beian.miit.gov.cn/', // 备案查询链接，如果用了萌备等备案请在这里填写
   BEI_AN_GONGAN: process.env.NEXT_PUBLIC_BEI_AN_GONGAN || '', // 公安备案号，例如 '浙公网安备3xxxxxxxx8号'

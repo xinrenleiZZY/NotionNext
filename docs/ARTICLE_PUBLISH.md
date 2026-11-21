@@ -54,7 +54,13 @@ node scripts/article-to-notion.mjs --list-databases
 
 # 7. 指定数据库 / 改状态
 yarn article:publish article-contents/foo.md --database <db-id> --status Published --type Post
+
+# 8. 只把正文灌进「已存在的页面」（不动属性）—— 用于补全历史上只同步了标题的空文章
+node scripts/article-to-notion.mjs article-contents/foo.md --page <page-id>
+node scripts/article-to-notion.mjs article-contents/foo.md --page <page-id> --replace
 ```
+
+> `--page` 模式会自动去掉正文首个 H1（页面本身已有标题），并把非法链接（相对路径、缺协议）降级成纯文本——Notion 会因非法 URL 整块拒收。
 
 ## front-matter 约定
 
