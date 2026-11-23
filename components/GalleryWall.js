@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const FAV_KEY = 'gallery-favorites'
+const ADULT_KEY = 'gallery-adult-confirmed'
 
 /**
  * 照片墙 / 相册组件
@@ -27,11 +28,23 @@ export default function GalleryWall({ config }) {
   const [activeTag, setActiveTag] = useState('')
   const [lightbox, setLightbox] = useState(-1)
   const [favorites, setFavorites] = useState([])
+  const [adultConfirmed, setAdultConfirmed] = useState(false)
+  const [showSensitive, setShowSensitive] = useState(true)
+
+  const hasSensitive = useMemo(() => items.some(item => item.sensitive), [items])
 
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(FAV_KEY) || '[]')
       if (Array.isArray(saved)) setFavorites(saved)
+      if (localStorage.getItem(ADULT_KEY) === '1') setAdultConfirmed(true)
+    } catch (e) {}
+  }, [])
+
+  const confirmAdult = useCallback(() => {
+    setAdultConfirmed(true)
+    try {
+      localStorage.setItem(ADULT_KEY, '1')
     } catch (e) {}
   }, [])
 
@@ -45,13 +58,14 @@ export default function GalleryWall({ config }) {
     })
   }, [])
 
-  const visible = useMemo(
-    () =>
-      activeTag
-        ? items.filter(item => (item.tags || []).includes(activeTag))
-        : items,
-    [items, activeTag]
-  )
+  const visible = useMemo(() => {
+    const allowSensitive = adultConfirmed && showSensitive
+    return items.filter(item => {
+      if (item.sensitive && !allowSensitive) return false
+      if (activeTag && !(item.tags || []).includes(activeTag)) return false
+      return true
+    })
+  }, [items, activeTag, adultConfirmed, showSensitive])
 
   const resolveSrc = useCallback(src => {
     const value = String(src || '')
@@ -114,6 +128,27 @@ export default function GalleryWall({ config }) {
         )}
       </header>
 
+      {hasSensitive && !adultConfirmed && (
+        <div
+          className='mb-5 flex flex-wrap items-center gap-3 rounded-2xl px-4 py-3 text-sm'
+          style={{
+            background: 'var(--btn-regular-bg, #ffe7ef)',
+            color: 'var(--deep-text, #3a1f2b)'
+          }}>
+          <span className='font-semibold'>🔞 本站相册含 18+ 插画</span>
+          <span style={{ color: 'var(--content-meta, rgba(0,0,0,.62))' }}>
+            默认仅显示全年龄内容。确认已满 18 岁后可查看全部。
+          </span>
+          <button
+            type='button'
+            onClick={confirmAdult}
+            className='rounded-full px-3 py-1.5 text-xs font-semibold text-white'
+            style={{ background: 'var(--primary, #d6336c)' }}>
+            我已满 18 岁，显示全部
+          </button>
+        </div>
+      )}
+
       {config?.SHOW_TAGS !== false && allTags.length > 0 && (
         <div className='mb-6 flex flex-wrap items-center gap-2'>
           <button
@@ -125,7 +160,7 @@ export default function GalleryWall({ config }) {
                 activeTag === '' ? 'var(--primary, #d6336c)' : 'var(--btn-regular-bg, #ffe7ef)',
               color: activeTag === '' ? '#fff' : 'var(--btn-content, #c2255c)'
             }}>
-            全部 {items.length}
+            全部 {visible.length}
           </button>
           {allTags.slice(0, 16).map(tag => (
             <button
@@ -141,6 +176,18 @@ export default function GalleryWall({ config }) {
               {tag}
             </button>
           ))}
+          {hasSensitive && adultConfirmed && (
+            <button
+              type='button'
+              onClick={() => setShowSensitive(v => !v)}
+              className='ml-auto rounded-full px-3 py-1.5 text-xs font-medium transition-colors'
+              style={{
+                background: showSensitive ? 'var(--primary, #d6336c)' : 'var(--btn-regular-bg, #ffe7ef)',
+                color: showSensitive ? '#fff' : 'var(--btn-content, #c2255c)'
+              }}>
+              {showSensitive ? '隐藏 18+' : '显示 18+'}
+            </button>
+          )}
         </div>
       )}
 
@@ -164,7 +211,9 @@ export default function GalleryWall({ config }) {
               return (
                 <figure
                   key={`${item.src}-${index}`}
-                  className='gw-item group relative cursor-zoom-in overflow-hidden'
+                  className={`gw-item group relative cursor-zoom-in overflow-hidden ${
+                    item.sensitive ? 'is-adult' : ''
+                  }`}
                   onClick={() => setLightbox(index)}>
                   <img
                     src={resolveSrc(item.thumb || item.src)}
@@ -173,6 +222,8 @@ export default function GalleryWall({ config }) {
                     decoding='async'
                     className='h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
                   />
+
+                  {item.sensitive && <span className='gw-adult-badge'>18+</span>}
 
                   <button
                     type='button'
@@ -310,6 +361,29 @@ export default function GalleryWall({ config }) {
         .gw-fav.is-fav {
           background: #ff6b8a;
           color: #fff;
+        }
+        /* 18+ 缩略图默认模糊，悬停/聚焦时清晰 */
+        .gw-item.is-adult img {
+          filter: blur(14px) saturate(1.05);
+          transition: filter 0.3s ease, transform 0.5s ease;
+        }
+        .gw-item.is-adult:hover img,
+        .gw-item.is-adult:focus-within img {
+          filter: blur(0);
+        }
+        .gw-adult-badge {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          z-index: 2;
+          padding: 2px 7px;
+          border-radius: 999px;
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          color: #fff;
+          background: rgba(214, 51, 108, 0.92);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
         }
         .gw-caption {
           position: absolute;

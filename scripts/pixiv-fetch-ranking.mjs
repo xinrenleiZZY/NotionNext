@@ -30,7 +30,8 @@ function parseArgs() {
     pages: 4,
     limit: 120,
     out: 'conf/gallery-pixiv.config.js',
-    merge: true
+    merge: true,
+    includeSensitive: false
   }
   const argv = process.argv.slice(2)
   for (let i = 0; i < argv.length; i++) {
@@ -40,6 +41,7 @@ function parseArgs() {
     else if (a === '--limit') args.limit = Number(argv[++i]) || 120
     else if (a === '--out') args.out = argv[++i]
     else if (a === '--rebuild') args.merge = false
+    else if (a === '--include-sensitive') args.includeSensitive = true
   }
   return args
 }
@@ -66,12 +68,19 @@ async function getJson(url, cookie, referer = 'https://www.pixiv.net/ranking.php
   }
 }
 
-function isSafe(item) {
+function isSafe(item, includeSensitive) {
   const t = item?.illust_content_type || {}
-  if (Number(t.sexual) > 0) return false
+  // 任何模式都排除猎奇/暴力
   if (t.grotesque || t.violent) return false
   if (item?.illust_type !== '0') return false // 只要插画（跳过动图/漫画）
+  // 默认只要全年龄；--include-sensitive 时允许 sexual 标记（页面侧有 18+ 门禁）
+  if (!includeSensitive && Number(t.sexual) > 0) return false
   return true
+}
+
+function isSensitive(item) {
+  const t = item?.illust_content_type || {}
+  return Number(t.sexual) > 0
 }
 
 function normalizeTag(tag) {
@@ -99,7 +108,7 @@ async function main() {
     return
   }
 
-  const { modes, pages, limit, out, merge } = parseArgs()
+  const { modes, pages, limit, out, merge, includeSensitive } = parseArgs()
   console.log(`抓取模式：${modes.join(', ')} | 每榜 ${pages} 页 | 目标 ${limit} 张`)
 
   // 1) 收集候选
@@ -127,7 +136,7 @@ async function main() {
   // 2) 过滤 + 打散（各榜交替，保证多样性）
   const byMode = new Map()
   for (const item of candidates.values()) {
-    if (!isSafe(item)) continue
+    if (!isSafe(item, includeSensitive)) continue
     if (!byMode.has(item._mode)) byMode.set(item._mode, [])
     byMode.get(item._mode).push(item)
   }
@@ -170,7 +179,8 @@ async function main() {
       tags: ['Pixiv', ...tags],
       link: `https://www.pixiv.net/artworks/${id}`,
       pixivId: id,
-      mode: item._mode
+      mode: item._mode,
+      ...(isSensitive(item) ? { sensitive: true } : {})
     })
     if (entries.length % 10 === 0) console.log(`  详情进度 ${entries.length}/${picked.length}`)
     await sleep(700)

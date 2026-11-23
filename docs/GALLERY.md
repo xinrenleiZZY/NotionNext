@@ -63,6 +63,25 @@ PIXIV_COOKIE="..." node scripts/pixiv-fetch-ranking.mjs --rebuild
 
 > 遇到少量 `429` 时，该条目会先用榜单缩略图兜底；隔一段时间重跑即可补成高清。
 
+### 18+ 内容（年龄门禁）
+
+默认只抓全年龄作品。要包含敏感内容：
+
+```bash
+PIXIV_COOKIE="..." node scripts/pixiv-fetch-ranking.mjs --include-sensitive --limit 170
+```
+
+- 始终排除 `grotesque`（猎奇）/ `violent`（暴力）/ 动图 / 漫画
+- 敏感条目会写入 `sensitive: true`
+- 页面侧规则：
+  - **默认隐藏**所有敏感条目，顶部显示「🔞 含 18+ 插画」提示
+  - 点击「我已满 18 岁，显示全部」后写入 `localStorage`，才显示
+  - 18+ 卡片带 `18+` 角标，缩略图默认**高斯模糊**，悬停/聚焦才清晰
+  - 可随时用「隐藏 18+ / 显示 18+」按钮切换
+- 灯箱不额外模糊（已通过年龄门禁）
+
+> 注意：不同地区对成人内容的法律要求不同，公开可访问的站点建议保留门禁，不要直接展示。
+
 ### 方式 B：指定作品 ID
 
 ```bash
