@@ -64,7 +64,7 @@ const GALLERY = {
   ENABLE: true,
   TITLE: '星轨相册',
   DESCRIPTION:
-    'Pixiv 月/周/日/新人榜精选与个人收藏，共 176 张。含 18+ 内容（默认隐藏，确认年龄后可见）。点击可放大查看，卡片右下角可跳转作者原出处。',
+    'Pixiv 月/周/日/新人榜精选与个人收藏，共 206 张（仅单张插画，已排除漫画/多页）。含 18+ 内容（默认隐藏，确认年龄后可见）。点击可放大查看，卡片右下角可跳转作者原出处。',
   COLUMNS: 4,
   SHOW_TAGS: true,
   ITEMS: [...PIXIV_ITEMS, ...LOCAL_ITEMS]

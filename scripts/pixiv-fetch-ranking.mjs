@@ -73,6 +73,8 @@ function isSafe(item, includeSensitive) {
   // 任何模式都排除猎奇/暴力
   if (t.grotesque || t.violent) return false
   if (item?.illust_type !== '0') return false // 只要插画（跳过动图/漫画）
+  // 多页作品（漫画/分镜）不要，照片墙只要单张插画
+  if (Number(item?.illust_page_count) > 1) return false
   // 默认只要全年龄；--include-sensitive 时允许 sexual 标记（页面侧有 18+ 门禁）
   if (!includeSensitive && Number(t.sexual) > 0) return false
   return true
