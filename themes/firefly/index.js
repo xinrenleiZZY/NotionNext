@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import Banner from './components/Banner'
 import Catalog from './components/Catalog'
+import MotionLayer from './components/MotionLayer'
 import Navbar from './components/Navbar'
 import PostList from './components/PostList'
 import ProfileCard from './components/ProfileCard'
@@ -291,6 +292,7 @@ const LayoutBase = props => {
   return (
     <div id='theme-firefly' className={siteConfig('FONT_STYLE')} style={{ '--hue': hue }}>
       <Style />
+      <MotionLayer />
 
       {/* 可替换的全站背景图 */}
       {wallpaper && (

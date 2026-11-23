@@ -262,6 +262,97 @@ export const Style = () => {
       }
 
       /* ============================
+         入场动画层（默认不显示，JS 打开）
+         ============================ */
+      .ff-intro {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+        background: var(--page-bg, #f6fffb);
+        clip-path: inset(0 0 0 0);
+        will-change: clip-path;
+      }
+
+      .ff-intro.is-on {
+        display: flex;
+      }
+
+      .ff-intro-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .ff-intro-logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 999px;
+        object-fit: cover;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14);
+        opacity: 0;
+      }
+
+      .ff-intro-word {
+        overflow: hidden;
+        font-size: clamp(1.5rem, 4vw, 2.6rem);
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        color: var(--deep-text, #0b1a16);
+        opacity: 0;
+      }
+
+      .ff-intro-bar {
+        display: block;
+        width: min(240px, 46vw);
+        height: 2px;
+        border-radius: 999px;
+        background: var(--line-color, rgba(0, 0, 0, 0.1));
+        overflow: hidden;
+      }
+
+      .ff-intro-bar i {
+        display: block;
+        width: 100%;
+        height: 100%;
+        transform-origin: left center;
+        transform: scaleX(0);
+        background: var(--primary);
+      }
+
+      /* Lenis 平滑滚动配套样式 */
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
+      }
+
+      /* 滚动揭示元素（JS 初始化后由 GSAP 控制透明度，避免无 JS 时不可见） */
+      .ff-card-shadow,
+      .ff-section-title,
+      .ff-profile-card {
+        will-change: transform, opacity;
+      }
+
+      /* ============================
          Banner + 水波纹（Canvas）
          ============================ */
       .ff-waves-canvas {

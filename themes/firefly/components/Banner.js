@@ -104,7 +104,7 @@ export default function Banner(props) {
       />
 
       {/* 文案 */}
-      <div className='relative z-10 flex h-full flex-col items-center justify-center px-6 text-center'>
+      <div className='ff-banner-parallax relative z-10 flex h-full flex-col items-center justify-center px-6 text-center'>
         <h1 className='ff-banner-title text-3xl font-extrabold text-white md:text-5xl lg:text-6xl'>
           {title}
         </h1>
@@ -114,7 +114,7 @@ export default function Banner(props) {
           </p>
         )}
 
-        <div className='mt-7 flex items-center gap-3'>
+        <div className='ff-banner-social mt-7 flex items-center gap-3'>
           {github && (
             <a
               href={github}
@@ -147,7 +147,7 @@ export default function Banner(props) {
         </div>
 
         {images.length > 1 && (
-          <div className='mt-6 flex items-center gap-1.5'>
+          <div className='ff-banner-dots mt-6 flex items-center gap-1.5'>
             {images.map((_, index) => (
               <button
                 key={index}
