@@ -41,14 +41,32 @@
 
 ## 二、批量导入 Pixiv
 
+### 方式 A：直接抓排行榜（已内置，当前 18 张即由此生成）
+
 ```bash
-# 浏览器登录 pixiv 后，F12 → Application → Cookies → PHPSESSID
-PIXIV_COOKIE="PHPSESSID=xxxxx" node scripts/pixiv-import.mjs 12345678 23456789
+# 浏览器登录 pixiv 后取 Cookie：PHPSESSID + cf_clearance
+PIXIV_COOKIE="PHPSESSID=xxx; cf_clearance=yyy" node scripts/pixiv-fetch-ranking.mjs --limit 18
+# 可选：--mode daily|weekly|monthly|rookie，默认 monthly
+```
+
+脚本会：
+
+1. 抓排行榜 JSON（每页 50 条，不够自动抓第二页）
+2. **过滤** `sexual>0` / `grotesque` / `violent` 的作品（公开博客安全）
+3. 逐条补 `ajax/illust/{id}` 拿到高清图、作者、标签
+4. 生成 `conf/gallery-pixiv.config.js`（含 `src/title/author/tags/link/pixivId/rank`）
+
+生成后提交即可，页面会自动显示「标签 + 今日推荐（前三名）+ 作者 + 作者出处 + NO.xx + 收藏」。
+
+### 方式 B：指定作品 ID
+
+```bash
+PIXIV_COOKIE="PHPSESSID=xxxxx" node scripts/pixiv-import.mjs 152294495 12345678
 # 或从文件读取（每行一个 ID / 链接）
 PIXIV_COOKIE="PHPSESSID=xxxxx" node scripts/pixiv-import.mjs --file ids.txt
 ```
 
-脚本会输出可直接粘贴到 `ITEMS` 数组的条目（含标题、作者、标签、作品链接）。
+脚本会输出可直接粘贴到 `ITEMS` 数组的条目。
 
 **版权提醒**：Pixiv 作品版权归原作者所有。请保留 `author` 与 `link`，不要商用，不要去除水印。
 
