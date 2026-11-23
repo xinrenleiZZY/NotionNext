@@ -20,9 +20,9 @@ import { useEffect, useRef } from 'react'
 const LAYERS = [
   // y: 基线高度比例；amp: 振幅（相对高度）；freq: 周期数；speed: 相位速度；alpha: 透明度
   // 从后往前画：最后一层近乎不透明，形成清晰的「波形前缘」，看起来才像水
-  { y: 0.5, amp: 0.16, freq: 1.9, speed: 0.62, alpha: 0.34, phase: 0 },
-  { y: 0.64, amp: 0.13, freq: 2.7, speed: -0.48, alpha: 0.58, phase: 1.7 },
-  { y: 0.8, amp: 0.11, freq: 3.5, speed: 0.78, alpha: 0.98, phase: 3.4 }
+  { y: 0.48, amp: 0.2, freq: 2.4, speed: 0.85, alpha: 0.34, phase: 0 },
+  { y: 0.62, amp: 0.17, freq: 3.2, speed: -0.65, alpha: 0.56, phase: 1.7 },
+  { y: 0.8, amp: 0.14, freq: 4.2, speed: 1.0, alpha: 0.98, phase: 3.4 }
 ]
 
 export default function WavesCanvas({ className }) {
