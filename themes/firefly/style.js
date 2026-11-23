@@ -269,9 +269,9 @@ export const Style = () => {
         bottom: -1px;
         left: 0;
         width: 100%;
-        height: 11vh;
-        min-height: 56px;
-        max-height: 140px;
+        height: 12vh;
+        min-height: 64px;
+        max-height: 160px;
         pointer-events: none;
         z-index: 5;
         display: block;
