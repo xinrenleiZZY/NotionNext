@@ -77,14 +77,16 @@ export default function Navbar(props) {
             </span>
           </SmartLink>
 
-          {/* 桌面菜单 */}
-          <nav className='mx-auto hidden min-w-0 items-center gap-0.5 overflow-hidden lg:flex'>
+          {/* 桌面菜单：强制单行，放不下时横向滚动（不换行、不压 banner） */}
+          <nav
+            className='mx-auto hidden min-w-0 flex-1 flex-nowrap items-center justify-center gap-0.5 overflow-x-auto overflow-y-hidden lg:flex'
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {links.map((link, index) => (
               <SmartLink
                 key={`${link.href || link.name}-${index}`}
                 href={link.href}
                 target={link.target}
-                className='ff-btn-plain shrink-0 whitespace-nowrap px-3 py-1.5 text-[0.8125rem] font-medium no-underline'
+                className='ff-btn-plain shrink-0 whitespace-nowrap px-2 py-1.5 text-[0.8125rem] font-medium no-underline xl:px-2.5'
                 style={{ color: overlay && !scrolled ? '#fff' : 'var(--content-meta)' }}>
                 {link.icon && <i className={`${link.icon} text-[0.75rem]`} />}
                 {link.name}
