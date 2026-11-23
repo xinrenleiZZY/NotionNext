@@ -284,7 +284,7 @@ const LayoutBase = props => {
   const hue = siteConfig('FIREFLY_HUE', 165, CONFIG)
 
   return (
-    <div id='theme-firefly' className={siteConfig('FONT_STYLE')} style={{ '--hue': hue }}>
+    <div id='theme-firefly-y' className={siteConfig('FONT_STYLE')} style={{ '--hue': hue }}>
       <Style />
       <Navbar {...props} overlay={hasBanner} />
 
