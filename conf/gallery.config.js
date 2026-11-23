@@ -65,7 +65,7 @@ const GALLERY = {
   TITLE: '星轨相册',
   DESCRIPTION:
     'Pixiv 月榜精选与个人收藏。点击可放大查看，卡片右下角可跳转作者原出处。',
-  COLUMNS: 3,
+  COLUMNS: 4,
   SHOW_TAGS: true,
   ITEMS: [...PIXIV_ITEMS, ...LOCAL_ITEMS]
 }

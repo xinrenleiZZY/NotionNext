@@ -167,7 +167,7 @@ export default function GalleryWall({ config }) {
                   className='gw-item group relative cursor-zoom-in overflow-hidden'
                   onClick={() => setLightbox(index)}>
                   <img
-                    src={resolveSrc(item.src)}
+                    src={resolveSrc(item.thumb || item.src)}
                     alt={item.title || ''}
                     loading='lazy'
                     decoding='async'
