@@ -43,7 +43,10 @@ export default function MotionLayer() {
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const finePointer =
-      window.matchMedia && window.matchMedia('(pointer: fine)').matches
+      window.matchMedia &&
+      (window.matchMedia('(pointer: fine)').matches ||
+        window.matchMedia('(hover: hover)').matches ||
+        !('ontouchstart' in window))
 
     let disposed = false
     let cleanup = []
