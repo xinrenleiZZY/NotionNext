@@ -262,20 +262,21 @@ export const Style = () => {
       }
 
       /* ============================
-         Banner + 水波纹
+         Banner + 水波纹（Canvas）
          ============================ */
-      .ff-waves {
+      .ff-waves-canvas {
         position: absolute;
         bottom: -1px;
         left: 0;
         width: 100%;
-        height: 10vh;
-        min-height: 52px;
+        height: 11vh;
+        min-height: 56px;
         max-height: 140px;
         pointer-events: none;
         z-index: 5;
-        overflow: hidden;
         display: block;
+        /* 让 canvas 能读到主题的 --page-bg（用于取色绘制） */
+        color: var(--page-bg);
       }
 
       /* 可替换的全站背景图（固定层，不遮挡内容） */
@@ -292,37 +293,6 @@ export const Style = () => {
         height: 100%;
         object-fit: cover;
         transform: scale(1.04);
-      }
-
-      .ff-waves path {
-        fill: var(--page-bg);
-        transition: fill 0.15s;
-        will-change: transform;
-        transform: translateZ(0);
-        backface-visibility: hidden;
-      }
-
-      .ff-wave-1 {
-        animation: ff-move-wave 14s linear infinite;
-        opacity: 0.6;
-      }
-      .ff-wave-2 {
-        animation: ff-move-wave 20s linear infinite reverse;
-        opacity: 0.4;
-      }
-      .ff-wave-3 {
-        animation: ff-move-wave 28s linear infinite;
-        opacity: 0.24;
-      }
-
-      /* 路径本身宽 2880（两个完整周期），平移 -50% 正好一个周期，首尾无缝 */
-      @keyframes ff-move-wave {
-        from {
-          transform: translate3d(0, 0, 0);
-        }
-        to {
-          transform: translate3d(-50%, 0, 0);
-        }
       }
 
       @keyframes ff-fade-up {
@@ -437,7 +407,6 @@ export const Style = () => {
 
       @media (prefers-reduced-motion: reduce) {
         #theme-firefly *,
-        .ff-waves path,
         .ff-kenburns,
         .ff-banner-title,
         .ff-banner-subtitle {

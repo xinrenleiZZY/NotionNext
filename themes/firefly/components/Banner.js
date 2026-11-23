@@ -5,6 +5,7 @@ import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { useEffect, useMemo, useState } from 'react'
 import CONFIG from '../config'
+import WavesCanvas from './WavesCanvas'
 
 /**
  * Firefly 首页 Banner：
@@ -165,27 +166,8 @@ export default function Banner(props) {
         )}
       </div>
 
-      {/* 水波纹：每条路径由两段完全相同的波组成（周期无缝），动画平移 -50% 正好一个周期 */}
-      {showWaves && (
-        <svg
-          className='ff-waves'
-          viewBox='0 0 2880 180'
-          preserveAspectRatio='none'
-          aria-hidden='true'>
-          <path
-            className='ff-wave-1'
-            d='M0,80 C240,20 480,140 720,80 C960,20 1200,140 1440,80 C1680,20 1920,140 2160,80 C2400,20 2640,140 2880,80 L2880,180 L0,180 Z'
-          />
-          <path
-            className='ff-wave-2'
-            d='M0,110 C240,150 480,70 720,110 C960,150 1200,70 1440,110 C1680,150 1920,70 2160,110 C2400,150 2640,70 2880,110 L2880,180 L0,180 Z'
-          />
-          <path
-            className='ff-wave-3'
-            d='M0,140 C240,164 480,116 720,140 C960,164 1200,116 1440,140 C1680,164 1920,116 2160,140 C2400,164 2640,116 2880,140 L2880,180 L0,180 Z'
-          />
-        </svg>
-      )}
+      {/* 水波纹：Canvas 连续正弦波（无拼接边界，宽屏也平滑流动） */}
+      {showWaves && <WavesCanvas className='ff-waves-canvas' />}
     </div>
   )
 }
