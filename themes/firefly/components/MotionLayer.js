@@ -108,11 +108,15 @@ export default function MotionLayer() {
         if (lenis) {
           const onScroll = () => ScrollTriggerInstance.update()
           lenis.on('scroll', onScroll)
-          const tick = time => lenis.raf(time * 1000)
-          gsapInstance.ticker.add(tick)
-          gsapInstance.ticker.lagSmoothing(0)
+          // 用自己的 rAF 循环驱动（不依赖 GSAP ticker，避免 ticker 未运行时不动）
+          let frame = 0
+          const raf = time => {
+            lenis.raf(time)
+            frame = requestAnimationFrame(raf)
+          }
+          frame = requestAnimationFrame(raf)
           cleanup.push(() => {
-            gsapInstance?.ticker.remove(tick)
+            cancelAnimationFrame(frame)
             lenis?.off?.('scroll', onScroll)
           })
         }
