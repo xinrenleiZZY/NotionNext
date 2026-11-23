@@ -111,7 +111,15 @@ export default function MotionLayer() {
         }
 
         // ---------- 入场动画 ----------
-        if (introEl && firstVisit && !reduceMotion) {
+        const pending =
+          document.documentElement.classList.contains('ff-intro-pending')
+        const startedAt = window.__ffIntroStart || Date.now()
+        const bootDelay = Date.now() - startedAt
+        // 首屏 JS 就绪太晚（>1.6s，CSS 自动淡出已开始）就不播完整入场，直接收尾
+        const playFull = firstVisit && !reduceMotion && bootDelay < 1600
+
+        if (introEl && playFull) {
+          document.documentElement.classList.remove('ff-intro-pending')
           introEl.classList.add('is-on')
           // 兜底：动画异常时 6 秒后强制关闭，绝不挡页面
           cleanup.push(
@@ -175,7 +183,24 @@ export default function MotionLayer() {
               '-=0.7'
             )
           cleanup.push(() => tl.kill())
+        } else if (introEl && pending) {
+          // 遮罩由内联脚本显示，但 JS 就绪时 CSS 已自动淡出：直接收尾，不要二次闪现
+          document.documentElement.classList.remove('ff-intro-pending')
+          introEl.classList.remove('is-on')
+          introEl.style.display = 'none'
+          try {
+            sessionStorage.setItem(INTRO_KEY, '1')
+          } catch (e) {}
+          if (!reduceMotion) {
+            gsapInstance.fromTo(
+              '.ff-banner-title, .ff-banner-subtitle',
+              { y: 18, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' }
+            )
+          }
         } else {
+          document.documentElement.classList.remove('ff-intro-pending')
+          if (introEl) introEl.style.display = 'none'
           // 非首次：hero 轻微淡入，避免硬切
           if (!reduceMotion) {
             gsapInstance.fromTo(

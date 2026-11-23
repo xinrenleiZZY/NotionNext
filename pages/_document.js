@@ -37,6 +37,22 @@ const darkModeScript = `
 })()
 `
 
+// 入场动画预置：在首屏渲染前就显示遮罩，避免「内容先闪现、再被盖住」
+const introScript = `
+(function() {
+  try {
+    window.__ffIntroStart = Date.now()
+    if (sessionStorage.getItem('ff-intro-played') !== '1') {
+      document.documentElement.classList.add('ff-intro-pending')
+      // 兜底：JS 异常时 9 秒后自动放行
+      setTimeout(function() {
+        document.documentElement.classList.remove('ff-intro-pending')
+      }, 9000)
+    }
+  } catch (e) {}
+})()
+`
+
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx)
@@ -104,6 +120,21 @@ class MyDocument extends Document {
 
           {/* 预先设置深色模式，避免闪烁 */}
           <script dangerouslySetInnerHTML={{ __html: darkModeScript }} />
+
+          {/* 入场遮罩：在绘制前就生效；CSS 自带「自动淡出」，JS 慢时也不会一直挡着 */}
+          <script dangerouslySetInnerHTML={{ __html: introScript }} />
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+html.ff-intro-pending .ff-intro{display:flex!important;opacity:1;animation:ff-intro-auto 2.1s ease forwards}
+@keyframes ff-intro-auto{
+  0%,62%{opacity:1;visibility:visible}
+  100%{opacity:0;visibility:hidden}
+}
+.ff-intro{position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:#f6fffb}
+`
+            }}
+          />
         </Head>
 
         <body>
