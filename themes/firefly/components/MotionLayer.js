@@ -113,6 +113,18 @@ export default function MotionLayer() {
         // ---------- 入场动画 ----------
         if (introEl && firstVisit && !reduceMotion) {
           introEl.classList.add('is-on')
+          // 兜底：动画异常时 6 秒后强制关闭，绝不挡页面
+          cleanup.push(
+            setTimeout(() => {
+              if (introEl.classList.contains('is-on')) {
+                introEl.classList.remove('is-on')
+                introEl.style.display = 'none'
+                try {
+                  sessionStorage.setItem(INTRO_KEY, '1')
+                } catch (e) {}
+              }
+            }, 6000)
+          )
           const tl = gsapInstance.timeline({
             onComplete: () => {
               introEl.classList.remove('is-on')
