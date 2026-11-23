@@ -114,11 +114,22 @@ export default function GalleryWall({ config }) {
   return (
     <div className='mx-auto w-full max-w-[1180px] px-4 pb-20 pt-10 md:px-6'>
       <header className='mb-6'>
-        <h1
-          className='text-2xl font-extrabold tracking-tight md:text-3xl'
-          style={{ color: 'var(--deep-text, #111)' }}>
-          {config?.TITLE || '相册'}
-        </h1>
+        <div className='flex flex-wrap items-end justify-between gap-3'>
+          <h1
+            className='text-2xl font-extrabold tracking-tight md:text-3xl'
+            style={{ color: 'var(--deep-text, #111)' }}>
+            {config?.TITLE || '相册'}
+          </h1>
+          <a
+            href='/apps/wall'
+            className='rounded-full px-3.5 py-2 text-xs font-semibold no-underline transition-transform active:scale-95'
+            style={{
+              background: 'linear-gradient(120deg,#ff6b8a,#c9a8ff)',
+              color: '#fff'
+            }}>
+            🌸 去照片墙（随机 12 张）
+          </a>
+        </div>
         {config?.DESCRIPTION && (
           <p
             className='mt-2 max-w-2xl text-sm leading-relaxed'
