@@ -2,26 +2,54 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+const FAV_KEY = 'gallery-favorites'
+
 /**
  * 照片墙 / 相册组件
- * - 瀑布流布局（CSS columns，按屏幕宽度 1/2/N 列）
+ * - 瀑布流（1/2/N 列自适应）
  * - 标签筛选
- * - 点击灯箱查看，支持键盘 ← → Esc
- * - Pixiv 图片自动走 /api/pximg 代理（绕过 Referer 校验）
+ * - 卡片：标签 + 今日推荐 + 作者 + 作者出处 + NO.xx + 收藏
+ * - 灯箱：键盘 ← → Esc、原作品链接
+ * - Pixiv 图片自动走 /api/pximg 代理
  */
 export default function GalleryWall({ config }) {
   const items = useMemo(() => (config?.ITEMS || []).filter(item => item?.src), [config])
   const allTags = useMemo(() => {
     const set = new Set()
-    items.forEach(item => (item.tags || []).forEach(tag => set.add(tag)))
+    items.forEach(item =>
+      (item.tags || []).forEach(tag => {
+        if (tag && tag !== 'Pixiv') set.add(tag)
+      })
+    )
     return Array.from(set)
   }, [items])
 
   const [activeTag, setActiveTag] = useState('')
   const [lightbox, setLightbox] = useState(-1)
+  const [favorites, setFavorites] = useState([])
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(FAV_KEY) || '[]')
+      if (Array.isArray(saved)) setFavorites(saved)
+    } catch (e) {}
+  }, [])
+
+  const toggleFav = useCallback(key => {
+    setFavorites(prev => {
+      const next = prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+      try {
+        localStorage.setItem(FAV_KEY, JSON.stringify(next))
+      } catch (e) {}
+      return next
+    })
+  }, [])
 
   const visible = useMemo(
-    () => (activeTag ? items.filter(item => (item.tags || []).includes(activeTag)) : items),
+    () =>
+      activeTag
+        ? items.filter(item => (item.tags || []).includes(activeTag))
+        : items,
     [items, activeTag]
   )
 
@@ -67,6 +95,8 @@ export default function GalleryWall({ config }) {
 
   const current = lightbox >= 0 ? visible[lightbox] : null
 
+  const itemKey = item => item.pixivId || item.src
+
   return (
     <div className='mx-auto w-full max-w-[1180px] px-4 pb-20 pt-10 md:px-6'>
       <header className='mb-6'>
@@ -91,12 +121,13 @@ export default function GalleryWall({ config }) {
             onClick={() => setActiveTag('')}
             className='rounded-full px-3 py-1.5 text-xs font-medium transition-colors'
             style={{
-              background: activeTag === '' ? 'var(--primary, #d6336c)' : 'var(--btn-regular-bg, #ffe7ef)',
+              background:
+                activeTag === '' ? 'var(--primary, #d6336c)' : 'var(--btn-regular-bg, #ffe7ef)',
               color: activeTag === '' ? '#fff' : 'var(--btn-content, #c2255c)'
             }}>
             全部 {items.length}
           </button>
-          {allTags.map(tag => (
+          {allTags.slice(0, 16).map(tag => (
             <button
               key={tag}
               type='button'
@@ -125,30 +156,66 @@ export default function GalleryWall({ config }) {
       ) : (
         <div style={{ '--gw-cols': Number(config?.COLUMNS) || 3 }}>
           <div className='gw-grid'>
-            {visible.map((item, index) => (
-              <figure
-                key={`${item.src}-${index}`}
-                className='gw-item group relative cursor-zoom-in overflow-hidden'
-                onClick={() => setLightbox(index)}>
-                <img
-                  src={resolveSrc(item.src)}
-                  alt={item.title || ''}
-                  loading='lazy'
-                  decoding='async'
-                  className='h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
-                />
-                <figcaption className='gw-caption'>
-                  <span className='line-clamp-1 text-sm font-semibold'>
-                    {item.title || '未命名'}
-                  </span>
-                  {item.author && (
-                    <span className='mt-0.5 block line-clamp-1 text-[11px] opacity-80'>
-                      {item.author}
-                    </span>
-                  )}
-                </figcaption>
-              </figure>
-            ))}
+            {visible.map((item, index) => {
+              const isFav = favorites.includes(itemKey(item))
+              const tags = (item.tags || []).filter(tag => tag && tag !== 'Pixiv')
+              const primaryTag = tags[0] || ''
+              const recommend = Number(item.rank) > 0 && Number(item.rank) <= 3
+              return (
+                <figure
+                  key={`${item.src}-${index}`}
+                  className='gw-item group relative cursor-zoom-in overflow-hidden'
+                  onClick={() => setLightbox(index)}>
+                  <img
+                    src={resolveSrc(item.src)}
+                    alt={item.title || ''}
+                    loading='lazy'
+                    decoding='async'
+                    className='h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
+                  />
+
+                  <button
+                    type='button'
+                    aria-label='favorite'
+                    className={`gw-fav ${isFav ? 'is-fav' : ''}`}
+                    onClick={e => {
+                      e.stopPropagation()
+                      toggleFav(itemKey(item))
+                    }}>
+                    {isFav ? '♥' : '♡'}
+                  </button>
+
+                  <figcaption className='gw-caption'>
+                    <div className='gw-tags'>
+                      {primaryTag && <span className='gw-tag'>{primaryTag}</span>}
+                      {recommend && <span className='gw-tag gw-hot'>今日推荐</span>}
+                    </div>
+
+                    {item.author && <div className='gw-author'>{item.author}</div>}
+
+                    <div className='gw-bottom'>
+                      {item.link ? (
+                        <a
+                          href={item.link}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='gw-source'
+                          onClick={e => e.stopPropagation()}>
+                          作者出处 ↗
+                        </a>
+                      ) : (
+                        <span />
+                      )}
+                      {Number(item.rank) > 0 && (
+                        <span className='gw-rank'>
+                          NO.{String(item.rank).padStart(2, '0')}
+                        </span>
+                      )}
+                    </div>
+                  </figcaption>
+                </figure>
+              )
+            })}
           </div>
         </div>
       )}
@@ -222,23 +289,89 @@ export default function GalleryWall({ config }) {
           background: var(--card-bg, #fff);
           box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
         }
+        .gw-fav {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          z-index: 2;
+          display: grid;
+          place-items: center;
+          width: 30px;
+          height: 30px;
+          border-radius: 999px;
+          border: none;
+          cursor: pointer;
+          color: #e0507f;
+          background: rgba(255, 255, 255, 0.86);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+          font-size: 15px;
+          line-height: 1;
+        }
+        .gw-fav.is-fav {
+          background: #ff6b8a;
+          color: #fff;
+        }
         .gw-caption {
           position: absolute;
           inset-inline: 0;
           bottom: 0;
-          padding: 28px 12px 10px;
+          padding: 34px 12px 10px;
           color: #fff;
-          background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
-          opacity: 0;
-          transform: translateY(6px);
-          transition:
-            opacity 0.25s ease,
-            transform 0.25s ease;
+          background: linear-gradient(180deg, transparent, rgba(18, 8, 14, 0.72));
+          transition: opacity 0.25s ease;
         }
-        .gw-item:hover .gw-caption,
-        .gw-item:focus-within .gw-caption {
-          opacity: 1;
-          transform: translateY(0);
+        .gw-tags {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 6px;
+          margin-bottom: 4px;
+        }
+        .gw-tag {
+          display: inline-flex;
+          align-items: center;
+          padding: 2px 8px;
+          border-radius: 999px;
+          font-size: 11px;
+          font-weight: 600;
+          color: #fff;
+          background: rgba(255, 255, 255, 0.22);
+          backdrop-filter: blur(4px);
+        }
+        .gw-hot {
+          background: linear-gradient(120deg, #ff5c8a, #c9a8ff);
+        }
+        .gw-author {
+          font-size: 13px;
+          font-weight: 600;
+          text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+        }
+        .gw-bottom {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 6px;
+        }
+        .gw-source {
+          display: inline-flex;
+          align-items: center;
+          padding: 3px 9px;
+          border-radius: 999px;
+          font-size: 11px;
+          font-weight: 600;
+          color: #fff;
+          text-decoration: none;
+          background: rgba(255, 255, 255, 0.2);
+          transition: background 0.2s ease;
+        }
+        .gw-source:hover {
+          background: rgba(255, 255, 255, 0.32);
+        }
+        .gw-rank {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: rgba(255, 255, 255, 0.85);
         }
         .gw-lightbox {
           position: fixed;
