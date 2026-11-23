@@ -67,11 +67,18 @@ export default function MotionLayer() {
       // ---------- Lenis 平滑滚动 ----------
       if (!reduceMotion && finePointer) {
         try {
-          await loadScript('/vendor/lenis.min.js')
+          let LenisCtor = null
+          // 优先用 ESM 直接 import（public/vendor/lenis.mjs），失败再退回 UMD script
+          try {
+            const mod = await import(/* webpackIgnore: true */ '/vendor/lenis.mjs')
+            LenisCtor = mod?.default || mod?.Lenis || null
+          } catch (e) {
+            await loadScript('/vendor/lenis.min.js')
+            LenisCtor = window.Lenis || null
+          }
           if (disposed) return
-          const Lenis = window.Lenis
-          if (Lenis) {
-            lenis = new Lenis({
+          if (LenisCtor) {
+            lenis = new LenisCtor({
               lerp: 0.085,
               wheelMultiplier: 1,
               smoothWheel: true,
@@ -85,7 +92,7 @@ export default function MotionLayer() {
             })
           }
         } catch (e) {
-          console.warn('[MotionLayer] lenis load failed', e)
+          console.warn('[MotionLayer] lenis init failed', e)
         }
       }
 
