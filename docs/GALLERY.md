@@ -41,22 +41,27 @@
 
 ## 二、批量导入 Pixiv
 
-### 方式 A：直接抓排行榜（已内置，当前 18 张即由此生成）
+### 方式 A：直接抓排行榜（已内置，当前 120 张 Pixiv 即由此生成）
 
 ```bash
 # 浏览器登录 pixiv 后取 Cookie：PHPSESSID + cf_clearance
-PIXIV_COOKIE="PHPSESSID=xxx; cf_clearance=yyy" node scripts/pixiv-fetch-ranking.mjs --limit 18
-# 可选：--mode daily|weekly|monthly|rookie，默认 monthly
+# 默认抓 月榜/周榜/日榜/新人榜 各 4 页，取 120 张，并与已有数据合并
+PIXIV_COOKIE="PHPSESSID=xxx; cf_clearance=yyy" node scripts/pixiv-fetch-ranking.mjs
+# 想扩到更多：加大页数与目标数
+PIXIV_COOKIE="..." node scripts/pixiv-fetch-ranking.mjs --modes monthly,weekly,daily,rookie,original --pages 8 --limit 240
+# 全部重建（不合并旧数据）
+PIXIV_COOKIE="..." node scripts/pixiv-fetch-ranking.mjs --rebuild
 ```
 
 脚本会：
 
-1. 抓排行榜 JSON（每页 50 条，不够自动抓第二页）
-2. **过滤** `sexual>0` / `grotesque` / `violent` 的作品（公开博客安全）
-3. 逐条补 `ajax/illust/{id}` 拿到高清图、作者、标签
-4. 生成 `conf/gallery-pixiv.config.js`（含 `src/title/author/tags/link/pixivId/rank`）
+1. 抓多个排行榜 JSON（每页 50 条），按 `illust_id` 去重
+2. **过滤** `sexual>0` / `grotesque` / `violent` 的作品，并打散各榜条目保证多样性
+3. 逐条补 `ajax/illust/{id}` 拿到 regular 原图、作者、标签（自动退避重试）
+4. 生成 `conf/gallery-pixiv.config.js`，每条含 `src / thumb / title / author / tags / link / pixivId / rank / mode`
+5. **默认合并**旧条目：重复运行会越攒越多（排行榜会变化，每次都能补进新图）
 
-生成后提交即可，页面会自动显示「标签 + 今日推荐（前三名）+ 作者 + 作者出处 + NO.xx + 收藏」。
+> 遇到少量 `429` 时，该条目会先用榜单缩略图兜底；隔一段时间重跑即可补成高清。
 
 ### 方式 B：指定作品 ID
 

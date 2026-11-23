@@ -64,7 +64,7 @@ const GALLERY = {
   ENABLE: true,
   TITLE: '星轨相册',
   DESCRIPTION:
-    'Pixiv 月榜精选与个人收藏。点击可放大查看，卡片右下角可跳转作者原出处。',
+    'Pixiv 月榜 / 周榜 / 日榜 / 新人榜精选与个人收藏，共 126 张。点击可放大查看，卡片右下角可跳转作者原出处。',
   COLUMNS: 4,
   SHOW_TAGS: true,
   ITEMS: [...PIXIV_ITEMS, ...LOCAL_ITEMS]
