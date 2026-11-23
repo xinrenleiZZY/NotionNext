@@ -198,7 +198,7 @@ const getLayoutNameByPath = path => {
  * 切换主题时的特殊处理
  * 删除多余的元素
  */
-const fixThemeDOM = () => {
+export const fixThemeDOM = () => {
   if (isBrowser) {
     const elements = document.querySelectorAll('[id^="theme-"]')
     if (elements?.length > 1) {
