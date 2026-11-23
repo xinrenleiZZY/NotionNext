@@ -1,0 +1,27 @@
+/**
+ * Firefly 主题配置
+ * 视觉参考：CuteLeaf/Firefly（Astro，Fuwari 派生）—— 在 NotionNext 内复刻
+ * 原版默认 hue=165（青绿），可任意改
+ */
+const CONFIG = {
+  // 主题色相 0-360：165 青绿(原版默认) / 200 青 / 250 蓝 / 300 紫 / 345 粉
+  FIREFLY_HUE: 165,
+  // 首页 banner
+  FIREFLY_BANNER: true,
+  FIREFLY_BANNER_HEIGHT: 62,
+  FIREFLY_BANNER_INTERVAL: 6,
+  // banner 底部水波纹
+  FIREFLY_WAVES: true,
+  // 首页左右侧栏（左：资料卡 / 右：最新动态+统计）
+  FIREFLY_LEFT_SIDEBAR: true,
+  FIREFLY_RIGHT_SIDEBAR: true,
+  // 列表封面 / 摘要
+  FIREFLY_POST_COVER: true,
+  FIREFLY_POST_EXCERPT: true,
+  // 文章页目录
+  FIREFLY_TOC: true,
+  // 列表每页条数（覆盖全局 POSTS_PER_PAGE 时不生效，仅作默认）
+  FIREFLY_BANNER_DESC: ''
+}
+
+export default CONFIG

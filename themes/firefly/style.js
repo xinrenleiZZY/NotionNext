@@ -269,37 +269,43 @@ export const Style = () => {
         bottom: -1px;
         left: 0;
         width: 100%;
-        height: 9vh;
-        min-height: 44px;
-        max-height: 120px;
+        height: 10vh;
+        min-height: 52px;
+        max-height: 140px;
         pointer-events: none;
         z-index: 5;
+        overflow: hidden;
+        display: block;
       }
 
       .ff-waves path {
         fill: var(--page-bg);
         transition: fill 0.15s;
+        will-change: transform;
+        transform: translateZ(0);
+        backface-visibility: hidden;
       }
 
       .ff-wave-1 {
-        animation: ff-move-wave 12s linear infinite;
-        opacity: 0.55;
+        animation: ff-move-wave 14s linear infinite;
+        opacity: 0.6;
       }
       .ff-wave-2 {
-        animation: ff-move-wave 18s linear infinite reverse;
-        opacity: 0.35;
+        animation: ff-move-wave 20s linear infinite reverse;
+        opacity: 0.4;
       }
       .ff-wave-3 {
-        animation: ff-move-wave 24s linear infinite;
-        opacity: 0.2;
+        animation: ff-move-wave 28s linear infinite;
+        opacity: 0.24;
       }
 
+      /* 路径本身宽 2880（两个完整周期），平移 -50% 正好一个周期，首尾无缝 */
       @keyframes ff-move-wave {
         from {
-          transform: translateX(0);
+          transform: translate3d(0, 0, 0);
         }
         to {
-          transform: translateX(-50%);
+          transform: translate3d(-50%, 0, 0);
         }
       }
 

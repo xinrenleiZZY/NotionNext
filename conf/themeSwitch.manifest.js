@@ -134,6 +134,12 @@ export const THEME_SWITCH_MANIFEST = {
     summary: 'Firefly 复刻：OKLCH hue 驱动 + 玻璃胶囊导航 + 三栏（资料卡/文章流/动态）+ 水波纹 banner。',
     cover: '/bg_image.jpg',
     coverWebp: ''
+  },
+  'firefly-y': {
+    name: 'Firefly-Y',
+    summary: 'Firefly 的粉紫版：LyuTing 风格配色（玫瑰粉 #d6336c + 淡紫 #c9a8ff），粉色毛玻璃卡片。',
+    cover: '/bg_image.jpg',
+    coverWebp: ''
   }
 }
 

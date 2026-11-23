@@ -78,13 +78,13 @@ export default function Navbar(props) {
           </SmartLink>
 
           {/* 桌面菜单 */}
-          <nav className='ml-auto mr-auto hidden items-center gap-0.5 lg:flex'>
+          <nav className='mx-auto hidden min-w-0 items-center gap-0.5 overflow-hidden lg:flex'>
             {links.map((link, index) => (
               <SmartLink
                 key={`${link.href || link.name}-${index}`}
                 href={link.href}
                 target={link.target}
-                className='ff-btn-plain px-3 py-1.5 text-[0.8125rem] font-medium no-underline'
+                className='ff-btn-plain shrink-0 whitespace-nowrap px-3 py-1.5 text-[0.8125rem] font-medium no-underline'
                 style={{ color: overlay && !scrolled ? '#fff' : 'var(--content-meta)' }}>
                 {link.icon && <i className={`${link.icon} text-[0.75rem]`} />}
                 {link.name}
@@ -92,35 +92,44 @@ export default function Navbar(props) {
             ))}
           </nav>
 
-          {/* 右侧操作 */}
+          {/* 右侧操作：搜索浮层，避免撑开导航导致位移 */}
           <div
-            className='ml-auto flex items-center gap-1'
+            className='relative ml-auto flex shrink-0 items-center gap-1'
             style={{ color: overlay && !scrolled ? '#fff' : 'var(--content-meta)' }}>
-            {searchOpen ? (
-              <input
-                autoFocus
-                value={keyword}
-                onChange={e => setKeyword(e.target.value)}
-                onKeyUp={e => {
-                  if (e.key === 'Enter') submitSearch()
-                  if (e.key === 'Escape') setSearchOpen(false)
-                }}
-                placeholder={`${locale.NAV.SEARCH}…`}
-                className='w-36 rounded-xl px-2 py-1 text-xs outline-none sm:w-48'
+            <button
+              type='button'
+              aria-label={locale.NAV.SEARCH}
+              onClick={() => setSearchOpen(v => !v)}
+              className='ff-btn-plain h-9 w-9 cursor-pointer'>
+              <i className={`fas ${searchOpen ? 'fa-xmark' : 'fa-magnifying-glass'} text-[0.8rem]`} />
+            </button>
+
+            {searchOpen && (
+              <div
+                className='absolute right-0 top-[2.6rem] z-50 w-[min(20rem,80vw)] rounded-2xl p-2'
                 style={{
-                  background: 'var(--btn-regular-bg)',
-                  color: 'var(--deep-text)'
-                }}
-              />
-            ) : (
-              <button
-                type='button'
-                aria-label={locale.NAV.SEARCH}
-                onClick={() => setSearchOpen(true)}
-                className='ff-btn-plain h-9 w-9 cursor-pointer'>
-                <i className='fas fa-magnifying-glass text-[0.8rem]' />
-              </button>
+                  background: 'var(--float-panel-bg)',
+                  boxShadow:
+                    '0 0 0 1px var(--line-color), var(--shadow-navbar)'
+                }}>
+                <input
+                  autoFocus
+                  value={keyword}
+                  onChange={e => setKeyword(e.target.value)}
+                  onKeyUp={e => {
+                    if (e.key === 'Enter') submitSearch()
+                    if (e.key === 'Escape') setSearchOpen(false)
+                  }}
+                  placeholder={`${locale.NAV.SEARCH}…`}
+                  className='w-full rounded-xl px-3 py-2 text-sm outline-none'
+                  style={{
+                    background: 'var(--btn-regular-bg)',
+                    color: 'var(--deep-text)'
+                  }}
+                />
+              </div>
             )}
+
             <button
               type='button'
               aria-label='dark-mode'
