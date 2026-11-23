@@ -21,7 +21,19 @@ const CONFIG = {
   // 文章页目录
   FIREFLY_TOC: true,
   // 列表每页条数（覆盖全局 POSTS_PER_PAGE 时不生效，仅作默认）
-  FIREFLY_BANNER_DESC: ''
+  FIREFLY_BANNER_DESC: '',
+
+  // ===== 可替换素材 =====
+  // banner 轮播图：JSON 数组字符串或逗号分隔 URL，例如
+  //   '/Camera Roll/a.jpg,/Camera Roll/b.jpg' 或 '["https://a.jpg","https://b.jpg"]'
+  // 留空(null)则自动用「站点封面 + 最近文章封面」；可在 blog.config.js / Notion Config 覆盖
+  FIREFLY_BANNER_IMAGES: null,
+  // 全站背景图（固定层），留空则用主题底色；支持本地路径或外链
+  FIREFLY_WALLPAPER: null,
+  // 背景图不透明度 0–1
+  FIREFLY_WALLPAPER_OPACITY: 0.28,
+  // 背景图模糊像素
+  FIREFLY_WALLPAPER_BLUR: 2
 }
 
 export default CONFIG

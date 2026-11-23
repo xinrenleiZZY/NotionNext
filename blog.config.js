@@ -49,6 +49,18 @@ const BLOG = {
   // RSS订阅
   ENABLE_RSS: envBool(process.env.NEXT_PUBLIC_ENABLE_RSS, true), // 是否开启RSS订阅功能
 
+  // ===== Firefly 主题可替换素材 =====
+  // 首页轮播图：逗号分隔（可替换成任何图片/外链）；留空则自动用站点封面+文章封面
+  FIREFLY_BANNER_IMAGES:
+    process.env.NEXT_PUBLIC_FIREFLY_BANNER_IMAGES ||
+    [
+      '/Camera Roll/D.C.5 to 4 Luminous Memories 壁紙A 横.jpg',
+      '/Camera Roll/D.C.5 to 4 Luminous Memories 壁紙B 横.jpg',
+      '/Camera Roll/D.C.5 to 4 Luminous Memories 壁紙カレンダー9月(横).jpg'
+    ].join(','),
+  // 全站固定背景图（留空则不启用）
+  FIREFLY_WALLPAPER: process.env.NEXT_PUBLIC_FIREFLY_WALLPAPER || '',
+
   // 其它复杂配置
   // 原配置文件过长，且并非所有人都会用到，故此将配置拆分到/conf/目录下, 按需找到对应文件并修改即可
   ...require('./conf/comment.config'), // 评论插件

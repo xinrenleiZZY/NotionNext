@@ -282,13 +282,33 @@ const LayoutBase = props => {
   const isHome = router.pathname === '/'
   const hasBanner = isHome && siteConfig('FIREFLY_BANNER', true, CONFIG)
   const hue = siteConfig('FIREFLY_HUE', 165, CONFIG)
+  const wallpaper = siteConfig('FIREFLY_WALLPAPER', '', CONFIG)
+  const wallpaperOpacity = Number(
+    siteConfig('FIREFLY_WALLPAPER_OPACITY', 0.28, CONFIG)
+  )
+  const wallpaperBlur = Number(siteConfig('FIREFLY_WALLPAPER_BLUR', 2, CONFIG))
 
   return (
     <div id='theme-firefly' className={siteConfig('FONT_STYLE')} style={{ '--hue': hue }}>
       <Style />
+
+      {/* 可替换的全站背景图 */}
+      {wallpaper && (
+        <div className='ff-wallpaper' aria-hidden='true'>
+          <img
+            src={encodeURI(String(wallpaper))}
+            alt=''
+            style={{
+              opacity: Number.isFinite(wallpaperOpacity) ? wallpaperOpacity : 0.28,
+              filter: `blur(${Number.isFinite(wallpaperBlur) ? wallpaperBlur : 2}px)`
+            }}
+          />
+        </div>
+      )}
+
       <Navbar {...props} overlay={hasBanner} />
 
-      <div className='flex min-h-screen flex-col'>
+      <div className='relative z-10 flex min-h-screen flex-col'>
         <main className={`flex-1 ${hasBanner ? '' : 'pt-[4.75rem]'}`}>
           <Transition
             show={!onLoading}

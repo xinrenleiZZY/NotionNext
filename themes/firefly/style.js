@@ -278,6 +278,22 @@ export const Style = () => {
         display: block;
       }
 
+      /* 可替换的全站背景图（固定层，不遮挡内容） */
+      #theme-firefly .ff-wallpaper {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      #theme-firefly .ff-wallpaper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.04);
+      }
+
       .ff-waves path {
         fill: var(--page-bg);
         transition: fill 0.15s;

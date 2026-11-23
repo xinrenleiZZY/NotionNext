@@ -24,7 +24,29 @@ export default function Banner(props) {
     Math.max(Number(siteConfig('FIREFLY_BANNER_INTERVAL', 6, CONFIG)) || 6, 2) * 1000
 
   const posts = props.posts || props.allNavPages || []
+
+  // 自定义轮播图优先（可用 Notion Config / 环境变量覆盖，无需改代码）
+  const customImages = useMemo(() => {
+    const raw = siteConfig('FIREFLY_BANNER_IMAGES', '', CONFIG)
+    if (!raw) return []
+    if (Array.isArray(raw)) return raw.filter(Boolean)
+    const text = String(raw).trim()
+    if (text.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(text)
+        if (Array.isArray(parsed)) return parsed.filter(Boolean)
+      } catch (e) {
+        // 落到逗号分隔解析
+      }
+    }
+    return text
+      .split(',')
+      .map(item => item.trim())
+      .filter(Boolean)
+  }, [])
+
   const images = useMemo(() => {
+    if (customImages.length) return customImages
     const list = []
     if (siteInfo?.pageCover) list.push(siteInfo.pageCover)
     posts.slice(0, 4).forEach(post => {
@@ -33,7 +55,7 @@ export default function Banner(props) {
       }
     })
     return list.slice(0, 4)
-  }, [siteInfo, posts])
+  }, [customImages, siteInfo, posts])
 
   const [active, setActive] = useState(0)
 

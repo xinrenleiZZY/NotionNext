@@ -1,0 +1,81 @@
+# 照片墙 / 相册（/apps/gallery）
+
+照片墙页面：`https://www.juxingspacestation.top/apps/gallery`
+
+- 数据源：`conf/gallery.config.js`
+- 组件：`components/GalleryWall.js`（瀑布流 + 标签筛选 + 灯箱，键盘 ← → Esc）
+- Pixiv 代理：`pages/api/pximg.js`（服务端补 Referer，绕开 i.pximg.net 的 403）
+
+## 一、添加图片（三种来源）
+
+编辑 `conf/gallery.config.js` 的 `ITEMS`：
+
+```js
+{
+  src: '/Camera Roll/xxx.jpg',   // 1) 本地：public 下的相对路径
+  title: '标题',
+  author: '作者',
+  tags: ['壁纸'],
+  link: ''                        // 可选：原图/作品页
+}
+```
+
+```js
+{
+  src: 'https://example.com/a.jpg',  // 2) 任意外链
+  title: '外部图片', author: '', tags: ['外链']
+}
+```
+
+```js
+{
+  src: 'https://i.pximg.net/img-original/...',  // 3) Pixiv 直链
+  title: '作品标题',
+  author: '画师名',
+  tags: ['Pixiv'],
+  link: 'https://www.pixiv.net/artworks/12345678'
+}
+```
+
+> Pixiv 图片必须带 `Referer: https://www.pixiv.net/` 才能访问。组件会自动把 `*.pximg.net` 的地址改写成 `/api/pximg?url=...`，由服务端代理，不需要你手动处理。
+
+## 二、批量导入 Pixiv
+
+```bash
+# 浏览器登录 pixiv 后，F12 → Application → Cookies → PHPSESSID
+PIXIV_COOKIE="PHPSESSID=xxxxx" node scripts/pixiv-import.mjs 12345678 23456789
+# 或从文件读取（每行一个 ID / 链接）
+PIXIV_COOKIE="PHPSESSID=xxxxx" node scripts/pixiv-import.mjs --file ids.txt
+```
+
+脚本会输出可直接粘贴到 `ITEMS` 数组的条目（含标题、作者、标签、作品链接）。
+
+**版权提醒**：Pixiv 作品版权归原作者所有。请保留 `author` 与 `link`，不要商用，不要去除水印。
+
+## 三、替换首页轮播图与全站背景
+
+两处都通过站点配置（`blog.config.js` / Notion Config / 环境变量）控制，**改配置就能换，不用改代码**：
+
+| 配置项 | 说明 | 示例 |
+| --- | --- | --- |
+| `FIREFLY_BANNER_IMAGES` | 首页轮播图，逗号分隔或 JSON 数组；留空则用「站点封面 + 最近文章封面」 | `/Camera Roll/a.jpg,/Camera Roll/b.jpg` |
+| `FIREFLY_WALLPAPER` | 全站固定背景图 | `/Camera Roll/D.C.5 to 4 Luminous Memories 壁紙A 横.jpg` |
+| `FIREFLY_WALLPAPER_OPACITY` | 背景不透明度 0–1，默认 0.28 | `0.2` |
+| `FIREFLY_WALLPAPER_BLUR` | 背景模糊 px，默认 2 | `4` |
+
+生效优先级：URL `?theme=` > 代码配置 > Notion Config。改完部署/等 ISR 刷新即可。
+
+## 四、本地预览
+
+```bash
+yarn dev
+# 打开 http://localhost:3000/apps/gallery
+```
+
+`/api/pximg` 在本地也能用（需要能访问 pixiv 的网络）。
+
+## 五、性能与限流
+
+- 图片全部 `loading="lazy"`
+- 代理接口带 7 天 CDN 缓存（`s-maxage=604800`）
+- 建议单页图不超过 **60 张**，超过用标签分开；Pixiv 原图较大时优先用 `urls.regular`
