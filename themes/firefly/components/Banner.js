@@ -11,6 +11,20 @@ import WavesCanvas from './WavesCanvas'
  * Firefly 首页 Banner：
  * 全宽轮播（Ken Burns + 交叉淡入）+ 居中大标题 + 副标题 + 社交按钮 + 底部水波纹
  */
+// 固定参数的花瓣（确定性，避免 SSR 与客户端随机值不一致）
+const PETALS = [
+  { left: 6, duration: 13, delay: 0, scale: 0.9 },
+  { left: 15, duration: 17, delay: 2.4, scale: 1.1 },
+  { left: 24, duration: 15, delay: 4.8, scale: 0.75 },
+  { left: 34, duration: 19, delay: 1.2, scale: 1.0 },
+  { left: 45, duration: 14, delay: 5.6, scale: 0.85 },
+  { left: 56, duration: 18, delay: 3.1, scale: 1.15 },
+  { left: 66, duration: 16, delay: 6.4, scale: 0.8 },
+  { left: 76, duration: 20, delay: 0.8, scale: 1.05 },
+  { left: 86, duration: 15, delay: 4.2, scale: 0.9 },
+  { left: 94, duration: 17, delay: 2.0, scale: 0.7 }
+]
+
 export default function Banner(props) {
   const { siteInfo } = useGlobal()
   const title = siteInfo?.title || siteConfig('TITLE') || ''
@@ -166,6 +180,21 @@ export default function Banner(props) {
         )}
       </div>
 
+      {/* 轻量 CSS 花瓣（替代 canvas 樱花，零 JS 开销） */}
+      <div className='ff-petals' aria-hidden='true'>
+        {PETALS.map((p, i) => (
+          <span
+            key={i}
+            className='ff-petal'
+            style={{
+              left: `${p.left}%`,
+              animationDuration: `${p.duration}s`,
+              animationDelay: `${p.delay}s`,
+              transform: `scale(${p.scale})`
+            }}
+          />
+        ))}
+      </div>
       {/* 水波纹：Canvas 连续正弦波（无拼接边界，宽屏也平滑流动） */}
       {showWaves && <WavesCanvas className='ff-waves-canvas' />}
     </div>

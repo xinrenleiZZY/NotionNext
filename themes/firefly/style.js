@@ -411,6 +411,47 @@ export const Style = () => {
       }
 
 
+      /* 轻量花瓣（CSS only，不用 canvas；替代原樱花特效） */
+      .ff-petals {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 4;
+      }
+
+      .ff-petal {
+        position: absolute;
+        top: -8vh;
+        width: 14px;
+        height: 11px;
+        border-radius: 62% 38% 55% 45% / 60% 55% 45% 40%;
+        background: linear-gradient(160deg, #ffd7e6, #ff9dbb);
+        opacity: 0.75;
+        will-change: transform;
+        animation: ff-petal-fall linear infinite;
+      }
+
+      @keyframes ff-petal-fall {
+        0% {
+          transform: translate3d(0, -10vh, 0) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translate3d(6vw, 74vh, 0) rotate(420deg);
+          opacity: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ff-petal {
+          animation: none !important;
+          display: none;
+        }
+      }
       /* ============================
          Banner + 水波纹（Canvas）
          ============================ */
