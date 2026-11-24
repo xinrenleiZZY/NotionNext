@@ -109,12 +109,10 @@ export default function MotionLayer() {
       try {
         const gsapMod = await import('gsap')
         const stMod = await import('gsap/ScrollTrigger')
-        const textMod = await import('gsap/TextPlugin')
         if (disposed) return
         gsap = gsapMod.gsap || gsapMod.default
         ScrollTrigger = stMod.ScrollTrigger
-        const TextPlugin = textMod.TextPlugin || textMod.default
-        gsap.registerPlugin(ScrollTrigger, TextPlugin)
+        gsap.registerPlugin(ScrollTrigger)
 
         if (lenis) {
           const onScroll = () => ScrollTrigger.update()
@@ -165,13 +163,19 @@ export default function MotionLayer() {
             setTimeout(done, 3500)
           })
 
-          // 1) 打印域名
-          await gsap.to(domainEl, {
-            text: { value: DOMAIN },
-            duration: 1.5,
-            ease: 'none'
+          // 1) 打印域名（rAF 打字机，不依赖 TextPlugin）
+          await new Promise(resolve => {
+            const started = performance.now()
+            const duration = 1500
+            const tick = now => {
+              const p = Math.min(1, (now - started) / duration)
+              domainEl.textContent = DOMAIN.slice(0, Math.ceil(p * DOMAIN.length))
+              if (p < 1) requestAnimationFrame(tick)
+              else resolve()
+            }
+            requestAnimationFrame(tick)
           })
-          await sleep(260)
+          await sleep(300)
 
           // 2) 域名退场 → 标题浮现
           await gsap.to(introEl.querySelector('.ff-intro-domain'), {
