@@ -67,6 +67,19 @@ export default function MotionLayer() {
     })()
 
     const boot = async () => {
+      // 调试/低端设备开关：?motion=off（也可 localStorage.motion-off=1 持久关闭）
+      try {
+        const params = new URLSearchParams(window.location.search)
+        const forcedOff =
+          params.get('motion') === 'off' ||
+          localStorage.getItem('motion-off') === '1'
+        if (forcedOff) {
+          document.documentElement.classList.remove('ff-intro-pending')
+          if (introEl) introEl.style.display = 'none'
+          window.__ffMotionOff = true
+          return
+        }
+      } catch (e) {}
       // ---------- Lenis 平滑滚动 ----------
       if (!reduceMotion && finePointer) {
         try {

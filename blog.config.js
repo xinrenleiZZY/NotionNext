@@ -54,9 +54,9 @@ const BLOG = {
   FIREFLY_BANNER_IMAGES:
     process.env.NEXT_PUBLIC_FIREFLY_BANNER_IMAGES ||
     [
-      '/Camera Roll/D.C.5 to 4 Luminous Memories 壁紙A 横.jpg',
-      '/Camera Roll/D.C.5 to 4 Luminous Memories 壁紙B 横.jpg',
-      '/Camera Roll/D.C.5 to 4 Luminous Memories 壁紙カレンダー9月(横).jpg'
+      '/banner/dc5-a-1440.jpg',
+      '/banner/dc5-b-1440.jpg',
+      '/banner/dc5-sep-1440.jpg'
     ].join(','),
   // 全站固定背景图（留空则不启用）
   FIREFLY_WALLPAPER: process.env.NEXT_PUBLIC_FIREFLY_WALLPAPER || '',

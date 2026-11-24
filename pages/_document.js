@@ -47,7 +47,7 @@ const introScript = `
       // 兜底：JS 异常时 9 秒后自动放行
       setTimeout(function() {
         document.documentElement.classList.remove('ff-intro-pending')
-      }, 9000)
+      }, 30000)
     }
   } catch (e) {}
 })()
@@ -126,9 +126,9 @@ class MyDocument extends Document {
           <style
             dangerouslySetInnerHTML={{
               __html: `
-html.ff-intro-pending .ff-intro{display:flex!important;opacity:1;animation:ff-intro-auto 14s ease forwards}
+html.ff-intro-pending .ff-intro{display:flex!important;opacity:1;animation:ff-intro-auto 30s ease forwards}
 @keyframes ff-intro-auto{
-  0%,94%{opacity:1;visibility:visible}
+  0%,97%{opacity:1;visibility:visible}
   100%{opacity:0;visibility:hidden}
 }
 .ff-intro{position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:#f6fffb}

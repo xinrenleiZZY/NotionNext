@@ -410,12 +410,6 @@ export const Style = () => {
         pointer-events: none;
       }
 
-      /* 滚动揭示元素（JS 初始化后由 GSAP 控制透明度，避免无 JS 时不可见） */
-      .ff-card-shadow,
-      .ff-section-title,
-      .ff-profile-card {
-        will-change: transform, opacity;
-      }
 
       /* ============================
          Banner + 水波纹（Canvas）

@@ -3,7 +3,7 @@
  */
 module.exports = {
   // 鼠标点击烟花特效
-  FIREWORKS: process.env.NEXT_PUBLIC_FIREWORKS || true, // 开关
+  FIREWORKS: process.env.NEXT_PUBLIC_FIREWORKS || false, // 开关
   // 烟花色彩（仙帝仙庭风：金+粉+青+紫）
   FIREWORKS_COLOR: [
     '255, 215, 0',
@@ -13,7 +13,7 @@ module.exports = {
   ],
 
   // 鼠标跟随特效
-  MOUSE_FOLLOW: process.env.NEXT_PUBLIC_MOUSE_FOLLOW || true, // 开关
+  MOUSE_FOLLOW: process.env.NEXT_PUBLIC_MOUSE_FOLLOW || false, // 开关
   // 鼠标类型 11：转圈随机颜色粒子（仙气缭绕感）
   MOUSE_FOLLOW_EFFECT_TYPE: 11, // 1-12
   MOUSE_FOLLOW_EFFECT_COLOR: '#EC4899', // 粉色主色调 契合仙帝·永恒仙庭
@@ -27,7 +27,7 @@ module.exports = {
   // 静态彩带特效
   RIBBON: process.env.NEXT_PUBLIC_RIBBON || false, // 开关
   // 星空雨特效 黑夜模式才会生效（星空=仙庭）
-  STARRY_SKY: process.env.NEXT_PUBLIC_STARRY_SKY || true, // 开关
+  STARRY_SKY: process.env.NEXT_PUBLIC_STARRY_SKY || false, // 开关
   // ANIMATE.css 动画
   ANIMATE_CSS_URL:
     process.env.NEXT_PUBLIC_ANIMATE_CSS_URL ||

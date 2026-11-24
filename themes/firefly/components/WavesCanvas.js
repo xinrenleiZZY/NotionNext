@@ -52,7 +52,7 @@ export default function WavesCanvas({ className }) {
     }
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
       const rect = canvas.getBoundingClientRect()
       const w = Math.max(1, Math.round(rect.width))
       const h = Math.max(1, Math.round(rect.height))
@@ -92,8 +92,13 @@ export default function WavesCanvas({ className }) {
       ctx.globalAlpha = 1
     }
 
+    let lastDraw = 0
     const loop = time => {
-      drawAt(time / 1000)
+      // 30fps 足够平滑，省一半绘制开销
+      if (time - lastDraw >= 33) {
+        lastDraw = time
+        drawAt(time / 1000)
+      }
       state.raf = requestAnimationFrame(loop)
     }
 
@@ -137,12 +142,26 @@ export default function WavesCanvas({ className }) {
       attributeFilter: ['class', 'data-theme']
     })
 
+    // 不在视口内时暂停（滚到大半个页面后水波纹不可见，没必要再画）
+    let onScreen = true
+    const io =
+      typeof IntersectionObserver !== 'undefined'
+        ? new IntersectionObserver(entries => {
+            onScreen = entries[0]?.isIntersecting ?? true
+            if (reduceMotion) return
+            if (onScreen && !document.hidden) start()
+            else stop()
+          }, { rootMargin: '120px' })
+        : null
+    io?.observe(canvas)
+
     window.addEventListener('resize', onResize)
     document.addEventListener('visibilitychange', onVisibility)
 
     return () => {
       stop()
       observer?.disconnect()
+      io?.disconnect()
       window.removeEventListener('resize', onResize)
       document.removeEventListener('visibilitychange', onVisibility)
     }
