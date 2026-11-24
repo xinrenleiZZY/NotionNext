@@ -262,7 +262,7 @@ export const Style = () => {
       }
 
       /* ============================
-         入场动画层（默认不显示，JS 打开）
+         入场动画层（域名打字 → 标题 → 进度 → 上拉）
          ============================ */
       .ff-intro {
         display: none;
@@ -272,8 +272,8 @@ export const Style = () => {
         align-items: center;
         justify-content: center;
         background: var(--page-bg, #f6fffb);
-        clip-path: inset(0 0 0 0);
-        will-change: clip-path;
+        overflow: hidden;
+        will-change: transform;
       }
 
       .ff-intro.is-on {
@@ -281,46 +281,111 @@ export const Style = () => {
       }
 
       .ff-intro-inner {
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 18px;
+        justify-content: center;
+        min-height: 40vh;
+        padding: 0 6vw;
+        text-align: center;
       }
 
-      .ff-intro-logo {
-        width: 64px;
-        height: 64px;
-        border-radius: 999px;
-        object-fit: cover;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14);
+      /* 域名打字 */
+      .ff-intro-domain {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+        font-size: clamp(1rem, 2vw, 1.4rem);
+        letter-spacing: 0.04em;
+        color: var(--content-meta, rgba(58, 31, 43, 0.66));
+        min-height: 2em;
+      }
+
+      .ff-intro-caret {
+        display: inline-block;
+        width: 2px;
+        height: 1.15em;
+        margin-left: 3px;
+        background: var(--deep-text, #3a1f2b);
+        animation: ff-caret-blink 0.9s steps(2, start) infinite;
+      }
+
+      @keyframes ff-caret-blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* 标题 */
+      .ff-intro-title {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        margin: 0;
         opacity: 0;
+        font-size: clamp(2rem, 6.2vw, 5rem);
+        font-weight: 900;
+        line-height: 1.05;
+        letter-spacing: -0.01em;
+        color: var(--deep-text, #3a1f2b);
+        text-align: center;
+        will-change: transform, opacity, filter;
       }
 
-      .ff-intro-word {
+      /* 底部：进度文案 + 位置时间 */
+      .ff-intro-foot {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 46px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 0 5vw;
+        font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+        font-size: clamp(0.6rem, 1.1vw, 0.78rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--content-meta, rgba(58, 31, 43, 0.6));
+      }
+
+      /* 底部进度条 */
+      .ff-intro-progress {
+        position: absolute;
+        left: 5vw;
+        right: 5vw;
+        bottom: 34px;
+        height: 1px;
+        background: var(--line-color, rgba(58, 31, 43, 0.14));
         overflow: hidden;
-        font-size: clamp(1.5rem, 4vw, 2.6rem);
-        font-weight: 800;
-        letter-spacing: 0.02em;
-        color: var(--deep-text, #0b1a16);
-        opacity: 0;
       }
 
-      .ff-intro-bar {
-        display: block;
-        width: min(240px, 46vw);
-        height: 2px;
-        border-radius: 999px;
-        background: var(--line-color, rgba(0, 0, 0, 0.1));
-        overflow: hidden;
-      }
-
-      .ff-intro-bar i {
+      .ff-intro-progress i {
         display: block;
         width: 100%;
         height: 100%;
         transform-origin: left center;
         transform: scaleX(0);
-        background: var(--primary);
+        background: var(--deep-text, #3a1f2b);
+      }
+
+      @media (max-width: 640px) {
+        .ff-intro-foot {
+          bottom: 34px;
+        }
+        .ff-intro-progress {
+          bottom: 24px;
+        }
       }
 
       /* Lenis 平滑滚动配套样式 */

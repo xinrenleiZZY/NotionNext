@@ -5,20 +5,23 @@ import { useRouter } from 'next/router'
 import { useEffect, useRef } from 'react'
 
 /**
- * 动效层：丝滑滚动 + 入场动画 + 滚动揭示 + Banner 视差
+ * 动效层：入场编排 + 丝滑滚动 + 滚动揭示 + Banner 视差
  *
- * 技术选型（参考 aonnoysengupta.com：Astro + Lenis + GSAP）
- *  - Lenis：惯性平滑滚动（vendor 到 /vendor/lenis.min.js，避免改 yarn.lock）
- *  - GSAP + ScrollTrigger：入场时间线、滚动揭示、视差（已在 package.json 依赖中）
+ * 入场分镜（参考 aonnoysengupta.com，节奏放慢）：
+ *   1. 遮罩已由首屏内联脚本显示
+ *   2. 中间「打印」域名（打字机 + 光标）
+ *   3. 域名收缩消失 → 站点标题从模糊中放大浮现
+ *   4. 底部进度条扫过 + `// loading xx%` 计数，右下角显示城市/时间
+ *   5. 等页面 load（最多再等 3.5s）
+ *   6. 标题上移淡出 + 整块遮罩上拉（yPercent -100）揭开首页
  *
- * 工程约束
- *  - 全部只动 transform / opacity / clip-path，走 GPU 合成
- *  - prefers-reduced-motion：跳过入场与视差，只保留内容
- *  - 入场层默认 display:none，由 JS 打开；JS 失败不会挡住页面
- *  - 每次会话只播一次入场（sessionStorage）
+ * 技术：Lenis（平滑滚动）+ GSAP/ScrollTrigger/TextPlugin（已在依赖中）
  */
 
 const INTRO_KEY = 'ff-intro-played'
+const DOMAIN = 'juxingspacestation.top'
+
+const sleep = ms => new Promise(r => setTimeout(r, ms))
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -50,8 +53,8 @@ export default function MotionLayer() {
 
     let disposed = false
     let cleanup = []
-    let gsapInstance = null
-    let ScrollTriggerInstance = null
+    let gsap = null
+    let ScrollTrigger = null
     let lenis = null
 
     const introEl = introRef.current
@@ -68,7 +71,6 @@ export default function MotionLayer() {
       if (!reduceMotion && finePointer) {
         try {
           let LenisCtor = null
-          // 优先用 ESM 直接 import（public/vendor/lenis.mjs），失败再退回 UMD script
           try {
             const mod = await import(/* webpackIgnore: true */ '/vendor/lenis.mjs')
             LenisCtor = mod?.default || mod?.Lenis || null
@@ -86,7 +88,14 @@ export default function MotionLayer() {
               touchMultiplier: 1.6
             })
             window.__ffLenis = lenis
+            let frame = 0
+            const raf = time => {
+              lenis.raf(time)
+              frame = requestAnimationFrame(raf)
+            }
+            frame = requestAnimationFrame(raf)
             cleanup.push(() => {
+              cancelAnimationFrame(frame)
               window.__ffLenis = null
               lenis?.destroy()
             })
@@ -100,39 +109,28 @@ export default function MotionLayer() {
       try {
         const gsapMod = await import('gsap')
         const stMod = await import('gsap/ScrollTrigger')
+        const textMod = await import('gsap/TextPlugin')
         if (disposed) return
-        gsapInstance = gsapMod.gsap || gsapMod.default
-        ScrollTriggerInstance = stMod.ScrollTrigger
-        gsapInstance.registerPlugin(ScrollTriggerInstance)
+        gsap = gsapMod.gsap || gsapMod.default
+        ScrollTrigger = stMod.ScrollTrigger
+        const TextPlugin = textMod.TextPlugin || textMod.default
+        gsap.registerPlugin(ScrollTrigger, TextPlugin)
 
         if (lenis) {
-          const onScroll = () => ScrollTriggerInstance.update()
+          const onScroll = () => ScrollTrigger.update()
           lenis.on('scroll', onScroll)
-          // 用自己的 rAF 循环驱动（不依赖 GSAP ticker，避免 ticker 未运行时不动）
-          let frame = 0
-          const raf = time => {
-            lenis.raf(time)
-            frame = requestAnimationFrame(raf)
-          }
-          frame = requestAnimationFrame(raf)
-          cleanup.push(() => {
-            cancelAnimationFrame(frame)
-            lenis?.off?.('scroll', onScroll)
-          })
+          cleanup.push(() => lenis?.off?.('scroll', onScroll))
         }
 
-        // ---------- 入场动画 ----------
-        const pending =
-          document.documentElement.classList.contains('ff-intro-pending')
+        // ---------- 入场 ----------
+        const pending = document.documentElement.classList.contains('ff-intro-pending')
         const startedAt = window.__ffIntroStart || Date.now()
         const bootDelay = Date.now() - startedAt
-        // 首屏 JS 就绪太晚（>1.6s，CSS 自动淡出已开始）就不播完整入场，直接收尾
-        const playFull = firstVisit && !reduceMotion && bootDelay < 1600
 
-        if (introEl && playFull) {
+        if (introEl && firstVisit && !reduceMotion && bootDelay < 9000) {
           document.documentElement.classList.remove('ff-intro-pending')
           introEl.classList.add('is-on')
-          // 兜底：动画异常时 6 秒后强制关闭，绝不挡页面
+          // 兜底：异常时 12 秒强制放行
           cleanup.push(
             setTimeout(() => {
               if (introEl.classList.contains('is-on')) {
@@ -142,60 +140,110 @@ export default function MotionLayer() {
                   sessionStorage.setItem(INTRO_KEY, '1')
                 } catch (e) {}
               }
-            }, 6000)
+            }, 12000)
           )
-          const tl = gsapInstance.timeline({
-            onComplete: () => {
-              introEl.classList.remove('is-on')
-              introEl.style.display = 'none'
-              try {
-                sessionStorage.setItem(INTRO_KEY, '1')
-              } catch (e) {}
+
+          const hourText = new Intl.DateTimeFormat('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: 'Asia/Shanghai'
+          }).format(new Date())
+          const meta = introEl.querySelector('.ff-intro-meta')
+          if (meta) meta.textContent = `guangzhou, cn ${hourText} GMT+8`
+
+          const domainEl = introEl.querySelector('.ff-intro-domain-text')
+          const titleEl = introEl.querySelector('.ff-intro-title')
+          const progressEl = introEl.querySelector('.ff-intro-progress i')
+          const loadingEl = introEl.querySelector('.ff-intro-loading')
+
+          // 页面 load（最多等 3.5s，避免因为个别图片一直等）
+          const loadPromise = new Promise(resolve => {
+            if (document.readyState === 'complete') return resolve()
+            const done = () => resolve()
+            window.addEventListener('load', done, { once: true })
+            setTimeout(done, 3500)
+          })
+
+          // 1) 打印域名
+          await gsap.to(domainEl, {
+            text: { value: DOMAIN },
+            duration: 1.5,
+            ease: 'none'
+          })
+          await sleep(260)
+
+          // 2) 域名退场 → 标题浮现
+          await gsap.to(introEl.querySelector('.ff-intro-domain'), {
+            opacity: 0,
+            scale: 0.86,
+            filter: 'blur(6px)',
+            duration: 0.45,
+            ease: 'power2.in'
+          })
+          await gsap.fromTo(
+            titleEl,
+            { opacity: 0, scale: 0.74, filter: 'blur(18px)', y: 20 },
+            {
+              opacity: 1,
+              scale: 1,
+              filter: 'blur(0px)',
+              y: 0,
+              duration: 1.15,
+              ease: 'expo.out'
+            }
+          )
+
+          // 3) 进度条扫过（同时更新百分比文案）
+          const progress = { v: 0 }
+          await gsap.to(progress, {
+            v: 100,
+            duration: 1.7,
+            ease: 'power1.inOut',
+            onUpdate: () => {
+              const v = Math.round(progress.v)
+              if (progressEl) progressEl.style.transform = `scaleX(${v / 100})`
+              if (loadingEl) loadingEl.textContent = `// loading ${v}%`
             }
           })
-          tl.fromTo(
-            '.ff-intro-logo',
-            { scale: 0.82, opacity: 0, y: 12 },
-            { scale: 1, opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }
-          )
-            .fromTo(
-              '.ff-intro-word',
-              { y: '110%', opacity: 0 },
-              { y: '0%', opacity: 1, duration: 0.8, ease: 'expo.out' },
-              '-=0.45'
-            )
-            .fromTo(
-              '.ff-intro-bar i',
-              { scaleX: 0 },
-              { scaleX: 1, duration: 0.85, ease: 'power2.inOut' },
-              '-=0.55'
-            )
-            .to(
-              introEl,
-              {
-                clipPath: 'inset(0 0 100% 0)',
-                duration: 0.75,
-                ease: 'power4.inOut'
-              },
-              '+=0.12'
-            )
 
-          // 首页 hero 内容跟随入场
-          tl.fromTo(
+          // 4) 等页面真正 load（给内容加载时间）
+          await Promise.race([loadPromise, sleep(3500)])
+          await sleep(320)
+
+          // 5) 标题上移 + 遮罩上拉揭开
+          await gsap.to(titleEl, {
+            y: -70,
+            opacity: 0,
+            scale: 1.03,
+            duration: 0.7,
+            ease: 'power2.in'
+          })
+          await gsap.to(introEl, {
+            yPercent: -100,
+            duration: 1.05,
+            ease: 'power4.inOut'
+          })
+
+          introEl.classList.remove('is-on')
+          introEl.style.display = 'none'
+          try {
+            sessionStorage.setItem(INTRO_KEY, '1')
+          } catch (e) {}
+
+          // 首页 hero 跟随入场
+          gsap.fromTo(
             '.ff-banner-title',
-            { y: 46, opacity: 0, filter: 'blur(8px)' },
-            { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.out' },
-            '-=0.5'
+            { y: 54, opacity: 0, filter: 'blur(10px)' },
+            { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.1, ease: 'expo.out' }
           )
-            .fromTo(
-              '.ff-banner-subtitle, .ff-banner-social, .ff-banner-dots',
-              { y: 24, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.7, stagger: 0.08, ease: 'power3.out' },
-              '-=0.7'
-            )
-          cleanup.push(() => tl.kill())
+          gsap.fromTo(
+            '.ff-banner-subtitle, .ff-banner-social, .ff-banner-dots',
+            { y: 26, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.8, stagger: 0.09, ease: 'power3.out', delay: 0.15 }
+          )
         } else if (introEl && pending) {
-          // 遮罩由内联脚本显示，但 JS 就绪时 CSS 已自动淡出：直接收尾，不要二次闪现
+          // JS 太慢 / 非首次：直接放行，不遮挡
           document.documentElement.classList.remove('ff-intro-pending')
           introEl.classList.remove('is-on')
           introEl.style.display = 'none'
@@ -203,7 +251,7 @@ export default function MotionLayer() {
             sessionStorage.setItem(INTRO_KEY, '1')
           } catch (e) {}
           if (!reduceMotion) {
-            gsapInstance.fromTo(
+            gsap.fromTo(
               '.ff-banner-title, .ff-banner-subtitle',
               { y: 18, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' }
@@ -212,9 +260,8 @@ export default function MotionLayer() {
         } else {
           document.documentElement.classList.remove('ff-intro-pending')
           if (introEl) introEl.style.display = 'none'
-          // 非首次：hero 轻微淡入，避免硬切
           if (!reduceMotion) {
-            gsapInstance.fromTo(
+            gsap.fromTo(
               '.ff-banner-title, .ff-banner-subtitle',
               { y: 18, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' }
@@ -224,16 +271,16 @@ export default function MotionLayer() {
 
         // ---------- 滚动揭示 ----------
         if (!reduceMotion) {
-          const revealTargets = gsapInstance.utils.toArray(
+          const revealTargets = gsap.utils.toArray(
             '.ff-card-shadow, .ff-section-title, .ff-profile-card'
           )
           if (revealTargets.length) {
-            gsapInstance.set(revealTargets, { opacity: 0, y: 26 })
-            ScrollTriggerInstance.batch(revealTargets, {
+            gsap.set(revealTargets, { opacity: 0, y: 26 })
+            ScrollTrigger.batch(revealTargets, {
               start: 'top 92%',
               once: true,
               onEnter: batch =>
-                gsapInstance.to(batch, {
+                gsap.to(batch, {
                   opacity: 1,
                   y: 0,
                   duration: 0.7,
@@ -242,22 +289,21 @@ export default function MotionLayer() {
                   overwrite: true
                 })
             })
-            // 兜底：4 秒后仍在视口内却没触发的，直接显示（防 ScrollTrigger 异常）
             cleanup.push(
               setTimeout(() => {
                 revealTargets.forEach(el => {
                   if (getComputedStyle(el).opacity === '0') {
-                    gsapInstance.to(el, { opacity: 1, y: 0, duration: 0.4 })
+                    gsap.to(el, { opacity: 1, y: 0, duration: 0.4 })
                   }
                 })
-              }, 4000)
+              }, 5000)
             )
           }
 
-          // ---------- Banner 视差 ----------
+          // Banner 视差
           const banner = document.querySelector('.ff-banner-parallax')
           if (banner) {
-            const parallax = gsapInstance.to(banner, {
+            const parallax = gsap.to(banner, {
               yPercent: 14,
               opacity: 0.45,
               ease: 'none',
@@ -273,21 +319,13 @@ export default function MotionLayer() {
               parallax.kill()
             })
           }
-
-          // ---------- 卡片悬停微交互 ----------
-          const hovers = gsapInstance.utils.toArray('.ff-card-shadow')
-          cleanup.push(() => {
-            hovers.forEach(el => {
-              el.style.transform = ''
-            })
-          })
         }
 
         // 路由切换后刷新触发器
         const onRoute = () => {
           setTimeout(() => {
             introEl?.classList.remove('is-on')
-            ScrollTriggerInstance?.refresh()
+            ScrollTrigger?.refresh()
           }, 400)
         }
         router.events.on('routeChangeComplete', onRoute)
@@ -295,6 +333,8 @@ export default function MotionLayer() {
       } catch (e) {
         console.warn('[MotionLayer] gsap init failed', e)
         introEl?.classList.remove('is-on')
+        document.documentElement.classList.remove('ff-intro-pending')
+        if (introEl) introEl.style.display = 'none'
       }
     }
 
@@ -307,22 +347,29 @@ export default function MotionLayer() {
           typeof fn === 'function' ? fn() : clearTimeout(fn)
         } catch (e) {}
       })
-      ScrollTriggerInstance?.getAll?.().forEach(t => t.kill())
-      gsapInstance?.globalTimeline?.clear?.()
+      ScrollTrigger?.getAll?.().forEach(t => t.kill())
+      gsap?.globalTimeline?.clear?.()
     }
   }, [])
 
   const title = siteConfig('TITLE') || ''
-  const logo = siteConfig('BLOG_LOGO') || ''
 
   return (
     <div ref={introRef} className='ff-intro' aria-hidden='true'>
       <div className='ff-intro-inner'>
-        {logo && <img className='ff-intro-logo' src={logo} alt='' draggable={false} />}
-        <div className='ff-intro-word'>{title}</div>
-        <span className='ff-intro-bar'>
-          <i />
-        </span>
+        <div className='ff-intro-domain'>
+          <span className='ff-intro-domain-text' />
+          <span className='ff-intro-caret' />
+        </div>
+        <h1 className='ff-intro-title'>{title}</h1>
+      </div>
+
+      <div className='ff-intro-foot'>
+        <span className='ff-intro-loading'>// loading 0%</span>
+        <span className='ff-intro-meta'>guangzhou, cn</span>
+      </div>
+      <div className='ff-intro-progress'>
+        <i />
       </div>
     </div>
   )
