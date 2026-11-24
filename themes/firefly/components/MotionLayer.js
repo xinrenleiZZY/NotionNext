@@ -125,7 +125,7 @@ export default function MotionLayer() {
         const startedAt = window.__ffIntroStart || Date.now()
         const bootDelay = Date.now() - startedAt
 
-        if (introEl && firstVisit && !reduceMotion && bootDelay < 9000) {
+        if (introEl && firstVisit && !reduceMotion) {
           document.documentElement.classList.remove('ff-intro-pending')
           introEl.classList.add('is-on')
           // 兜底：异常时 12 秒强制放行
@@ -246,21 +246,6 @@ export default function MotionLayer() {
             { y: 26, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.8, stagger: 0.09, ease: 'power3.out', delay: 0.15 }
           )
-        } else if (introEl && pending) {
-          // JS 太慢 / 非首次：直接放行，不遮挡
-          document.documentElement.classList.remove('ff-intro-pending')
-          introEl.classList.remove('is-on')
-          introEl.style.display = 'none'
-          try {
-            sessionStorage.setItem(INTRO_KEY, '1')
-          } catch (e) {}
-          if (!reduceMotion) {
-            gsap.fromTo(
-              '.ff-banner-title, .ff-banner-subtitle',
-              { y: 18, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'power3.out' }
-            )
-          }
         } else {
           document.documentElement.classList.remove('ff-intro-pending')
           if (introEl) introEl.style.display = 'none'
