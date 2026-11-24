@@ -295,11 +295,11 @@ export const Style = () => {
       .ff-intro-domain {
         display: inline-flex;
         align-items: center;
-        gap: 2px;
+        gap: 3px;
         font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
-        font-size: clamp(1rem, 2vw, 1.4rem);
-        letter-spacing: 0.04em;
-        color: var(--content-meta, rgba(58, 31, 43, 0.66));
+        font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+        letter-spacing: 0.06em;
+        color: var(--deep-text, #3a1f2b);
         min-height: 2em;
       }
 
@@ -329,13 +329,13 @@ export const Style = () => {
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        width: 100%;
+        width: min(88%, 1080px);
         margin: 0;
         opacity: 0;
-        font-size: clamp(2rem, 6.2vw, 5rem);
+        font-size: clamp(1.7rem, 4.4vw, 3.4rem);
         font-weight: 900;
-        line-height: 1.05;
-        letter-spacing: -0.01em;
+        line-height: 1.12;
+        letter-spacing: -0.015em;
         color: var(--deep-text, #3a1f2b);
         text-align: center;
         will-change: transform, opacity, filter;
@@ -355,7 +355,7 @@ export const Style = () => {
         font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
         font-size: clamp(0.6rem, 1.1vw, 0.78rem);
         letter-spacing: 0.06em;
-        text-transform: uppercase;
+        text-transform: none;
         color: var(--content-meta, rgba(58, 31, 43, 0.6));
       }
 
