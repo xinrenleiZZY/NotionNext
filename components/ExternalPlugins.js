@@ -40,9 +40,9 @@ const ExternalPlugin = props => {
   const ADSENSE_GOOGLE_ID = siteConfig('ADSENSE_GOOGLE_ID', null, NOTION_CONFIG)
   const FACEBOOK_APP_ID = siteConfig('FACEBOOK_APP_ID', null, NOTION_CONFIG)
   const FACEBOOK_PAGE_ID = siteConfig('FACEBOOK_PAGE_ID', null, NOTION_CONFIG)
-  const FIREWORKS = siteConfig('FIREWORKS', null, NOTION_CONFIG)
-  const SAKURA = siteConfig('SAKURA', null, NOTION_CONFIG)
-  const STARRY_SKY = siteConfig('STARRY_SKY', null, NOTION_CONFIG)
+  const FIREWORKS = false // 性能优先：全屏 canvas 特效用代码强制关闭
+  const SAKURA = false // 性能优先：全屏 canvas 特效用代码强制关闭
+  const STARRY_SKY = false // 性能优先：全屏 canvas 特效用代码强制关闭
   const MUSIC_PLAYER = siteConfig('MUSIC_PLAYER', null, NOTION_CONFIG)
   const NEST = siteConfig('NEST', null, NOTION_CONFIG)
   const FLUTTERINGRIBBON = siteConfig('FLUTTERINGRIBBON', null, NOTION_CONFIG)
@@ -108,7 +108,7 @@ const ExternalPlugin = props => {
   const CLARITY_ID = siteConfig('CLARITY_ID', null, NOTION_CONFIG)
   const IMG_SHADOW = siteConfig('IMG_SHADOW', null, NOTION_CONFIG)
   const ANIMATE_CSS_URL = siteConfig('ANIMATE_CSS_URL', null, NOTION_CONFIG)
-  const MOUSE_FOLLOW = siteConfig('MOUSE_FOLLOW', null, NOTION_CONFIG)
+  const MOUSE_FOLLOW = false // 性能优先：全屏 canvas 特效用代码强制关闭
   const CUSTOM_EXTERNAL_CSS = siteConfig(
     'CUSTOM_EXTERNAL_CSS',
     null,

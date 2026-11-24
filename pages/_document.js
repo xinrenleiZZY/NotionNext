@@ -37,17 +37,13 @@ const darkModeScript = `
 })()
 `
 
-// 入场动画预置：在首屏渲染前就显示遮罩，避免「内容先闪现、再被盖住」
+// 入场动画预置：遮罩默认在 CSS 里就显示，这里只决定「本次是否跳过」
 const introScript = `
 (function() {
   try {
     window.__ffIntroStart = Date.now()
-    if (sessionStorage.getItem('ff-intro-played') !== '1') {
-      document.documentElement.classList.add('ff-intro-pending')
-      // 兜底：JS 异常时 9 秒后自动放行
-      setTimeout(function() {
-        document.documentElement.classList.remove('ff-intro-pending')
-      }, 30000)
+    if (sessionStorage.getItem('ff-intro-played') === '1') {
+      document.documentElement.classList.add('ff-intro-skip')
     }
   } catch (e) {}
 })()
@@ -121,17 +117,17 @@ class MyDocument extends Document {
           {/* 预先设置深色模式，避免闪烁 */}
           <script dangerouslySetInnerHTML={{ __html: darkModeScript }} />
 
-          {/* 入场遮罩：在绘制前就生效；CSS 自带「自动淡出」，JS 慢时也不会一直挡着 */}
+          {/* 入场遮罩：默认就在 CSS 里显示（首帧覆盖内容），JS 完成后隐藏；会话内已看过则直接跳过 */}
           <script dangerouslySetInnerHTML={{ __html: introScript }} />
           <style
             dangerouslySetInnerHTML={{
               __html: `
-html.ff-intro-pending .ff-intro{display:flex!important;opacity:1;animation:ff-intro-auto 30s ease forwards}
-@keyframes ff-intro-auto{
-  0%,97%{opacity:1;visibility:visible}
+.ff-intro{display:flex;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:#f6fffb;animation:ff-intro-fallback 12s ease forwards}
+@keyframes ff-intro-fallback{
+  0%,88%{opacity:1;visibility:visible}
   100%{opacity:0;visibility:hidden}
 }
-.ff-intro{position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:#f6fffb}
+html.ff-intro-skip .ff-intro{display:none!important;animation:none!important}
 `
             }}
           />

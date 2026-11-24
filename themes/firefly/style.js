@@ -265,7 +265,7 @@ export const Style = () => {
          入场动画层（域名打字 → 标题 → 进度 → 上拉）
          ============================ */
       .ff-intro {
-        display: none;
+        display: flex;
         position: fixed;
         inset: 0;
         z-index: 200;

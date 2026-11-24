@@ -74,7 +74,6 @@ export default function MotionLayer() {
           params.get('motion') === 'off' ||
           localStorage.getItem('motion-off') === '1'
         if (forcedOff) {
-          document.documentElement.classList.remove('ff-intro-pending')
           if (introEl) introEl.style.display = 'none'
           window.__ffMotionOff = true
           return
@@ -134,12 +133,11 @@ export default function MotionLayer() {
         }
 
         // ---------- 入场 ----------
-        const pending = document.documentElement.classList.contains('ff-intro-pending')
+        const skipped = document.documentElement.classList.contains('ff-intro-skip')
         const startedAt = window.__ffIntroStart || Date.now()
         const bootDelay = Date.now() - startedAt
 
-        if (introEl && firstVisit && !reduceMotion) {
-          document.documentElement.classList.remove('ff-intro-pending')
+        if (introEl && firstVisit && !reduceMotion && !skipped) {
           introEl.classList.add('is-on')
           // 兜底：异常时 12 秒强制放行
           cleanup.push(
@@ -260,7 +258,6 @@ export default function MotionLayer() {
             { y: 0, opacity: 1, duration: 0.8, stagger: 0.09, ease: 'power3.out', delay: 0.15 }
           )
         } else {
-          document.documentElement.classList.remove('ff-intro-pending')
           if (introEl) introEl.style.display = 'none'
           if (!reduceMotion) {
             gsap.fromTo(
