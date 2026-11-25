@@ -31,6 +31,9 @@ const CONFIG = {
   // 全站背景图（固定层），留空则用主题底色；支持本地路径或外链
   FIREFLY_WALLPAPER: null,
   // 背景图不透明度 0–1
+  // 轮播里是否混入相册图片（数量）
+  FIREFLY_BANNER_GALLERY_ENABLE: true,
+  FIREFLY_BANNER_GALLERY: 4,
   FIREFLY_WALLPAPER_OPACITY: 0.28,
   // 背景图模糊像素
   FIREFLY_WALLPAPER_BLUR: 2

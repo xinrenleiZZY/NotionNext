@@ -5,6 +5,7 @@ import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { useEffect, useMemo, useState } from 'react'
 import CONFIG from '../config'
+import GALLERY from '@/conf/gallery.config'
 import WavesCanvas from './WavesCanvas'
 
 /**
@@ -60,17 +61,40 @@ export default function Banner(props) {
       .filter(Boolean)
   }, [])
 
-  const images = useMemo(() => {
-    if (customImages.length) return customImages
-    const list = []
-    if (siteInfo?.pageCover) list.push(siteInfo.pageCover)
-    posts.slice(0, 4).forEach(post => {
-      if (post?.pageCover && !list.includes(post.pageCover)) {
-        list.push(post.pageCover)
+  // 相册图片加入轮播（Pixiv 图走 /api/pximg 代理，避免 403）
+  const galleryImages = useMemo(() => {
+    if (!siteConfig('FIREFLY_BANNER_GALLERY_ENABLE', true, CONFIG)) return []
+    const count = Number(siteConfig('FIREFLY_BANNER_GALLERY', 4, CONFIG)) || 0
+    if (count <= 0) return []
+    const pool = (GALLERY?.ITEMS || []).filter(item => item?.src && !item.sensitive)
+    return pool.slice(0, count).map(item => {
+      const src = item.thumb || item.src
+      if (/i\.pximg\.net|pixiv\.net/.test(src)) {
+        return `/api/pximg?url=${encodeURIComponent(src)}`
       }
+      return src
     })
-    return list.slice(0, 4)
-  }, [customImages, siteInfo, posts])
+  }, [])
+
+  const images = useMemo(() => {
+    const base = customImages.length
+      ? customImages
+      : (() => {
+          const list = []
+          if (siteInfo?.pageCover) list.push(siteInfo.pageCover)
+          posts.slice(0, 4).forEach(post => {
+            if (post?.pageCover && !list.includes(post.pageCover)) {
+              list.push(post.pageCover)
+            }
+          })
+          return list.slice(0, 4)
+        })()
+    const merged = [...base]
+    galleryImages.forEach(src => {
+      if (src && !merged.includes(src)) merged.push(src)
+    })
+    return merged.slice(0, 8)
+  }, [customImages, galleryImages, siteInfo, posts])
 
   const [active, setActive] = useState(0)
 

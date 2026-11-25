@@ -261,6 +261,35 @@ export const Style = () => {
         font-weight: 600;
       }
 
+      /* 顶部艺术字 logo（滚动前的导航左侧） */
+      .ff-wordmark {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: Georgia, 'Times New Roman', 'Songti SC', serif;
+        font-style: italic;
+        font-weight: 700;
+        font-size: 1.42rem;
+        letter-spacing: -0.02em;
+        line-height: 1;
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.28);
+      }
+
+      .ff-wordmark-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px 6px;
+        border: 1px solid currentColor;
+        border-radius: 5px;
+        font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+        font-style: normal;
+        font-size: 0.46em;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        transform: rotate(-5deg) translateY(-2px);
+        opacity: 0.9;
+      }
       /* ============================
          入场动画层（域名打字 → 标题 → 进度 → 上拉）
          ============================ */

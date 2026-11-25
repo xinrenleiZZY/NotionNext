@@ -74,18 +74,27 @@ export default function Navbar(props) {
             href='/'
             className='ff-btn-plain shrink-0 px-2 py-1.5 no-underline'
             style={{ color: overlay && !scrolled ? '#fff' : 'var(--deep-text)' }}>
-            <img
-              src={siteConfig('BLOG_LOGO')}
-              alt=''
-              width={24}
-              height={24}
-              draggable={false}
-              className='h-6 w-6 shrink-0 rounded-full object-cover'
-              style={{ boxShadow: '0 0 0 1px var(--line-divider)' }}
-            />
-            <span className='max-w-[38vw] truncate text-[0.9rem] font-bold'>
-              {title}
-            </span>
+            {overlay && !scrolled ? (
+              <span className='ff-wordmark'>
+                Zenyth
+                <span className='ff-wordmark-badge'>2026</span>
+              </span>
+            ) : (
+              <>
+                <img
+                  src={siteConfig('BLOG_LOGO')}
+                  alt=''
+                  width={24}
+                  height={24}
+                  draggable={false}
+                  className='h-6 w-6 shrink-0 rounded-full object-cover'
+                  style={{ boxShadow: '0 0 0 1px var(--line-divider)' }}
+                />
+                <span className='max-w-[38vw] truncate text-[0.9rem] font-bold'>
+                  {title}
+                </span>
+              </>
+            )}
           </SmartLink>
 
           {/* 桌面菜单：强制单行，放不下时横向滚动（不换行、不压 banner） */}
@@ -99,7 +108,7 @@ export default function Navbar(props) {
                 target={link.target}
                 className='ff-btn-plain shrink-0 whitespace-nowrap px-2 py-1.5 text-[0.8125rem] font-medium no-underline xl:px-2.5'
                 style={{ color: overlay && !scrolled ? '#fff' : 'var(--content-meta)' }}>
-                {cleanMenuName(link.name)}
+                {link.name}
               </SmartLink>
             ))}
           </nav>
@@ -173,7 +182,7 @@ export default function Navbar(props) {
               onClick={() => setMenuOpen(false)}
               className='ff-btn-plain justify-start px-3 py-2.5 text-sm no-underline'
               style={{ color: 'var(--deep-text)' }}>
-              {cleanMenuName(link.name)}
+              {link.name}
             </SmartLink>
           ))}
         </div>
