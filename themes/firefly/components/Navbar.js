@@ -12,6 +12,17 @@ const isVisible = link => !!link && link.show !== false
  * Firefly 顶栏：玻璃胶囊（源码 navbar.css）
  * 首页覆盖 banner 时透明，滚动后变实底
  */
+/**
+ * 去掉菜单标题开头重复的 emoji / 符号（Notion 菜单本身已有图标设计）
+ * 例："🔗 仙盟友链" → "仙盟友链"，"ℹ️ 关于本尊" → "关于本尊"
+ */
+const cleanMenuName = name =>
+  String(name || '')
+    .replace(
+      /^[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}\u{1F3FB}-\u{1F3FF}\u{FE0F}\u{200D}\u{20E3}\u2600-\u27BF\s]+/gu,
+      ''
+    )
+    .trim()
 export default function Navbar(props) {
   const { customNav, customMenu, overlay = false } = props
   const { locale, isDarkMode, toggleDarkMode, siteInfo } = useGlobal()
@@ -88,8 +99,7 @@ export default function Navbar(props) {
                 target={link.target}
                 className='ff-btn-plain shrink-0 whitespace-nowrap px-2 py-1.5 text-[0.8125rem] font-medium no-underline xl:px-2.5'
                 style={{ color: overlay && !scrolled ? '#fff' : 'var(--content-meta)' }}>
-                {link.icon && <i className={`${link.icon} text-[0.75rem]`} />}
-                {link.name}
+                {cleanMenuName(link.name)}
               </SmartLink>
             ))}
           </nav>
@@ -163,8 +173,7 @@ export default function Navbar(props) {
               onClick={() => setMenuOpen(false)}
               className='ff-btn-plain justify-start px-3 py-2.5 text-sm no-underline'
               style={{ color: 'var(--deep-text)' }}>
-              {link.icon && <i className={`${link.icon} text-xs`} />}
-              {link.name}
+              {cleanMenuName(link.name)}
             </SmartLink>
           ))}
         </div>

@@ -108,7 +108,7 @@ const ExternalPlugin = props => {
   const CLARITY_ID = siteConfig('CLARITY_ID', null, NOTION_CONFIG)
   const IMG_SHADOW = siteConfig('IMG_SHADOW', null, NOTION_CONFIG)
   const ANIMATE_CSS_URL = siteConfig('ANIMATE_CSS_URL', null, NOTION_CONFIG)
-  const MOUSE_FOLLOW = false // 性能优先：全屏 canvas 特效用代码强制关闭
+  const MOUSE_FOLLOW = siteConfig('MOUSE_FOLLOW', null, NOTION_CONFIG)
   const CUSTOM_EXTERNAL_CSS = siteConfig(
     'CUSTOM_EXTERNAL_CSS',
     null,
