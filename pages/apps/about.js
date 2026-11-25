@@ -1,20 +1,21 @@
-import GitHubShowcase from '@/components/GitHubShowcase'
+import AboutShowcase from '@/components/AboutShowcase'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
+import { compactPageProps } from '@/lib/site/compactPageProps'
 import { fixThemeDOM } from '@/themes/theme'
 import { useEffect } from 'react'
 
 /**
- * 关于本尊（GitHub 主页展示）
+ * 关于本尊（个人主页）
  * 地址：/apps/about
  */
-export default function AboutPage({ githubFallback }) {
+export default function AboutPage({ githubFallback, latestPosts }) {
   useEffect(() => {
     fixThemeDOM()
     const timer = setTimeout(fixThemeDOM, 400)
     return () => clearTimeout(timer)
   }, [])
 
-  return <GitHubShowcase fallback={githubFallback} />
+  return <AboutShowcase fallback={githubFallback} latestPosts={latestPosts} />
 }
 
 async function fetchGitHubFallback() {
@@ -52,7 +53,8 @@ async function fetchGitHubFallback() {
         html_url: user.html_url,
         followers: user.followers,
         following: user.following,
-        public_repos: user.public_repos
+        public_repos: user.public_repos,
+        created_at: user.created_at
       },
       stats: {
         repos: repos.length,
@@ -82,7 +84,8 @@ async function fetchGitHubFallback() {
 
 export async function getStaticProps(req) {
   const { locale } = req
-  const props = (await fetchGlobalAllData({ from: 'about', locale })) || {}
+  const siteData = (await fetchGlobalAllData({ from: 'about', locale })) || {}
   const githubFallback = await fetchGitHubFallback()
-  return { props: { ...props, githubFallback }, revalidate: 3600 }
+  const props = compactPageProps(siteData, { githubFallback })
+  return { props, revalidate: 3600 }
 }

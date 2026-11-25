@@ -7,6 +7,7 @@
 //   因此整体移除，回归 NotionNext 上游的简洁默认值处理逻辑。
 //   若 Notion API 报 403，请在 Vercel / .env.local 设置 NOTION_TOKEN_V2（从浏览器 Notion Cookie 提取 token_v2）。
 
+const FIREFLY_WALLPAPERS = require('./conf/wallpaper.config')
 
 /**
  * 布尔环境变量解析器：区分 string/false/0/off → false
@@ -24,8 +25,7 @@ const BLOG = {
   API_BASE_URL: process.env.API_BASE_URL || 'https://www.notion.so/api/v3', // API默认请求地址,可以配置成自己的地址例如：https://[xxxxx].notion.site/api/v3
   // Important page_id！！！Duplicate Template from  https://tanghh.notion.site/02ab3b8678004aa69e9e415905ef32a5
   NOTION_PAGE_ID:
-    process.env.NOTION_PAGE_ID ||
-    'REPLACE_WITH_YOUR_NOTION_PAGE_ID',
+    process.env.NOTION_PAGE_ID || 'REPLACE_WITH_YOUR_NOTION_PAGE_ID',
   THEME: process.env.NEXT_PUBLIC_THEME || 'firefly', // 当前主题，在themes文件夹下可找到所有支持的主题；主题名称就是文件夹名，例如 claude,endspace,example,fukasawa,fuwari,gitbook,heo,hexo,landing,matery,medium,next,nobelium,plog,simple
   LANG: process.env.NEXT_PUBLIC_LANG || 'zh-CN', // e.g 'zh-CN','en-US'  see /lib/lang.js for more.
   SINCE: process.env.NEXT_PUBLIC_SINCE || 2025, // e.g if leave this empty, current year will be used.
@@ -37,13 +37,18 @@ const BLOG = {
   APPEARANCE_DARK_TIME: process.env.NEXT_PUBLIC_APPEARANCE_DARK_TIME || [18, 6], // 夜间模式起至时间，false时关闭根据时间自动切换夜间模式
 
   AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '仙帝·Zeyan', // 您的昵称
-  BIO: process.env.NEXT_PUBLIC_BIO || '放下本仙尊的阔乐！本仙尊乃永恒仙庭仙尊·游走于数据星系与修仙世界的技术修士', // 作者简介
+  BIO:
+    process.env.NEXT_PUBLIC_BIO ||
+    '放下本仙尊的阔乐！本仙尊乃永恒仙庭仙尊·游走于数据星系与修仙世界的技术修士', // 作者简介
   LINK: process.env.NEXT_PUBLIC_LINK || 'https://www.juxingspacestation.top', // 网站地址（个人博客主域名；jxspace.top 为公司站，勿混用）
-  KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '仙帝, Zeyan, 永恒仙庭, 聚星知识产权, AI, 技术博客, Python, Docker, Next.js', // 网站关键词 英文逗号隔开
+  KEYWORDS:
+    process.env.NEXT_PUBLIC_KEYWORD ||
+    '仙帝, Zeyan, 永恒仙庭, 聚星知识产权, AI, 技术博客, Python, Docker, Next.js', // 网站关键词 英文逗号隔开
   BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon.ico', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
   BLOG_LOGO: process.env.NEXT_PUBLIC_LOGO || '/brand/zenyth-avatar-64.png', // 顶栏站点标识（头像），建议正方形图片；可用 NEXT_PUBLIC_LOGO 覆盖
   BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '', // 备案号 闽ICP备XXXXXX
-  BEI_AN_LINK: process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://beian.miit.gov.cn/', // 备案查询链接，如果用了萌备等备案请在这里填写
+  BEI_AN_LINK:
+    process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://beian.miit.gov.cn/', // 备案查询链接，如果用了萌备等备案请在这里填写
   BEI_AN_GONGAN: process.env.NEXT_PUBLIC_BEI_AN_GONGAN || '', // 公安备案号，例如 '浙公网安备3xxxxxxxx8号'
 
   // RSS订阅
@@ -53,11 +58,9 @@ const BLOG = {
   // 首页轮播图：逗号分隔（可替换成任何图片/外链）；留空则自动用站点封面+文章封面
   FIREFLY_BANNER_IMAGES:
     process.env.NEXT_PUBLIC_FIREFLY_BANNER_IMAGES ||
-    [
-      '/banner/dc5-a-1440.jpg',
-      '/banner/dc5-b-1440.jpg',
-      '/banner/dc5-sep-1440.jpg'
-    ].join(','),
+    FIREFLY_WALLPAPERS.map(item => item.src).join(','),
+  // 首页只展示完整壁纸，不再混入构图不一致的相册缩图
+  FIREFLY_BANNER_GALLERY_ENABLE: false,
   // 全站固定背景图（留空则不启用）
   FIREFLY_WALLPAPER: process.env.NEXT_PUBLIC_FIREFLY_WALLPAPER || '',
 
@@ -97,8 +100,10 @@ const BLOG = {
   ...require('./conf/techgrow.config'), // 公众号导流插件（TechGrow）
 
   // 侧栏布局 是否反转(左变右,右变左) 已支持主题: hexo next medium fukasawa example
-  LAYOUT_SIDEBAR_REVERSE:
-    envBool(process.env.NEXT_PUBLIC_LAYOUT_SIDEBAR_REVERSE, false),
+  LAYOUT_SIDEBAR_REVERSE: envBool(
+    process.env.NEXT_PUBLIC_LAYOUT_SIDEBAR_REVERSE,
+    false
+  ),
 
   // 欢迎语打字效果,Hexo,Matery主题支持, 英文逗号隔开多个欢迎语。（仙帝·永恒仙庭风格）
   GREETING_WORDS:

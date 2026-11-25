@@ -1,6 +1,7 @@
 import GalleryWall from '@/components/GalleryWall'
 import GALLERY from '@/conf/gallery.config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
+import { compactPageProps } from '@/lib/site/compactPageProps'
 import { fixThemeDOM } from '@/themes/theme'
 import { useEffect } from 'react'
 
@@ -22,6 +23,6 @@ export default function GalleryPage(props) {
 
 export async function getStaticProps(req) {
   const { locale } = req
-  const props = (await fetchGlobalAllData({ from: 'gallery', locale })) || {}
-  return { props, revalidate: 60 }
+  const siteData = (await fetchGlobalAllData({ from: 'gallery', locale })) || {}
+  return { props: compactPageProps(siteData), revalidate: 60 }
 }

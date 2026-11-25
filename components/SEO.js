@@ -1,6 +1,7 @@
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { loadExternalResource } from '@/lib/utils'
+import ABOUT from '@/conf/about.config'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -65,14 +66,19 @@ const SEO = props => {
     .split('#')[0]
     .split('?')[0]
   const canonicalPath =
-    asPath.replace(/\/index\.html$/, '/').replace(/\.html$/, '').replace(/\/+$/, '') ||
-    '/'
-  const canonicalUrl = `${SITE_BASE}${canonicalPath}`
+    asPath
+      .replace(/\/index\.html$/, '/')
+      .replace(/\.html$/, '')
+      .replace(/\/+$/, '') || '/'
+  const canonicalUrl = meta?.canonical || `${SITE_BASE}${canonicalPath}`
+  const metadataBase = meta?.canonical
+    ? new URL(meta.canonical).origin
+    : SITE_BASE
   // OG/Twitter 图片必须是绝对地址，社交平台不解析相对路径
   const ogImage =
     image && /^https?:\/\//i.test(image)
       ? image
-      : `${SITE_BASE}${image || '/bg_image.jpg'}`
+      : `${metadataBase}${image || '/bg_image.jpg'}`
   const TITLE = siteConfig('TITLE')
   const title = meta?.title || TITLE
   const description = meta?.description || `${siteInfo?.description}`
@@ -131,7 +137,10 @@ const SEO = props => {
         name='viewport'
         content='width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0'
       />
-      <meta name='robots' content='follow, index, max-snippet:-1, max-image-preview:large, max-video-preview:-1' />
+      <meta
+        name='robots'
+        content='follow, index, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+      />
       <meta charSet='UTF-8' />
       <meta name='format-detection' content='telephone=no' />
       <meta name='mobile-web-app-capable' content='yes' />
@@ -177,8 +186,14 @@ const SEO = props => {
 
       {/* Twitter Card 元数据 */}
       <meta name='twitter:card' content='summary_large_image' />
-      <meta name='twitter:site' content={siteConfig('TWITTER_SITE', '@NotionNext')} />
-      <meta name='twitter:creator' content={siteConfig('TWITTER_CREATOR', '@NotionNext')} />
+      <meta
+        name='twitter:site'
+        content={siteConfig('TWITTER_SITE', '@NotionNext')}
+      />
+      <meta
+        name='twitter:creator'
+        content={siteConfig('TWITTER_CREATOR', '@NotionNext')}
+      />
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={description} />
       <meta name='twitter:image' content={ogImage} />
@@ -221,7 +236,15 @@ const SEO = props => {
       <script
         type='application/ld+json'
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generateStructuredData(meta, siteInfo, canonicalUrl, ogImage, AUTHOR))
+          __html: JSON.stringify(
+            generateStructuredData(
+              meta,
+              siteInfo,
+              canonicalUrl,
+              ogImage,
+              AUTHOR
+            )
+          )
         }}
       />
 
@@ -301,6 +324,33 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
       },
       keywords: meta.tags?.join(', '),
       articleSection: meta.category
+    }
+  }
+
+  if (meta?.type === 'profile') {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ProfilePage',
+      name: meta.title,
+      description: meta.description,
+      url,
+      mainEntity: {
+        '@type': 'Person',
+        name: ABOUT.name,
+        alternateName: 'xinrenleiZZY',
+        description: ABOUT.intro,
+        image,
+        jobTitle: ABOUT.role,
+        worksFor: {
+          '@type': 'Organization',
+          name: ABOUT.company
+        },
+        sameAs: [
+          'https://github.com/xinrenleiZZY',
+          'https://www.juxingspacestation.top',
+          'https://www.jxspace.top'
+        ]
+      }
     }
   }
 
@@ -403,6 +453,43 @@ const getSEOMeta = (props, router, locale) => {
         description: `${siteInfo?.description}`,
         image: `${siteInfo?.pageCover}`,
         slug: 'category',
+        type: 'website'
+      }
+    case '/apps/about':
+      return {
+        title: '仙帝 Zeyan｜关于本尊',
+        description:
+          '仙帝（Zeyan，xinrenleiZZY）的个人主页：AI 自动化、企业数据系统、全栈开发与知识产权实践。',
+        image: '/banner/bubble-nebula.webp',
+        canonical: ABOUT.canonical,
+        slug: 'apps/about',
+        type: 'profile'
+      }
+    case '/apps/showcase':
+      return {
+        title: `仙术展示｜项目作品墙 | ${TITLE}`,
+        description: '精选项目、开源仓库、AI 自动化与企业数据系统实践。',
+        image: '/banner/circuit-board.webp',
+        canonical: 'https://www.juxingspacestation.top/apps/showcase',
+        slug: 'apps/showcase',
+        type: 'website'
+      }
+    case '/apps/gallery':
+      return {
+        title: `星轨相册｜动漫收藏 | ${TITLE}`,
+        description: '精选动漫插画、壁纸和收藏记录。',
+        image: '/banner/starfield.webp',
+        canonical: 'https://www.juxingspacestation.top/apps/gallery',
+        slug: 'apps/gallery',
+        type: 'website'
+      }
+    case '/apps/wall':
+      return {
+        title: `动漫照片墙 | ${TITLE}`,
+        description: '按标签浏览动漫照片与壁纸收藏。',
+        image: '/banner/bubble-nebula.webp',
+        canonical: 'https://www.juxingspacestation.top/apps/wall',
+        slug: 'apps/wall',
         type: 'website'
       }
     default:

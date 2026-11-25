@@ -37,9 +37,13 @@ export default function Banner(props) {
   const height = Number(siteConfig('FIREFLY_BANNER_HEIGHT', 62, CONFIG)) || 62
   const showWaves = siteConfig('FIREFLY_WAVES', true, CONFIG)
   const intervalMs =
-    Math.max(Number(siteConfig('FIREFLY_BANNER_INTERVAL', 6, CONFIG)) || 6, 2) * 1000
+    Math.max(Number(siteConfig('FIREFLY_BANNER_INTERVAL', 6, CONFIG)) || 6, 2) *
+    1000
 
-  const posts = props.posts || props.allNavPages || []
+  const posts = useMemo(
+    () => props.posts || props.allNavPages || [],
+    [props.posts, props.allNavPages]
+  )
 
   // 自定义轮播图优先（可用 Notion Config / 环境变量覆盖，无需改代码）
   const customImages = useMemo(() => {
@@ -66,7 +70,9 @@ export default function Banner(props) {
     if (!siteConfig('FIREFLY_BANNER_GALLERY_ENABLE', true, CONFIG)) return []
     const count = Number(siteConfig('FIREFLY_BANNER_GALLERY', 4, CONFIG)) || 0
     if (count <= 0) return []
-    const pool = (GALLERY?.ITEMS || []).filter(item => item?.src && !item.sensitive)
+    const pool = (GALLERY?.ITEMS || []).filter(
+      item => item?.src && !item.sensitive
+    )
     return pool.slice(0, count).map(item => {
       const src = item.thumb || item.src
       if (/i\.pximg\.net|pixiv\.net/.test(src)) {
@@ -90,9 +96,12 @@ export default function Banner(props) {
           return list.slice(0, 4)
         })()
     const merged = [...base]
-    galleryImages.forEach(src => {
-      if (src && !merged.includes(src)) merged.push(src)
-    })
+    // 手工配置的轮播图优先且完整展示；只有未配置时才混入相册图。
+    if (!customImages.length) {
+      galleryImages.forEach(src => {
+        if (src && !merged.includes(src)) merged.push(src)
+      })
+    }
     return merged.slice(0, 8)
   }, [customImages, galleryImages, siteInfo, posts])
 
@@ -113,12 +122,18 @@ export default function Banner(props) {
   return (
     <div
       className='relative w-full overflow-hidden'
-      style={{ height: `${height}vh`, minHeight: 340, background: 'var(--btn-regular-bg)' }}>
+      style={{
+        height: `${height}vh`,
+        minHeight: 340,
+        background: 'var(--btn-regular-bg)'
+      }}
+    >
       {images.map((src, index) => (
         <div
           key={`${src}-${index}`}
           className='absolute inset-0 transition-opacity duration-700'
-          style={{ opacity: index === active ? 1 : 0 }}>
+          style={{ opacity: index === active ? 1 : 0 }}
+        >
           <LazyImage
             src={src}
             alt=''
@@ -160,7 +175,11 @@ export default function Banner(props) {
               rel='noopener noreferrer'
               aria-label='github'
               className='grid h-10 w-10 place-items-center rounded-full text-white no-underline transition-transform duration-200 hover:scale-110'
-              style={{ background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.35)' }}>
+              style={{
+                background: 'rgba(255,255,255,0.18)',
+                border: '1px solid rgba(255,255,255,0.35)'
+              }}
+            >
               <i className='fab fa-github' />
             </a>
           )}
@@ -169,7 +188,11 @@ export default function Banner(props) {
               href={`mailto:${email}`}
               aria-label='email'
               className='grid h-10 w-10 place-items-center rounded-full text-white no-underline transition-transform duration-200 hover:scale-110'
-              style={{ background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.35)' }}>
+              style={{
+                background: 'rgba(255,255,255,0.18)',
+                border: '1px solid rgba(255,255,255,0.35)'
+              }}
+            >
               <i className='fas fa-envelope' />
             </a>
           )}
@@ -178,7 +201,11 @@ export default function Banner(props) {
               href='/rss/feed.xml'
               aria-label='rss'
               className='grid h-10 w-10 place-items-center rounded-full text-white no-underline transition-transform duration-200 hover:scale-110'
-              style={{ background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.35)' }}>
+              style={{
+                background: 'rgba(255,255,255,0.18)',
+                border: '1px solid rgba(255,255,255,0.35)'
+              }}
+            >
               <i className='fas fa-rss' />
             </a>
           )}

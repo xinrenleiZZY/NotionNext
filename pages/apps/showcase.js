@@ -1,6 +1,7 @@
 import ShowcaseGrid from '@/components/ShowcaseGrid'
 import SHOWCASE from '@/conf/showcase.config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
+import { compactPageProps } from '@/lib/site/compactPageProps'
 import { fixThemeDOM } from '@/themes/theme'
 import { useEffect } from 'react'
 
@@ -20,6 +21,7 @@ export default function ShowcasePage() {
 
 export async function getStaticProps(req) {
   const { locale } = req
-  const props = (await fetchGlobalAllData({ from: 'showcase', locale })) || {}
-  return { props, revalidate: 300 }
+  const siteData =
+    (await fetchGlobalAllData({ from: 'showcase', locale })) || {}
+  return { props: compactPageProps(siteData), revalidate: 300 }
 }
