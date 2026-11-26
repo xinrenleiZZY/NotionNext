@@ -221,17 +221,6 @@ const nextConfig = {
   output: getOutput(),
   staticPageGenerationTimeout: getStaticPageGenerationTimeoutSec(),
 
-  // 旧页面重定向：/portfolio 的内容已合并进 /apps/showcase
-  async redirects() {
-    return [
-      {
-        source: '/portfolio',
-        destination: '/apps/showcase',
-        permanent: true
-      }
-    ]
-  },
-
   // 性能优化配置
   compress: true,
   poweredByHeader: false,
