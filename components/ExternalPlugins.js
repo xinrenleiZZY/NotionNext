@@ -189,6 +189,7 @@ const ExternalPlugin = props => {
   }, [ANIMATE_CSS_URL, IMG_SHADOW, externalCssList, externalJsList])
 
   const router = useRouter()
+  const compactWidgets = router.pathname === '/apps/about'
   useEffect(() => {
     // 异步渲染谷歌广告
     if (ADSENSE_GOOGLE_ID) {
@@ -204,7 +205,7 @@ const ExternalPlugin = props => {
         lang: lang
       })
     }, 500)
-  }, [router])
+  }, [router, ADSENSE_GOOGLE_ID, lang, props?.allLinkPages, props?.allNavPages])
 
   useEffect(() => {
     if (!isBrowser || !GLOBAL_JS || GLOBAL_JS.trim() === '') {
@@ -241,7 +242,7 @@ const ExternalPlugin = props => {
       <GlobalStyle />
       {ENABLE_ICON_FONT && <IconFont />}
       {MOUSE_FOLLOW && <MouseFollow />}
-      {pluginsIdle && THEME_SWITCH && <ThemeSwitch />}
+      {pluginsIdle && THEME_SWITCH && !compactWidgets && <ThemeSwitch />}
       {DEBUG && <DebugPanel />}
       {ANALYTICS_ACKEE_TRACKER && <Ackee />}
       {ANALYTICS_GOOGLE_ID && <Gtag />}
@@ -252,7 +253,9 @@ const ExternalPlugin = props => {
       {SAKURA && <Sakura />}
       {STARRY_SKY && <StarrySky />}
       {/* endspace 主题自带播放器（EndspacePlayer），避免左下角双播放器重叠 */}
-      {MUSIC_PLAYER && theme !== 'endspace' && <MusicPlayer />}
+      {MUSIC_PLAYER && theme !== 'endspace' && !compactWidgets && (
+        <MusicPlayer />
+      )}
       {NEST && <Nest />}
       {FLUTTERINGRIBBON && <FlutteringRibbon />}
       {COMMENT_TWIKOO_COUNT_ENABLE && <TwikooCommentCounter {...props} />}
@@ -448,7 +451,12 @@ const ExternalPlugin = props => {
 
       {/* UMAMI 统计 */}
       {UMAMI_ID && (
-        <script async defer src={UMAMI_HOST} data-website-id={UMAMI_ID}></script>
+        <script
+          async
+          defer
+          src={UMAMI_HOST}
+          data-website-id={UMAMI_ID}
+        ></script>
       )}
 
       {/* 谷歌统计 */}
