@@ -287,6 +287,12 @@ const nextConfig = {
     ? undefined
     : () => {
       return [
+        // 旧作品集页面已合并进 /apps/showcase
+        {
+          source: '/portfolio',
+          destination: '/apps/showcase',
+          permanent: true
+        },
         {
           source: '/feed',
           destination: '/rss/feed.xml',
