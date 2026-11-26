@@ -2,6 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
+    { "source": "/portfolio", "destination": "/apps/showcase", "permanent": true },
     {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "juxingspacestation.top" }],

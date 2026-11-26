@@ -142,6 +142,81 @@ export default function ShowcaseGrid({ config }) {
           这个分类下还没有作品。
         </div>
       )}
+
+      {/* 关于合作（原 /portfolio 内容合并） */}
+      {config?.COOPERATION && (
+        <section className='mt-16'>
+          <div
+            className='rounded-3xl p-6 md:p-9'
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(255,182,206,0.18), rgba(201,168,255,0.16))',
+              border: '1px solid var(--line-color, rgba(214,51,108,.12))'
+            }}>
+            <p
+              className='text-xs font-semibold uppercase tracking-[0.28em]'
+              style={{ color: 'var(--content-meta, rgba(0,0,0,.5))' }}>
+              Cooperation
+            </p>
+            <h2
+              className='mt-2 text-2xl font-black tracking-tight md:text-3xl'
+              style={{ color: 'var(--deep-text, #3a1f2b)' }}>
+              {config.COOPERATION.TITLE}
+            </h2>
+            <p
+              className='mt-2 max-w-2xl text-sm leading-relaxed'
+              style={{ color: 'var(--content-meta, rgba(0,0,0,.65))' }}>
+              {config.COOPERATION.DESC}
+            </p>
+
+            <div className='mt-6 grid gap-4 md:grid-cols-3'>
+              {(config.COOPERATION.CAPABILITIES || []).map(cap => (
+                <div
+                  key={cap.title}
+                  className='ff-card-shadow rounded-2xl p-4'
+                  style={{ background: 'rgba(255,255,255,.72)' }}>
+                  <h3
+                    className='text-sm font-extrabold'
+                    style={{ color: 'var(--deep-text, #3a1f2b)' }}>
+                    {cap.title}
+                  </h3>
+                  <p
+                    className='mt-1.5 text-xs leading-relaxed'
+                    style={{ color: 'var(--content-meta, rgba(0,0,0,.62))' }}>
+                    {cap.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className='mt-6 flex flex-wrap gap-2'>
+              {(config.COOPERATION.DIRECTIONS || []).map(direction => (
+                <span
+                  key={direction}
+                  className='rounded-full px-3 py-1.5 text-[11px] font-semibold'
+                  style={{ background: 'rgba(255,255,255,.72)', color: 'var(--btn-content, #c2255c)' }}>
+                  {direction}
+                </span>
+              ))}
+            </div>
+
+            <div className='mt-6 flex flex-wrap items-center gap-3'>
+              {(config.COOPERATION.CONTACTS || []).map(contact => (
+                <a
+                  key={contact.label}
+                  href={contact.href}
+                  target={contact.href.startsWith('http') ? '_blank' : undefined}
+                  rel='noopener noreferrer'
+                  className='flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold no-underline'
+                  style={{ background: 'var(--deep-text, #3a1f2b)', color: 'var(--page-bg, #fff)' }}>
+                  <span className='opacity-60'>{contact.label}</span>
+                  <span>{contact.value}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

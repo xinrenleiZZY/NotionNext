@@ -100,7 +100,41 @@ const SHOWCASE = {
       href: '/article/data-ip-rights',
       cover: '/Camera Roll/D.C.5 to 4 Luminous Memories 壁紙B 横.jpg'
     }
-  ]
+  ],
+
+  /**
+   * 关于合作（原 /portfolio 页面内容合并到这里）
+   */
+  COOPERATION: {
+    TITLE: '关于合作',
+    DESC: '数据资产确权 · 知识产权布局 · 数据合规风控。技术之外，也做「把数据变成资产」这件事。',
+    CAPABILITIES: [
+      {
+        title: '数据资产盘点',
+        desc: '梳理数据来源、类型与权属链，明确哪些数据可登记、可入表、可交易。'
+      },
+      {
+        title: '登记与合规辅导',
+        desc: '数据知识产权登记材料准备、流程跟进；采集合法性、个人信息与跨境传输评估。'
+      },
+      {
+        title: '数据产品设计',
+        desc: '把原始数据加工成可交付的产品：指标、报表、接口或数据集，并配套合规边界。'
+      }
+    ],
+    DIRECTIONS: [
+      'Notion + Next.js 建站与主题定制',
+      '合规范围内的准生产级数据采集',
+      'AI 工程化：多模型接入 / 成本监控 / 工作流',
+      '桌面与工具应用（Electron / Python）',
+      '数据合规咨询（跨境电商 / 个人信息 / 出境评估）'
+    ],
+    CONTACTS: [
+      { label: 'GitHub', value: '@xinrenleiZZY', href: 'https://github.com/xinrenleiZZY' },
+      { label: '邮箱', value: '2787326121@qq.com', href: 'mailto:2787326121@qq.com' },
+      { label: '博客', value: 'juxingspacestation.top', href: 'https://www.juxingspacestation.top' }
+    ]
+  }
 }
 
 module.exports = SHOWCASE
