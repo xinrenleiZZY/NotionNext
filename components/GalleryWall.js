@@ -1,9 +1,12 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import SmartLink from '@/components/SmartLink'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const FAV_KEY = 'gallery-favorites'
 const ADULT_KEY = 'gallery-adult-confirmed'
+const INITIAL_PAGE_SIZE = 24
+const PAGE_STEP = 24
 
 /**
  * 照片墙 / 相册组件
@@ -14,7 +17,10 @@ const ADULT_KEY = 'gallery-adult-confirmed'
  * - Pixiv 图片自动走 /api/pximg 代理
  */
 export default function GalleryWall({ config }) {
-  const items = useMemo(() => (config?.ITEMS || []).filter(item => item?.src), [config])
+  const items = useMemo(
+    () => (config?.ITEMS || []).filter(item => item?.src),
+    [config]
+  )
   const allTags = useMemo(() => {
     const set = new Set()
     items.forEach(item =>
@@ -30,8 +36,14 @@ export default function GalleryWall({ config }) {
   const [favorites, setFavorites] = useState([])
   const [adultConfirmed, setAdultConfirmed] = useState(false)
   const [showSensitive, setShowSensitive] = useState(true)
+  const [loadedCount, setLoadedCount] = useState(INITIAL_PAGE_SIZE)
+  const [failedItems, setFailedItems] = useState([])
+  const sentinelRef = useRef(null)
 
-  const hasSensitive = useMemo(() => items.some(item => item.sensitive), [items])
+  const hasSensitive = useMemo(
+    () => items.some(item => item.sensitive),
+    [items]
+  )
 
   useEffect(() => {
     try {
@@ -50,7 +62,9 @@ export default function GalleryWall({ config }) {
 
   const toggleFav = useCallback(key => {
     setFavorites(prev => {
-      const next = prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+      const next = prev.includes(key)
+        ? prev.filter(k => k !== key)
+        : [...prev, key]
       try {
         localStorage.setItem(FAV_KEY, JSON.stringify(next))
       } catch (e) {}
@@ -66,6 +80,35 @@ export default function GalleryWall({ config }) {
       return true
     })
   }, [items, activeTag, adultConfirmed, showSensitive])
+
+  useEffect(() => {
+    setLoadedCount(Math.min(INITIAL_PAGE_SIZE, visible.length))
+  }, [activeTag, adultConfirmed, showSensitive, visible.length])
+
+  const shownItems = useMemo(
+    () => visible.slice(0, loadedCount),
+    [visible, loadedCount]
+  )
+  const hasMore = loadedCount < visible.length
+
+  const loadMore = useCallback(() => {
+    setLoadedCount(count => Math.min(visible.length, count + PAGE_STEP))
+  }, [visible.length])
+
+  useEffect(() => {
+    const node = sentinelRef.current
+    if (!node || !hasMore || typeof IntersectionObserver === 'undefined') {
+      return
+    }
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0]?.isIntersecting) loadMore()
+      },
+      { rootMargin: '700px 0px' }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [hasMore, loadMore, loadedCount])
 
   const resolveSrc = useCallback(src => {
     const value = String(src || '')
@@ -111,29 +154,38 @@ export default function GalleryWall({ config }) {
 
   const itemKey = item => item.pixivId || item.src
 
+  const markImageFailed = useCallback(key => {
+    setFailedItems(previous =>
+      previous.includes(key) ? previous : [...previous, key]
+    )
+  }, [])
+
   return (
     <div className='mx-auto w-full max-w-[1180px] px-4 pb-20 pt-10 md:px-6'>
       <header className='mb-6'>
         <div className='flex flex-wrap items-end justify-between gap-3'>
           <h1
             className='text-2xl font-extrabold tracking-tight md:text-3xl'
-            style={{ color: 'var(--deep-text, #111)' }}>
+            style={{ color: 'var(--deep-text, #111)' }}
+          >
             {config?.TITLE || '相册'}
           </h1>
-          <a
+          <SmartLink
             href='/apps/wall'
             className='rounded-full px-3.5 py-2 text-xs font-semibold no-underline transition-transform active:scale-95'
             style={{
               background: 'linear-gradient(120deg,#ff6b8a,#c9a8ff)',
               color: '#fff'
-            }}>
+            }}
+          >
             🌸 去照片墙（随机 12 张）
-          </a>
+          </SmartLink>
         </div>
         {config?.DESCRIPTION && (
           <p
             className='mt-2 max-w-2xl text-sm leading-relaxed'
-            style={{ color: 'var(--content-meta, rgba(0,0,0,.65))' }}>
+            style={{ color: 'var(--content-meta, rgba(0,0,0,.65))' }}
+          >
             {config.DESCRIPTION}
           </p>
         )}
@@ -145,7 +197,8 @@ export default function GalleryWall({ config }) {
           style={{
             background: 'var(--btn-regular-bg, #ffe7ef)',
             color: 'var(--deep-text, #3a1f2b)'
-          }}>
+          }}
+        >
           <span className='font-semibold'>🔞 本站相册含 18+ 插画</span>
           <span style={{ color: 'var(--content-meta, rgba(0,0,0,.62))' }}>
             默认仅显示全年龄内容。确认已满 18 岁后可查看全部。
@@ -154,23 +207,27 @@ export default function GalleryWall({ config }) {
             type='button'
             onClick={confirmAdult}
             className='rounded-full px-3 py-1.5 text-xs font-semibold text-white'
-            style={{ background: 'var(--primary, #d6336c)' }}>
+            style={{ background: 'var(--primary, #d6336c)' }}
+          >
             我已满 18 岁，显示全部
           </button>
         </div>
       )}
 
       {config?.SHOW_TAGS !== false && allTags.length > 0 && (
-        <div className='mb-6 flex flex-wrap items-center gap-2'>
+        <div className='gallery-tag-row mb-6 flex flex-wrap items-center gap-2'>
           <button
             type='button'
             onClick={() => setActiveTag('')}
             className='rounded-full px-3 py-1.5 text-xs font-medium transition-colors'
             style={{
               background:
-                activeTag === '' ? 'var(--primary, #d6336c)' : 'var(--btn-regular-bg, #ffe7ef)',
+                activeTag === ''
+                  ? 'var(--primary, #d6336c)'
+                  : 'var(--btn-regular-bg, #ffe7ef)',
               color: activeTag === '' ? '#fff' : 'var(--btn-content, #c2255c)'
-            }}>
+            }}
+          >
             全部 {visible.length}
           </button>
           {allTags.slice(0, 16).map(tag => (
@@ -181,9 +238,13 @@ export default function GalleryWall({ config }) {
               className='rounded-full px-3 py-1.5 text-xs font-medium transition-colors'
               style={{
                 background:
-                  tag === activeTag ? 'var(--primary, #d6336c)' : 'var(--btn-regular-bg, #ffe7ef)',
-                color: tag === activeTag ? '#fff' : 'var(--btn-content, #c2255c)'
-              }}>
+                  tag === activeTag
+                    ? 'var(--primary, #d6336c)'
+                    : 'var(--btn-regular-bg, #ffe7ef)',
+                color:
+                  tag === activeTag ? '#fff' : 'var(--btn-content, #c2255c)'
+              }}
+            >
               {tag}
             </button>
           ))}
@@ -193,9 +254,12 @@ export default function GalleryWall({ config }) {
               onClick={() => setShowSensitive(v => !v)}
               className='ml-auto rounded-full px-3 py-1.5 text-xs font-medium transition-colors'
               style={{
-                background: showSensitive ? 'var(--primary, #d6336c)' : 'var(--btn-regular-bg, #ffe7ef)',
+                background: showSensitive
+                  ? 'var(--primary, #d6336c)'
+                  : 'var(--btn-regular-bg, #ffe7ef)',
                 color: showSensitive ? '#fff' : 'var(--btn-content, #c2255c)'
-              }}>
+              }}
+            >
               {showSensitive ? '隐藏 18+' : '显示 18+'}
             </button>
           )}
@@ -208,15 +272,20 @@ export default function GalleryWall({ config }) {
           style={{
             background: 'var(--card-bg, #fff)',
             color: 'var(--content-meta, rgba(0,0,0,.6))'
-          }}>
+          }}
+        >
           这个分类下还没有图，先去配置里加几张吧。
         </div>
       ) : (
         <div style={{ '--gw-cols': Number(config?.COLUMNS) || 3 }}>
           <div className='gw-grid'>
-            {visible.map((item, index) => {
-              const isFav = favorites.includes(itemKey(item))
-              const tags = (item.tags || []).filter(tag => tag && tag !== 'Pixiv')
+            {shownItems.map((item, index) => {
+              const key = itemKey(item)
+              const isFav = favorites.includes(key)
+              const imageFailed = failedItems.includes(key)
+              const tags = (item.tags || []).filter(
+                tag => tag && tag !== 'Pixiv'
+              )
               const primaryTag = tags[0] || ''
               const recommend = Number(item.rank) > 0 && Number(item.rank) <= 3
               return (
@@ -224,17 +293,33 @@ export default function GalleryWall({ config }) {
                   key={`${item.src}-${index}`}
                   className={`gw-item group relative cursor-zoom-in overflow-hidden ${
                     item.sensitive ? 'is-adult' : ''
-                  }`}
-                  onClick={() => setLightbox(index)}>
-                  <img
-                    src={resolveSrc(item.thumb || item.src)}
-                    alt={item.title || ''}
-                    loading='lazy'
-                    decoding='async'
-                    className='h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
-                  />
+                  } ${imageFailed ? 'is-failed' : ''}`}
+                  onClick={() => setLightbox(index)}
+                >
+                  <div className={`gw-media ${imageFailed ? 'is-failed' : ''}`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={resolveSrc(item.thumb || item.src)}
+                      alt={item.title || ''}
+                      loading={index < 6 ? 'eager' : 'lazy'}
+                      decoding='async'
+                      onError={() => markImageFailed(key)}
+                      className='h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]'
+                    />
+                    {imageFailed && (
+                      <div className='gw-fallback' aria-hidden='true'>
+                        <span className='gw-fallback-kicker'>
+                          IMAGE SIGNAL LOST
+                        </span>
+                        <strong>{item.title || '未命名作品'}</strong>
+                        <span>{item.author || '来源暂不可用'}</span>
+                      </div>
+                    )}
+                  </div>
 
-                  {item.sensitive && <span className='gw-adult-badge'>18+</span>}
+                  {item.sensitive && (
+                    <span className='gw-adult-badge'>18+</span>
+                  )}
 
                   <button
                     type='button'
@@ -242,18 +327,25 @@ export default function GalleryWall({ config }) {
                     className={`gw-fav ${isFav ? 'is-fav' : ''}`}
                     onClick={e => {
                       e.stopPropagation()
-                      toggleFav(itemKey(item))
-                    }}>
+                      toggleFav(key)
+                    }}
+                  >
                     {isFav ? '♥' : '♡'}
                   </button>
 
                   <figcaption className='gw-caption'>
                     <div className='gw-tags'>
-                      {primaryTag && <span className='gw-tag'>{primaryTag}</span>}
-                      {recommend && <span className='gw-tag gw-hot'>今日推荐</span>}
+                      {primaryTag && (
+                        <span className='gw-tag'>{primaryTag}</span>
+                      )}
+                      {recommend && (
+                        <span className='gw-tag gw-hot'>今日推荐</span>
+                      )}
                     </div>
 
-                    {item.author && <div className='gw-author'>{item.author}</div>}
+                    {item.author && (
+                      <div className='gw-author'>{item.author}</div>
+                    )}
 
                     <div className='gw-bottom'>
                       {item.link ? (
@@ -262,7 +354,8 @@ export default function GalleryWall({ config }) {
                           target='_blank'
                           rel='noopener noreferrer'
                           className='gw-source'
-                          onClick={e => e.stopPropagation()}>
+                          onClick={e => e.stopPropagation()}
+                        >
                           作者出处 ↗
                         </a>
                       ) : (
@@ -279,12 +372,39 @@ export default function GalleryWall({ config }) {
               )
             })}
           </div>
+          {hasMore && (
+            <div ref={sentinelRef} className='mt-6 flex justify-center'>
+              <button
+                type='button'
+                onClick={loadMore}
+                className='cursor-pointer rounded-full border px-5 py-2.5 text-xs font-semibold'
+                style={{
+                  borderColor: 'var(--line-color)',
+                  background: 'var(--card-bg)',
+                  color: 'var(--deep-text)',
+                  boxShadow: 'var(--shadow-navbar)'
+                }}
+              >
+                继续加载 · 已显示 {loadedCount} / {visible.length}
+              </button>
+            </div>
+          )}
         </div>
       )}
 
       {current && (
-        <div className='gw-lightbox' onClick={close} role='dialog' aria-modal='true'>
-          <button type='button' className='gw-lb-btn gw-lb-close' onClick={close} aria-label='close'>
+        <div
+          className='gw-lightbox'
+          onClick={close}
+          role='dialog'
+          aria-modal='true'
+        >
+          <button
+            type='button'
+            className='gw-lb-btn gw-lb-close'
+            onClick={close}
+            aria-label='close'
+          >
             ✕
           </button>
           <button
@@ -294,20 +414,25 @@ export default function GalleryWall({ config }) {
               e.stopPropagation()
               prev()
             }}
-            aria-label='prev'>
+            aria-label='prev'
+          >
             ‹
           </button>
           <figure className='gw-lb-body' onClick={e => e.stopPropagation()}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={resolveSrc(current.src)} alt={current.title || ''} />
             <figcaption>
               <span className='font-semibold'>{current.title || '未命名'}</span>
-              {current.author && <span className='ml-2 opacity-70'>· {current.author}</span>}
+              {current.author && (
+                <span className='ml-2 opacity-70'>· {current.author}</span>
+              )}
               {current.link && (
                 <a
                   href={current.link}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='ml-3 underline underline-offset-2 opacity-80 hover:opacity-100'>
+                  className='ml-3 underline underline-offset-2 opacity-80 hover:opacity-100'
+                >
                   查看原图 / 作品页
                 </a>
               )}
@@ -323,7 +448,8 @@ export default function GalleryWall({ config }) {
               e.stopPropagation()
               next()
             }}
-            aria-label='next'>
+            aria-label='next'
+          >
             ›
           </button>
         </div>
@@ -350,6 +476,80 @@ export default function GalleryWall({ config }) {
           border-radius: var(--radius-large, 1rem);
           background: var(--card-bg, #fff);
           box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+          content-visibility: auto;
+          contain-intrinsic-size: auto 360px;
+        }
+        .gw-media {
+          position: relative;
+          overflow: hidden;
+          min-height: 4.25rem;
+        }
+        .gw-media.is-failed {
+          aspect-ratio: 3 / 4;
+          background:
+            radial-gradient(
+              circle at 76% 20%,
+              rgba(120, 226, 194, 0.22),
+              transparent 34%
+            ),
+            linear-gradient(145deg, #09151d, #2b1730 58%, #102b30);
+        }
+        .gw-media.is-failed img {
+          display: none;
+        }
+        .gw-fallback {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 8px;
+          padding: 24px 18px 70px;
+          color: rgba(255, 255, 255, 0.86);
+        }
+        .gw-fallback::before,
+        .gw-fallback::after {
+          content: '';
+          position: absolute;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 999px;
+          pointer-events: none;
+        }
+        .gw-fallback::before {
+          width: 120px;
+          height: 120px;
+          right: -44px;
+          top: -32px;
+        }
+        .gw-fallback::after {
+          width: 74px;
+          height: 74px;
+          right: 8px;
+          top: 22px;
+        }
+        .gw-fallback-kicker {
+          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-size: 8px;
+          letter-spacing: 0.18em;
+          color: rgba(120, 226, 194, 0.74);
+        }
+        .gw-fallback strong {
+          position: relative;
+          display: -webkit-box;
+          overflow: hidden;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          font-family: ui-serif, Georgia, serif;
+          font-size: 18px;
+          line-height: 1.25;
+        }
+        .gw-fallback > span:last-child {
+          position: relative;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 10px;
+          color: rgba(255, 255, 255, 0.5);
         }
         .gw-fav {
           position: absolute;
@@ -376,7 +576,9 @@ export default function GalleryWall({ config }) {
         /* 18+ 缩略图默认模糊，悬停/聚焦时清晰 */
         .gw-item.is-adult img {
           filter: blur(14px) saturate(1.05);
-          transition: filter 0.3s ease, transform 0.5s ease;
+          transition:
+            filter 0.3s ease,
+            transform 0.5s ease;
         }
         .gw-item.is-adult:hover img,
         .gw-item.is-adult:focus-within img {
@@ -402,7 +604,11 @@ export default function GalleryWall({ config }) {
           bottom: 0;
           padding: 34px 12px 10px;
           color: #fff;
-          background: linear-gradient(180deg, transparent, rgba(18, 8, 14, 0.72));
+          background: linear-gradient(
+            180deg,
+            transparent,
+            rgba(18, 8, 14, 0.72)
+          );
           transition: opacity 0.25s ease;
         }
         .gw-tags {
@@ -523,10 +729,86 @@ export default function GalleryWall({ config }) {
           top: 50%;
           transform: translateY(-50%);
         }
+        @media (max-width: 639px) {
+          .gw-grid {
+            columns: 2;
+            column-gap: 10px;
+          }
+          .gw-item {
+            margin-bottom: 10px;
+            border-radius: 12px;
+          }
+          .gw-fallback {
+            gap: 5px;
+            padding: 14px 9px 58px;
+          }
+          .gw-fallback strong {
+            font-size: 13px;
+          }
+          .gw-fallback > span:last-child {
+            font-size: 9px;
+          }
+          .gw-fav {
+            top: 6px;
+            right: 6px;
+            width: 26px;
+            height: 26px;
+            font-size: 13px;
+          }
+          .gw-adult-badge {
+            top: 6px;
+            left: 6px;
+            padding: 1px 5px;
+            font-size: 9px;
+          }
+          .gw-caption {
+            padding: 24px 7px 7px;
+          }
+          .gw-tags {
+            gap: 3px;
+            margin-bottom: 2px;
+          }
+          .gw-tag {
+            padding: 1px 5px;
+            font-size: 9px;
+          }
+          .gw-author {
+            font-size: 10px;
+            line-height: 1.25;
+          }
+          .gw-bottom {
+            margin-top: 3px;
+          }
+          .gw-source {
+            padding: 1px 5px;
+            font-size: 9px;
+          }
+          .gw-rank {
+            font-size: 9px;
+            letter-spacing: 0.04em;
+          }
+        }
         @media (prefers-reduced-motion: reduce) {
           .gw-item img,
           .gw-caption {
             transition: none !important;
+          }
+        }
+      `}</style>
+
+      <style jsx global>{`
+        @media (max-width: 639px) {
+          .gallery-tag-row {
+            flex-wrap: nowrap !important;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+          }
+          .gallery-tag-row::-webkit-scrollbar {
+            display: none;
+          }
+          .gallery-tag-row > * {
+            flex: 0 0 auto;
           }
         }
       `}</style>

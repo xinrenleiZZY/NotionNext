@@ -9,16 +9,20 @@ import { useMemo, useState } from 'react'
  * - 数字编号 NO.01 风格
  */
 export default function ShowcaseGrid({ config }) {
-  const items = config?.ITEMS || []
+  const items = useMemo(() => config?.ITEMS || [], [config])
   const categories = useMemo(() => {
     const set = new Set()
     items.forEach(item => item.category && set.add(item.category))
     return ['全部', ...Array.from(set)]
   }, [items])
   const [active, setActive] = useState('全部')
+  const [failedCovers, setFailedCovers] = useState([])
 
   const visible = useMemo(
-    () => (active === '全部' ? items : items.filter(item => item.category === active)),
+    () =>
+      active === '全部'
+        ? items
+        : items.filter(item => item.category === active),
     [items, active]
   )
 
@@ -27,17 +31,20 @@ export default function ShowcaseGrid({ config }) {
       <header className='mb-8'>
         <p
           className='text-xs font-semibold uppercase tracking-[0.28em]'
-          style={{ color: 'var(--content-meta, rgba(0,0,0,.55))' }}>
+          style={{ color: 'var(--content-meta, rgba(0,0,0,.55))' }}
+        >
           {String(items.length).padStart(2, '0')} projects
         </p>
         <h1
           className='mt-2 text-3xl font-black tracking-tight md:text-5xl'
-          style={{ color: 'var(--deep-text, #111)' }}>
+          style={{ color: 'var(--deep-text, #111)' }}
+        >
           {config?.TITLE || '仙术展示'}
         </h1>
         <p
           className='mt-3 max-w-2xl text-sm leading-relaxed'
-          style={{ color: 'var(--content-meta, rgba(0,0,0,.65))' }}>
+          style={{ color: 'var(--content-meta, rgba(0,0,0,.65))' }}
+        >
           {config?.SUBTITLE}
         </p>
       </header>
@@ -54,8 +61,12 @@ export default function ShowcaseGrid({ config }) {
                 active === category
                   ? 'var(--deep-text, #111)'
                   : 'var(--btn-regular-bg, #ffe7ef)',
-              color: active === category ? 'var(--page-bg, #fff)' : 'var(--btn-content, #c2255c)'
-            }}>
+              color:
+                active === category
+                  ? 'var(--page-bg, #fff)'
+                  : 'var(--btn-content, #c2255c)'
+            }}
+          >
             {category}
           </button>
         ))}
@@ -73,13 +84,43 @@ export default function ShowcaseGrid({ config }) {
               borderRadius: 'var(--radius-large, 1rem)',
               background: 'var(--card-bg, #fff)',
               boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
-            }}>
-            <div className='relative aspect-[4/3] overflow-hidden'>
+            }}
+          >
+            <div
+              className='relative aspect-[4/3] overflow-hidden'
+              style={{
+                background:
+                  'radial-gradient(circle at 78% 18%, color-mix(in oklch, var(--primary) 34%, transparent), transparent 32%), linear-gradient(145deg, #07111f, #102b30)'
+              }}
+            >
+              <div className='absolute inset-0 flex flex-col justify-end p-5'>
+                <span className='font-mono text-[9px] tracking-[0.2em] text-white/40'>
+                  {item.category}
+                </span>
+                <strong className='mt-1 max-w-[85%] font-serif text-2xl font-medium leading-tight text-white/90'>
+                  {item.title}
+                </strong>
+                <span className='mt-2 font-mono text-[9px] tracking-[0.16em] text-[#78e2c2]'>
+                  PROJECT · {item.year}
+                </span>
+              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={encodeURI(item.cover || '')}
                 alt={item.title}
                 loading={index < 3 ? 'eager' : 'lazy'}
-                className='h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]'
+                onError={() =>
+                  setFailedCovers(previous =>
+                    previous.includes(item.title)
+                      ? previous
+                      : [...previous, item.title]
+                  )
+                }
+                className={`relative h-full w-full object-cover transition duration-700 group-hover:scale-[1.06] ${
+                  failedCovers.includes(item.title)
+                    ? 'pointer-events-none opacity-0'
+                    : 'opacity-100'
+                }`}
               />
               <span className='absolute left-3 top-3 rounded-full bg-black/45 px-2 py-1 text-[10px] font-bold tracking-wider text-white backdrop-blur'>
                 NO.{String(index + 1).padStart(2, '0')}
@@ -93,25 +134,29 @@ export default function ShowcaseGrid({ config }) {
               <div className='flex items-start justify-between gap-3'>
                 <h2
                   className='text-base font-extrabold leading-snug'
-                  style={{ color: 'var(--deep-text, #111)' }}>
+                  style={{ color: 'var(--deep-text, #111)' }}
+                >
                   {item.title}
                 </h2>
                 <span
                   className='mt-0.5 shrink-0 text-lg transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5'
-                  style={{ color: 'var(--primary, #d6336c)' }}>
+                  style={{ color: 'var(--primary, #d6336c)' }}
+                >
                   ↗
                 </span>
               </div>
               {item.subtitle && (
                 <p
                   className='mt-0.5 text-xs font-medium'
-                  style={{ color: 'var(--primary, #d6336c)' }}>
+                  style={{ color: 'var(--primary, #d6336c)' }}
+                >
                   {item.subtitle}
                 </p>
               )}
               <p
                 className='mt-2 line-clamp-3 text-xs leading-relaxed'
-                style={{ color: 'var(--content-meta, rgba(0,0,0,.62))' }}>
+                style={{ color: 'var(--content-meta, rgba(0,0,0,.62))' }}
+              >
                 {item.desc}
               </p>
               <div className='mt-3 flex flex-wrap gap-1.5'>
@@ -122,7 +167,8 @@ export default function ShowcaseGrid({ config }) {
                     style={{
                       background: 'var(--btn-regular-bg, #ffe7ef)',
                       color: 'var(--btn-content, #c2255c)'
-                    }}>
+                    }}
+                  >
                     {tag}
                   </span>
                 ))}
@@ -138,7 +184,8 @@ export default function ShowcaseGrid({ config }) {
           style={{
             background: 'var(--card-bg, #fff)',
             color: 'var(--content-meta, rgba(0,0,0,.6))'
-          }}>
+          }}
+        >
           这个分类下还没有作品。
         </div>
       )}
@@ -152,20 +199,24 @@ export default function ShowcaseGrid({ config }) {
               background:
                 'linear-gradient(135deg, rgba(255,182,206,0.18), rgba(201,168,255,0.16))',
               border: '1px solid var(--line-color, rgba(214,51,108,.12))'
-            }}>
+            }}
+          >
             <p
               className='text-xs font-semibold uppercase tracking-[0.28em]'
-              style={{ color: 'var(--content-meta, rgba(0,0,0,.5))' }}>
+              style={{ color: 'var(--content-meta, rgba(0,0,0,.5))' }}
+            >
               Cooperation
             </p>
             <h2
               className='mt-2 text-2xl font-black tracking-tight md:text-3xl'
-              style={{ color: 'var(--deep-text, #3a1f2b)' }}>
+              style={{ color: 'var(--deep-text, #3a1f2b)' }}
+            >
               {config.COOPERATION.TITLE}
             </h2>
             <p
               className='mt-2 max-w-2xl text-sm leading-relaxed'
-              style={{ color: 'var(--content-meta, rgba(0,0,0,.65))' }}>
+              style={{ color: 'var(--content-meta, rgba(0,0,0,.65))' }}
+            >
               {config.COOPERATION.DESC}
             </p>
 
@@ -174,15 +225,18 @@ export default function ShowcaseGrid({ config }) {
                 <div
                   key={cap.title}
                   className='ff-card-shadow rounded-2xl p-4'
-                  style={{ background: 'rgba(255,255,255,.72)' }}>
+                  style={{ background: 'rgba(255,255,255,.72)' }}
+                >
                   <h3
                     className='text-sm font-extrabold'
-                    style={{ color: 'var(--deep-text, #3a1f2b)' }}>
+                    style={{ color: 'var(--deep-text, #3a1f2b)' }}
+                  >
                     {cap.title}
                   </h3>
                   <p
                     className='mt-1.5 text-xs leading-relaxed'
-                    style={{ color: 'var(--content-meta, rgba(0,0,0,.62))' }}>
+                    style={{ color: 'var(--content-meta, rgba(0,0,0,.62))' }}
+                  >
                     {cap.desc}
                   </p>
                 </div>
@@ -194,7 +248,11 @@ export default function ShowcaseGrid({ config }) {
                 <span
                   key={direction}
                   className='rounded-full px-3 py-1.5 text-[11px] font-semibold'
-                  style={{ background: 'rgba(255,255,255,.72)', color: 'var(--btn-content, #c2255c)' }}>
+                  style={{
+                    background: 'rgba(255,255,255,.72)',
+                    color: 'var(--btn-content, #c2255c)'
+                  }}
+                >
                   {direction}
                 </span>
               ))}
@@ -205,10 +263,16 @@ export default function ShowcaseGrid({ config }) {
                 <a
                   key={contact.label}
                   href={contact.href}
-                  target={contact.href.startsWith('http') ? '_blank' : undefined}
+                  target={
+                    contact.href.startsWith('http') ? '_blank' : undefined
+                  }
                   rel='noopener noreferrer'
                   className='flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold no-underline'
-                  style={{ background: 'var(--deep-text, #3a1f2b)', color: 'var(--page-bg, #fff)' }}>
+                  style={{
+                    background: 'var(--deep-text, #3a1f2b)',
+                    color: 'var(--page-bg, #fff)'
+                  }}
+                >
                   <span className='opacity-60'>{contact.label}</span>
                   <span>{contact.value}</span>
                 </a>

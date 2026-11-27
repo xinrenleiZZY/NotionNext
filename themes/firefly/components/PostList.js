@@ -11,7 +11,15 @@ import PostCard from './PostCard'
  * Firefly 文章列表 + 分页
  */
 export default function PostList(props) {
-  const { posts = [], page = 1, postCount = 0, category, tag, hideTabs } = props
+  const {
+    posts = [],
+    page = 1,
+    postCount = 0,
+    category,
+    tag,
+    hideTabs,
+    hideHeading = false
+  } = props
   const { NOTION_CONFIG, locale } = useGlobal()
   const router = useRouter()
 
@@ -38,7 +46,7 @@ export default function PostList(props) {
     <div className='min-w-0'>
       {!hideTabs && <CategoryTabs {...props} />}
 
-      {heading && (
+      {heading && !hideHeading && (
         <div className='mb-4 flex items-center gap-2'>
           <span className='ff-section-title'>{heading}</span>
           <span className='ff-chip'>{postCount}</span>
@@ -48,7 +56,8 @@ export default function PostList(props) {
       {posts.length === 0 ? (
         <div
           className='card-base px-6 py-16 text-center text-sm'
-          style={{ color: 'var(--content-meta)' }}>
+          style={{ color: 'var(--content-meta)' }}
+        >
           {locale.COMMON.NO_RESULTS_FOUND}
         </div>
       ) : (
@@ -64,7 +73,8 @@ export default function PostList(props) {
           {currentPage > 1 ? (
             <SmartLink
               href={pageHref(currentPage - 1)}
-              className='ff-btn-regular px-3 py-1.5 text-xs no-underline'>
+              className='ff-btn-regular px-3 py-1.5 text-xs no-underline'
+            >
               <i className='fas fa-angle-left text-[0.65rem]' />
               上一页
             </SmartLink>
@@ -98,7 +108,8 @@ export default function PostList(props) {
                           : 'var(--btn-regular-bg)',
                       color:
                         p === currentPage ? '#0b1a16' : 'var(--btn-content)'
-                    }}>
+                    }}
+                  >
                     {p}
                   </SmartLink>
                 </span>
@@ -108,7 +119,8 @@ export default function PostList(props) {
           {currentPage < totalPage ? (
             <SmartLink
               href={pageHref(currentPage + 1)}
-              className='ff-btn-regular px-3 py-1.5 text-xs no-underline'>
+              className='ff-btn-regular px-3 py-1.5 text-xs no-underline'
+            >
               下一页
               <i className='fas fa-angle-right text-[0.65rem]' />
             </SmartLink>

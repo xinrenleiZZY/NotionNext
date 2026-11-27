@@ -243,7 +243,16 @@ const ExternalPlugin = props => {
       <GlobalStyle />
       {ENABLE_ICON_FONT && <IconFont />}
       {MOUSE_FOLLOW && <MouseFollow />}
-      {pluginsIdle && THEME_SWITCH && !constellationPage && <ThemeSwitch />}
+      {pluginsIdle &&
+        !constellationPage &&
+        (THEME_SWITCH || MUSIC_PLAYER) && (
+          <SiteDock
+            themeEnabled={Boolean(THEME_SWITCH)}
+            musicEnabled={Boolean(
+              MUSIC_PLAYER && theme !== 'endspace' && !aboutPage
+            )}
+          />
+        )}
       {DEBUG && <DebugPanel />}
       {ANALYTICS_ACKEE_TRACKER && <Ackee />}
       {ANALYTICS_GOOGLE_ID && <Gtag />}
@@ -514,9 +523,7 @@ const TwikooCommentCounter = dynamic(
 const DebugPanel = dynamic(() => import('@/components/DebugPanel'), {
   ssr: false
 })
-const ThemeSwitch = dynamic(() => import('@/components/ThemeSwitch'), {
-  ssr: false
-})
+const SiteDock = dynamic(() => import('@/components/SiteDock'), { ssr: false })
 const Fireworks = dynamic(() => import('@/components/Fireworks'), {
   ssr: false
 })

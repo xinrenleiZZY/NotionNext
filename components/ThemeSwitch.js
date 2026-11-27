@@ -29,11 +29,22 @@ function ThemeTierBadge({ tier, labels }) {
  *
  * @returns 主题切换
  */
-const ThemeSwitch = ({ compact = false }) => {
+const ThemeSwitch = ({
+  compact = false,
+  showTrigger = true,
+  open = false,
+  onClose
+}) => {
   const { theme, locale, isDarkMode, toggleDarkMode } = useGlobal()
   const router = useRouter()
   const currentTheme = getQueryParam(router.asPath, 'theme') || theme
   const [sideBarVisible, setSideBarVisible] = useState(false)
+  const panelVisible = showTrigger ? sideBarVisible : open
+
+  const closePanel = () => {
+    setSideBarVisible(false)
+    onClose?.()
+  }
 
   const currentMeta = getThemeSwitchMeta(currentTheme)
   const tierLabels = {
@@ -44,110 +55,113 @@ const ThemeSwitch = ({ compact = false }) => {
   const changeTheme = newTheme => {
     const query = router.query
     query.theme = newTheme
+    closePanel()
     router.push({ pathname: router.pathname, query }).then(() => {})
   }
 
   return (
     <>
       {/* 悬浮的主题切换按钮 */}
-      <Draggable stick={true}>
-        <div
-          id='draggableBox'
-          style={{
-            left: compact ? 'calc(100vw - 4rem)' : '0px',
-            top: compact ? '78vh' : '80vh'
-          }}
-          className={`group fixed z-50 flex select-none flex-col items-stretch overflow-hidden rounded-2xl border backdrop-blur-md transition ${
-            compact ? 'w-[3.5rem] p-1.5' : 'max-w-[min(100vw-1rem,16rem)] p-1.5'
-          } ${
-            isDarkMode
-              ? 'border-gray-500/45 bg-gray-950/[0.97] shadow-[0_8px_32px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.08] hover:border-gray-400/55 hover:shadow-[0_14px_44px_rgba(0,0,0,0.62)]'
-              : 'border-gray-200/80 bg-white/90 shadow-[0_8px_30px_rgb(0,0,0,0.12)] ring-1 ring-black/5 hover:border-gray-300/90 hover:shadow-[0_12px_40px_rgb(0,0,0,0.15)]'
-          }`}
-        >
-          {/* 悬浮入口：明暗随 isDarkMode，与 html.dark / 切换按钮一致 */}
+      {showTrigger && (
+        <Draggable stick={true}>
           <div
-            className={`flex min-h-[3rem] items-center duration-200 ${
+            id='draggableBox'
+            style={{
+              left: compact ? 'calc(100vw - 4rem)' : '0px',
+              top: compact ? '78vh' : '80vh'
+            }}
+            className={`group fixed z-50 flex select-none flex-col items-stretch overflow-hidden rounded-2xl border backdrop-blur-md transition ${
               compact
-                ? 'justify-center'
-                : 'gap-2.5 pl-0.5 pr-1 group-hover:gap-3'
+                ? 'w-[3.5rem] p-1.5'
+                : 'max-w-[min(100vw-1rem,16rem)] p-1.5'
+            } ${
+              isDarkMode
+                ? 'border-gray-500/45 bg-gray-950/[0.97] shadow-[0_8px_32px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.08] hover:border-gray-400/55 hover:shadow-[0_14px_44px_rgba(0,0,0,0.62)]'
+                : 'border-gray-200/80 bg-white/90 shadow-[0_8px_30px_rgb(0,0,0,0.12)] ring-1 ring-black/5 hover:border-gray-300/90 hover:shadow-[0_12px_40px_rgb(0,0,0,0.15)]'
             }`}
           >
-            <button
-              type='button'
-              className={`relative flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl border-0 text-white shadow-md ring-2 transition active:scale-95 ${
-                isDarkMode
-                  ? 'bg-gradient-to-br from-indigo-400 via-violet-500 to-fuchsia-500 ring-white/18'
-                  : 'bg-gradient-to-br from-indigo-500 via-violet-600 to-fuchsia-600 ring-white/30'
+            {/* 悬浮入口：明暗随 isDarkMode，与 html.dark / 切换按钮一致 */}
+            <div
+              className={`flex min-h-[3rem] items-center duration-200 ${
+                compact
+                  ? 'justify-center'
+                  : 'gap-2.5 pl-0.5 pr-1 group-hover:gap-3'
               }`}
-              onClick={() => {
-                setSideBarVisible(true)
-              }}
-              title={compact ? '切换主题' : 'Open theme panel'}
-              aria-label='切换主题'
             >
-              <span
-                className={`absolute inset-0 rounded-xl bg-gradient-to-t to-transparent ${
-                  isDarkMode ? 'from-black/25' : 'from-black/10'
+              <button
+                type='button'
+                className={`relative flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl border-0 text-white shadow-md ring-2 transition active:scale-95 ${
+                  isDarkMode
+                    ? 'bg-gradient-to-br from-indigo-400 via-violet-500 to-fuchsia-500 ring-white/18'
+                    : 'bg-gradient-to-br from-indigo-500 via-violet-600 to-fuchsia-600 ring-white/30'
                 }`}
-              />
-              <i
-                className='fa-solid fa-palette relative text-[15px]'
-                aria-hidden
-              />
-            </button>
-            {!compact && (
-              <div className='min-w-0 flex-1 overflow-hidden py-0.5'>
-                <label htmlFor='themeSelect' className='sr-only'>
-                  {locale.COMMON.THEME}
-                </label>
-                <button
-                  id='themeSelect'
-                  type='button'
-                  className={`w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/80 focus-visible:ring-offset-2 ${
-                    isDarkMode
-                      ? 'focus-visible:ring-indigo-400 focus-visible:ring-offset-gray-950'
-                      : 'focus-visible:ring-offset-white'
+                onClick={() => {
+                  setSideBarVisible(true)
+                }}
+                title={compact ? '切换主题' : 'Open theme panel'}
+                aria-label='切换主题'
+              >
+                <span
+                  className={`absolute inset-0 rounded-xl bg-gradient-to-t to-transparent ${
+                    isDarkMode ? 'from-black/25' : 'from-black/10'
                   }`}
-                  onClick={() => {
-                    setSideBarVisible(true)
-                  }}
-                  title='Click To Switch Theme'
-                >
-                  <span
-                    className={`block text-[10px] font-semibold uppercase tracking-[0.14em] ${
-                      isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                />
+                <i
+                  className='fa-solid fa-palette relative text-[15px]'
+                  aria-hidden
+                />
+              </button>
+              {!compact && (
+                <div className='min-w-0 flex-1 overflow-hidden py-0.5'>
+                  <label htmlFor='themeSelect' className='sr-only'>
+                    {locale.COMMON.THEME}
+                  </label>
+                  <button
+                    id='themeSelect'
+                    type='button'
+                    className={`w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/80 focus-visible:ring-offset-2 ${
+                      isDarkMode
+                        ? 'focus-visible:ring-indigo-400 focus-visible:ring-offset-gray-950'
+                        : 'focus-visible:ring-offset-white'
                     }`}
+                    onClick={() => {
+                      setSideBarVisible(true)
+                    }}
+                    title='Click To Switch Theme'
                   >
-                    {locale.MENU.THEME_SWITCH}
-                  </span>
-                  <span className='mt-0.5 flex min-w-0 items-center gap-1.5'>
                     <span
-                      className={`min-w-0 flex-1 truncate text-sm font-semibold leading-snug ${
-                        isDarkMode ? 'text-gray-50' : 'text-gray-900'
+                      className={`block text-[10px] font-semibold uppercase tracking-[0.14em] ${
+                        isDarkMode ? 'text-gray-400' : 'text-gray-500'
                       }`}
                     >
-                      {currentMeta.name}
+                      {locale.MENU.THEME_SWITCH}
                     </span>
-                    <ThemeTierBadge
-                      tier={currentMeta.tier}
-                      labels={tierLabels}
-                    />
-                  </span>
-                </button>
-              </div>
-            )}
+                    <span className='mt-0.5 flex min-w-0 items-center gap-1.5'>
+                      <span
+                        className={`min-w-0 flex-1 truncate text-sm font-semibold leading-snug ${
+                          isDarkMode ? 'text-gray-50' : 'text-gray-900'
+                        }`}
+                      >
+                        {currentMeta.name}
+                      </span>
+                      <ThemeTierBadge
+                        tier={currentMeta.tier}
+                        labels={tierLabels}
+                      />
+                    </span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </Draggable>
+        </Draggable>
+      )}
 
       <SideBarDrawer
         className='flex max-h-screen w-[min(100vw-0.5rem,28rem)] flex-col overflow-hidden border-r border-gray-200/90 bg-white p-0 shadow-2xl dark:border-gray-800 dark:bg-gray-950 md:w-[min(100vw-2rem,48rem)] lg:w-[min(100vw-3rem,56rem)]'
-        isOpen={sideBarVisible}
+        isOpen={panelVisible}
         showOnPC={true}
-        onClose={() => {
-          setSideBarVisible(false)
-        }}
+        onClose={closePanel}
       >
         <div className='flex min-h-0 flex-1 flex-col overflow-y-auto'>
           <div className='sticky top-0 z-[1] border-b border-gray-100 bg-white/95 px-5 py-4 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/95'>
@@ -163,9 +177,7 @@ const ThemeSwitch = ({ compact = false }) => {
               <button
                 type='button'
                 className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white'
-                onClick={() => {
-                  setSideBarVisible(false)
-                }}
+                onClick={closePanel}
               >
                 <i className='fas fa-times' />
               </button>

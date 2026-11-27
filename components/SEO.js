@@ -392,22 +392,32 @@ const getSEOMeta = (props, router, locale) => {
         slug: 'page/' + page,
         type: 'website'
       }
-    case '/category/[category]':
+    case '/category/[category]': {
+      const categoryTitle = category === '技术分享' ? '修行日志' : category
       return {
-        title: `${category} | ${locale.COMMON.CATEGORY} | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${categoryTitle} | ${siteInfo?.title}`,
+        description:
+          category === '技术分享'
+            ? '工程实践、项目复盘与持续构建记录。'
+            : `${siteInfo?.description}`,
         slug: 'category/' + category,
         image: `${siteInfo?.pageCover}`,
         type: 'website'
       }
-    case '/category/[category]/page/[page]':
+    }
+    case '/category/[category]/page/[page]': {
+      const categoryTitle = category === '技术分享' ? '修行日志' : category
       return {
-        title: `${category} | ${locale.COMMON.CATEGORY} | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${categoryTitle} | ${siteInfo?.title}`,
+        description:
+          category === '技术分享'
+            ? '工程实践、项目复盘与持续构建记录。'
+            : `${siteInfo?.description}`,
         slug: 'category/' + category,
         image: `${siteInfo?.pageCover}`,
         type: 'website'
       }
+    }
     case '/tag/[tag]':
     case '/tag/[tag]/page/[page]':
       return {
@@ -490,6 +500,16 @@ const getSEOMeta = (props, router, locale) => {
         image: '/banner/bubble-nebula.webp',
         canonical: 'https://www.juxingspacestation.top/apps/wall',
         slug: 'apps/wall',
+        type: 'website'
+      }
+    case '/links':
+      return {
+        title: '仙盟友链｜伙伴与收藏｜仙帝 Zeyan',
+        description:
+          '仙盟友链：长期可访问的技术博客、开源主页、独立创作者与收藏书签。',
+        image: '/banner/starfield.webp',
+        canonical: 'https://www.juxingspacestation.top/links',
+        slug: 'links',
         type: 'website'
       }
     default:

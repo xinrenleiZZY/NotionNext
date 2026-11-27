@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import Catalog from './components/Catalog'
 import ConstellationHomeHero from '@/components/ConstellationHomeHero'
+import JournalHeader from '@/components/JournalHeader'
 import MotionLayer from './components/MotionLayer'
 import Navbar from './components/Navbar'
 import PostList from './components/PostList'
@@ -280,28 +281,52 @@ const ArchiveList = ({ archivePosts }) => {
     <div className='grid gap-4'>
       {groups.map(group => {
         const posts = archivePosts[group] || []
+        let previousDay = ''
         return (
-          <section key={group} className='card-base ff-card-shadow px-5 py-4'>
-            <div className='mb-2 flex items-center gap-2'>
+          <section key={group} className='card-base ff-card-shadow px-4 py-5 md:px-5'>
+            <div className='mb-3 flex items-center gap-2'>
               <span className='ff-section-title'>{group}</span>
               <span className='ff-chip'>{posts.length}</span>
+              <span
+                className='ml-auto font-mono text-[9px] tracking-[0.18em]'
+                style={{ color: 'var(--content-meta)' }}
+              >
+                ARCHIVE
+              </span>
             </div>
-            <div className='space-y-0.5'>
-              {posts.map(post => (
-                <SmartLink
-                  key={post.id}
-                  href={post.href}
-                  className='flex items-baseline justify-between gap-4 rounded-lg px-2 py-1.5 no-underline transition-colors duration-150 hover:bg-[var(--btn-plain-bg-hover)]'
-                  style={{ color: 'var(--content-meta)' }}
-                >
-                  <span className='truncate text-[0.8125rem]'>
-                    {post.title}
-                  </span>
-                  <span className='shrink-0 text-[0.6875rem]'>
-                    {post.publishDay}
-                  </span>
-                </SmartLink>
-              ))}
+            <div>
+              {posts.map(post => {
+                const day = String(post.publishDay || '').slice(5)
+                const showDay = day !== previousDay
+                previousDay = day
+                return (
+                  <div
+                    key={post.id}
+                    className='flex items-start gap-2 rounded-lg px-1 transition-colors duration-150 hover:bg-[var(--btn-plain-bg-hover)] md:gap-3'
+                  >
+                    <span
+                      className='w-9 shrink-0 pt-2 font-mono text-[9px] tabular-nums md:w-11 md:text-[10px]'
+                      style={{ color: 'var(--content-meta)' }}
+                      aria-label={showDay ? post.publishDay : undefined}
+                    >
+                      {showDay ? day.replace('-', '.') : ''}
+                    </span>
+                    <SmartLink
+                      href={post.href}
+                      className='flex min-w-0 flex-1 items-center justify-between gap-3 py-2 no-underline'
+                      style={{ color: 'var(--content-meta)' }}
+                    >
+                      <span className='truncate text-[0.8125rem]'>
+                        {post.title}
+                      </span>
+                      <i
+                        className='fas fa-angle-right shrink-0 text-[9px] opacity-40'
+                        aria-hidden='true'
+                      />
+                    </SmartLink>
+                  </div>
+                )
+              })}
             </div>
           </section>
         )
@@ -435,9 +460,10 @@ const LayoutIndex = props => {
 const LayoutPostList = props => {
   return (
     <section className={`mx-auto w-full ${PAGE} px-3 pb-16 pt-4`}>
+      <JournalHeader {...props} />
       <div className='grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_260px]'>
         <div className='min-w-0'>
-          <PostList {...props} />
+          <PostList {...props} hideHeading />
         </div>
         <div className='hidden md:block'>
           <div className='sticky top-[4.75rem]'>
