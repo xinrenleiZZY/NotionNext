@@ -342,11 +342,9 @@ const LayoutBase = props => {
       <Style />
       <MotionLayer />
 
-      {isConstellationPage && (
-        <div className='ff-space-ambient' aria-hidden='true'>
-          <img src='/banner/starfield.webp' alt='' />
-        </div>
-      )}
+      <div className='ff-space-ambient' aria-hidden='true'>
+        <img src='/banner/starfield.webp' alt='' />
+      </div>
 
       {/* 可替换的全站背景图 */}
       {wallpaper && (
