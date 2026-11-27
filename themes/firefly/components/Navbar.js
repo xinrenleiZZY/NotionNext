@@ -24,7 +24,12 @@ const cleanMenuName = name =>
     )
     .trim()
 export default function Navbar(props) {
-  const { customNav, customMenu, overlay = false } = props
+  const {
+    customNav,
+    customMenu,
+    overlay = false,
+    constellationMode = false
+  } = props
   const { locale, isDarkMode, toggleDarkMode, siteInfo } = useGlobal()
   const router = useRouter()
   const [scrolled, setScrolled] = useState(false)
@@ -67,13 +72,17 @@ export default function Navbar(props) {
   return (
     <>
       <header
-        className={`ff-navbar ${overlay && !scrolled ? 'ff-navbar-transparent' : ''}`}>
+        className={`ff-navbar ${overlay && !scrolled ? 'ff-navbar-transparent' : ''}`}
+      >
         <div className='flex h-full w-full items-center gap-2 px-3'>
           {/* Logo */}
           <SmartLink
             href='/'
             className='ff-btn-plain shrink-0 px-2 py-1.5 no-underline'
-            style={{ color: overlay && !scrolled ? '#fff' : 'var(--deep-text)' }}>
+            style={{
+              color: overlay && !scrolled ? '#fff' : 'var(--deep-text)'
+            }}
+          >
             {overlay && !scrolled ? (
               <span className='ff-wordmark'>
                 Zenyth
@@ -100,14 +109,18 @@ export default function Navbar(props) {
           {/* 桌面菜单：强制单行，放不下时横向滚动（不换行、不压 banner） */}
           <nav
             className='mx-auto hidden min-w-0 flex-1 flex-nowrap items-center justify-center gap-0.5 overflow-x-auto overflow-y-hidden lg:flex'
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
             {links.map((link, index) => (
               <SmartLink
                 key={`${link.href || link.name}-${index}`}
                 href={link.href}
                 target={link.target}
                 className='ff-btn-plain shrink-0 whitespace-nowrap px-2 py-1.5 text-[0.8125rem] font-medium no-underline xl:px-2.5'
-                style={{ color: overlay && !scrolled ? '#fff' : 'var(--content-meta)' }}>
+                style={{
+                  color: overlay && !scrolled ? '#fff' : 'var(--content-meta)'
+                }}
+              >
                 {link.name}
               </SmartLink>
             ))}
@@ -116,13 +129,19 @@ export default function Navbar(props) {
           {/* 右侧操作：搜索浮层，避免撑开导航导致位移 */}
           <div
             className='relative ml-auto flex shrink-0 items-center gap-1'
-            style={{ color: overlay && !scrolled ? '#fff' : 'var(--content-meta)' }}>
+            style={{
+              color: overlay && !scrolled ? '#fff' : 'var(--content-meta)'
+            }}
+          >
             <button
               type='button'
               aria-label={locale.NAV.SEARCH}
               onClick={() => setSearchOpen(v => !v)}
-              className='ff-btn-plain h-9 w-9 cursor-pointer'>
-              <i className={`fas ${searchOpen ? 'fa-xmark' : 'fa-magnifying-glass'} text-[0.8rem]`} />
+              className='ff-btn-plain h-9 w-9 cursor-pointer'
+            >
+              <i
+                className={`fas ${searchOpen ? 'fa-xmark' : 'fa-magnifying-glass'} text-[0.8rem]`}
+              />
             </button>
 
             {searchOpen && (
@@ -130,9 +149,9 @@ export default function Navbar(props) {
                 className='absolute right-0 top-[2.6rem] z-50 w-[min(20rem,80vw)] rounded-2xl p-2'
                 style={{
                   background: 'var(--float-panel-bg)',
-                  boxShadow:
-                    '0 0 0 1px var(--line-color), var(--shadow-navbar)'
-                }}>
+                  boxShadow: '0 0 0 1px var(--line-color), var(--shadow-navbar)'
+                }}
+              >
                 <input
                   autoFocus
                   value={keyword}
@@ -151,19 +170,39 @@ export default function Navbar(props) {
               </div>
             )}
 
-            <button
-              type='button'
-              aria-label='dark-mode'
-              onClick={toggleDarkMode}
-              className='ff-btn-plain h-9 w-9 cursor-pointer'>
-              <i className={`fas ${isDarkMode ? 'fa-sun' : 'fa-moon'} text-[0.8rem]`} />
-            </button>
+            {constellationMode ? (
+              <button
+                type='button'
+                aria-label={isDarkMode ? '切换为亮色主题' : '切换为暗色主题'}
+                aria-pressed={isDarkMode}
+                onClick={toggleDarkMode}
+                className='ff-theme-orb'
+              >
+                <span className='ff-theme-orb-core' aria-hidden='true' />
+              </button>
+            ) : (
+              <button
+                type='button'
+                aria-label='dark-mode'
+                onClick={toggleDarkMode}
+                className='ff-btn-plain h-9 w-9 cursor-pointer'
+              >
+                <i
+                  className={`fas ${
+                    isDarkMode ? 'fa-sun' : 'fa-moon'
+                  } text-[0.8rem]`}
+                />
+              </button>
+            )}
             <button
               type='button'
               aria-label='menu'
               onClick={() => setMenuOpen(v => !v)}
-              className='ff-btn-plain h-9 w-9 cursor-pointer lg:hidden'>
-              <i className={`fas ${menuOpen ? 'fa-xmark' : 'fa-bars'} text-[0.85rem]`} />
+              className='ff-btn-plain h-9 w-9 cursor-pointer lg:hidden'
+            >
+              <i
+                className={`fas ${menuOpen ? 'fa-xmark' : 'fa-bars'} text-[0.85rem]`}
+              />
             </button>
           </div>
         </div>
@@ -173,7 +212,8 @@ export default function Navbar(props) {
       {menuOpen && (
         <div
           className='card-base fixed inset-x-3 top-[4.5rem] z-40 grid gap-1 p-2 lg:hidden'
-          style={{ boxShadow: 'var(--shadow-navbar)' }}>
+          style={{ boxShadow: 'var(--shadow-navbar)' }}
+        >
           {links.map((link, index) => (
             <SmartLink
               key={`m-${link.href || link.name}-${index}`}
@@ -181,7 +221,8 @@ export default function Navbar(props) {
               target={link.target}
               onClick={() => setMenuOpen(false)}
               className='ff-btn-plain justify-start px-3 py-2.5 text-sm no-underline'
-              style={{ color: 'var(--deep-text)' }}>
+              style={{ color: 'var(--deep-text)' }}
+            >
               {link.name}
             </SmartLink>
           ))}

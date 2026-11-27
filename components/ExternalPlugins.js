@@ -189,7 +189,8 @@ const ExternalPlugin = props => {
   }, [ANIMATE_CSS_URL, IMG_SHADOW, externalCssList, externalJsList])
 
   const router = useRouter()
-  const compactWidgets = router.pathname === '/apps/about'
+  const aboutPage = router.pathname === '/apps/about'
+  const constellationPage = router.pathname === '/' || aboutPage
   useEffect(() => {
     // 异步渲染谷歌广告
     if (ADSENSE_GOOGLE_ID) {
@@ -242,7 +243,7 @@ const ExternalPlugin = props => {
       <GlobalStyle />
       {ENABLE_ICON_FONT && <IconFont />}
       {MOUSE_FOLLOW && <MouseFollow />}
-      {pluginsIdle && THEME_SWITCH && !compactWidgets && <ThemeSwitch />}
+      {pluginsIdle && THEME_SWITCH && !constellationPage && <ThemeSwitch />}
       {DEBUG && <DebugPanel />}
       {ANALYTICS_ACKEE_TRACKER && <Ackee />}
       {ANALYTICS_GOOGLE_ID && <Gtag />}
@@ -253,7 +254,7 @@ const ExternalPlugin = props => {
       {SAKURA && <Sakura />}
       {STARRY_SKY && <StarrySky />}
       {/* endspace 主题自带播放器（EndspacePlayer），避免左下角双播放器重叠 */}
-      {MUSIC_PLAYER && theme !== 'endspace' && !compactWidgets && (
+      {MUSIC_PLAYER && theme !== 'endspace' && !aboutPage && (
         <MusicPlayer />
       )}
       {NEST && <Nest />}

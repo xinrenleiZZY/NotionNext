@@ -1,6 +1,6 @@
 'use client'
 
-import AboutHero from '@/components/AboutHero'
+import ConstellationExperience from '@/components/ConstellationExperience'
 import LazyImage from '@/components/LazyImage'
 import SmartLink from '@/components/SmartLink'
 import ABOUT from '@/conf/about.config'
@@ -76,16 +76,30 @@ export default function AboutShowcase({ fallback, latestPosts = [] }) {
 
   return (
     <>
-      <AboutHero
-        wallpapers={ABOUT.wallpapers}
-        name={ABOUT.name}
+      <ConstellationExperience
+        variant='about'
+        eyebrow='Personal space station · 2026'
+        title={ABOUT.name}
         role={ABOUT.role}
         headline={ABOUT.headline}
+        actions={[
+          {
+            label: '查看个人档案',
+            href: '#about',
+            primary: true,
+            icon: 'fas fa-arrow-down text-[10px]'
+          },
+          {
+            label: 'GitHub',
+            href: 'https://github.com/xinrenleiZZY',
+            icon: 'fab fa-github'
+          }
+        ]}
       />
 
       <div
         id='about'
-        className='relative z-10 mx-auto -mt-10 w-full max-w-[var(--page-width)] px-4 pb-24 md:px-8'
+        className='relative z-10 mx-auto w-full max-w-[var(--page-width)] scroll-mt-[5rem] px-4 pb-24 pt-5 md:px-8'
       >
         <div className='grid items-start gap-5 lg:grid-cols-[310px_minmax(0,1fr)]'>
           <aside className='lg:sticky lg:top-[5.5rem]'>

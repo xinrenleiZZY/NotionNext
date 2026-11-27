@@ -13,8 +13,8 @@ import { Transition } from '@headlessui/react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
-import Banner from './components/Banner'
 import Catalog from './components/Catalog'
+import ConstellationHomeHero from '@/components/ConstellationHomeHero'
 import MotionLayer from './components/MotionLayer'
 import Navbar from './components/Navbar'
 import PostList from './components/PostList'
@@ -51,7 +51,8 @@ const Footer = () => {
     <footer className='mt-10 px-3 pb-8'>
       <div
         className={`mx-auto flex w-full ${PAGE} flex-col items-center justify-between gap-2 text-[0.75rem] md:flex-row`}
-        style={{ color: 'var(--content-meta)' }}>
+        style={{ color: 'var(--content-meta)' }}
+      >
         <div className='flex flex-wrap items-center gap-2'>
           <span>© {range}</span>
           <span style={{ color: 'var(--deep-text)' }}>{author}</span>
@@ -60,7 +61,11 @@ const Footer = () => {
         </div>
         <div className='flex items-center gap-3'>
           {enableRss && (
-            <SmartLink href='/rss/feed.xml' className='no-underline' style={{ color: 'inherit' }}>
+            <SmartLink
+              href='/rss/feed.xml'
+              className='no-underline'
+              style={{ color: 'inherit' }}
+            >
               {locale.NAV.RSS}
             </SmartLink>
           )}
@@ -70,7 +75,8 @@ const Footer = () => {
               target='_blank'
               rel='noopener noreferrer'
               className='no-underline'
-              style={{ color: 'inherit' }}>
+              style={{ color: 'inherit' }}
+            >
               {beiAn}
             </a>
           )}
@@ -95,7 +101,8 @@ const BackToTop = () => {
       aria-label='back to top'
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       className='ff-btn-regular fixed bottom-6 right-5 z-30 h-10 w-10 cursor-pointer rounded-full'
-      style={{ boxShadow: 'var(--shadow-navbar)' }}>
+      style={{ boxShadow: 'var(--shadow-navbar)' }}
+    >
       <i className='fas fa-angle-up' />
     </button>
   )
@@ -111,7 +118,10 @@ const SearchInput = ({ keyword }) => {
   }
   return (
     <div className='card-base mb-4 flex items-center gap-2 px-4 py-2.5'>
-      <i className='fas fa-magnifying-glass text-xs' style={{ color: 'var(--content-meta)' }} />
+      <i
+        className='fas fa-magnifying-glass text-xs'
+        style={{ color: 'var(--content-meta)' }}
+      />
       <input
         value={value}
         onChange={e => setValue(e.target.value)}
@@ -124,7 +134,11 @@ const SearchInput = ({ keyword }) => {
         className='w-full bg-transparent text-sm outline-none'
         style={{ color: 'var(--deep-text)' }}
       />
-      <button type='button' onClick={submit} className='ff-btn-regular cursor-pointer px-3 py-1 text-xs'>
+      <button
+        type='button'
+        onClick={submit}
+        className='ff-btn-regular cursor-pointer px-3 py-1 text-xs'
+      >
         搜索
       </button>
     </div>
@@ -142,7 +156,10 @@ const ArticleLock = ({ validPassword }) => {
   return (
     <div className='relative z-10 mx-auto flex min-h-[50vh] w-full max-w-[460px] items-center px-4'>
       <div className='card-base ff-card-shadow w-full px-6 py-8 text-center'>
-        <div className='text-sm font-bold' style={{ color: 'var(--deep-text)' }}>
+        <div
+          className='text-sm font-bold'
+          style={{ color: 'var(--deep-text)' }}
+        >
           {locale.COMMON.ARTICLE_LOCK_TIPS}
         </div>
         <div className='mt-5 flex gap-2'>
@@ -153,9 +170,16 @@ const ArticleLock = ({ validPassword }) => {
               if (e.key === 'Enter') submit()
             }}
             className='w-full rounded-xl px-3 py-2 text-sm outline-none'
-            style={{ background: 'var(--btn-regular-bg)', color: 'var(--deep-text)' }}
+            style={{
+              background: 'var(--btn-regular-bg)',
+              color: 'var(--deep-text)'
+            }}
           />
-          <button type='button' onClick={submit} className='ff-btn-regular cursor-pointer px-4'>
+          <button
+            type='button'
+            onClick={submit}
+            className='ff-btn-regular cursor-pointer px-4'
+          >
             {locale.COMMON.SUBMIT}
           </button>
         </div>
@@ -177,7 +201,8 @@ const ArticleMeta = ({ post }) => {
     <header>
       <h1
         className='text-2xl font-extrabold leading-tight tracking-tight md:text-4xl'
-        style={{ color: 'var(--deep-text)' }}>
+        style={{ color: 'var(--deep-text)' }}
+      >
         {siteConfig('POST_TITLE_ICON') && (
           <span className='mr-2 inline-block align-middle'>
             <NotionIcon icon={post.pageIcon} />
@@ -186,8 +211,10 @@ const ArticleMeta = ({ post }) => {
         {post.title}
       </h1>
       {!isPage && (
-        <div className='mt-4 flex flex-wrap items-center gap-2 text-[0.75rem]'
-          style={{ color: 'var(--content-meta)' }}>
+        <div
+          className='mt-4 flex flex-wrap items-center gap-2 text-[0.75rem]'
+          style={{ color: 'var(--content-meta)' }}
+        >
           <span className='flex items-center gap-1'>
             <i className='fas fa-user text-[0.7rem]' />
             {siteConfig('AUTHOR')}
@@ -196,7 +223,8 @@ const ArticleMeta = ({ post }) => {
             <SmartLink
               href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
               className='flex items-center gap-1 no-underline'
-              style={{ color: 'inherit' }}>
+              style={{ color: 'inherit' }}
+            >
               <i className='fas fa-calendar-days text-[0.7rem]' />
               {post.publishDay}
             </SmartLink>
@@ -208,7 +236,10 @@ const ArticleMeta = ({ post }) => {
             </span>
           )}
           {post.category && (
-            <SmartLink href={`/category/${post.category}`} className='ff-chip no-underline'>
+            <SmartLink
+              href={`/category/${post.category}`}
+              className='ff-chip no-underline'
+            >
               {post.category}
             </SmartLink>
           )}
@@ -221,7 +252,8 @@ const ArticleMeta = ({ post }) => {
               key={t}
               href={`/tag/${encodeURIComponent(t)}`}
               className='ff-chip no-underline'
-              style={{ fontSize: '0.6875rem' }}>
+              style={{ fontSize: '0.6875rem' }}
+            >
               #{t}
             </SmartLink>
           ))}
@@ -236,8 +268,10 @@ const ArchiveList = ({ archivePosts }) => {
   const groups = Object.keys(archivePosts || {})
   if (!groups.length) {
     return (
-      <div className='card-base px-6 py-16 text-center text-sm'
-        style={{ color: 'var(--content-meta)' }}>
+      <div
+        className='card-base px-6 py-16 text-center text-sm'
+        style={{ color: 'var(--content-meta)' }}
+      >
         {locale.COMMON.NO_RESULTS_FOUND}
       </div>
     )
@@ -258,9 +292,14 @@ const ArchiveList = ({ archivePosts }) => {
                   key={post.id}
                   href={post.href}
                   className='flex items-baseline justify-between gap-4 rounded-lg px-2 py-1.5 no-underline transition-colors duration-150 hover:bg-[var(--btn-plain-bg-hover)]'
-                  style={{ color: 'var(--content-meta)' }}>
-                  <span className='truncate text-[0.8125rem]'>{post.title}</span>
-                  <span className='shrink-0 text-[0.6875rem]'>{post.publishDay}</span>
+                  style={{ color: 'var(--content-meta)' }}
+                >
+                  <span className='truncate text-[0.8125rem]'>
+                    {post.title}
+                  </span>
+                  <span className='shrink-0 text-[0.6875rem]'>
+                    {post.publishDay}
+                  </span>
                 </SmartLink>
               ))}
             </div>
@@ -281,7 +320,10 @@ const LayoutBase = props => {
   const router = useRouter()
   const searchModal = useRef(null)
   const isHome = router.pathname === '/'
-  const hasBanner = isHome && siteConfig('FIREFLY_BANNER', true, CONFIG)
+  const isAbout = router.pathname === '/apps/about'
+  const isConstellationPage = isHome || isAbout
+  const hasBanner =
+    isConstellationPage && siteConfig('FIREFLY_BANNER', true, CONFIG)
   const hue = siteConfig('FIREFLY_HUE', 165, CONFIG)
   const wallpaper = siteConfig('FIREFLY_WALLPAPER', '', CONFIG)
   const wallpaperOpacity = Number(
@@ -290,9 +332,21 @@ const LayoutBase = props => {
   const wallpaperBlur = Number(siteConfig('FIREFLY_WALLPAPER_BLUR', 2, CONFIG))
 
   return (
-    <div id='theme-firefly' className={siteConfig('FONT_STYLE')} style={{ '--hue': hue }}>
+    <div
+      id='theme-firefly'
+      className={`${siteConfig('FONT_STYLE')} ${
+        isConstellationPage ? 'ff-space-page' : ''
+      }`}
+      style={{ '--hue': hue }}
+    >
       <Style />
       <MotionLayer />
+
+      {isConstellationPage && (
+        <div className='ff-space-ambient' aria-hidden='true'>
+          <img src='/banner/starfield.webp' alt='' />
+        </div>
+      )}
 
       {/* 可替换的全站背景图 */}
       {wallpaper && (
@@ -301,14 +355,20 @@ const LayoutBase = props => {
             src={encodeURI(String(wallpaper))}
             alt=''
             style={{
-              opacity: Number.isFinite(wallpaperOpacity) ? wallpaperOpacity : 0.28,
+              opacity: Number.isFinite(wallpaperOpacity)
+                ? wallpaperOpacity
+                : 0.28,
               filter: `blur(${Number.isFinite(wallpaperBlur) ? wallpaperBlur : 2}px)`
             }}
           />
         </div>
       )}
 
-      <Navbar {...props} overlay={hasBanner} />
+      <Navbar
+        {...props}
+        overlay={hasBanner}
+        constellationMode={isConstellationPage}
+      />
 
       <div className='relative z-10 flex min-h-screen flex-col'>
         <main className={`flex-1 ${hasBanner ? '' : 'pt-[4.75rem]'}`}>
@@ -321,7 +381,8 @@ const LayoutBase = props => {
             leave='transition ease-in duration-150'
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
-            unmount={false}>
+            unmount={false}
+          >
             <div>
               {slotTop}
               {children}
@@ -342,8 +403,13 @@ const LayoutIndex = props => {
   const showRight = siteConfig('FIREFLY_RIGHT_SIDEBAR', true, CONFIG)
   return (
     <>
-      {siteConfig('FIREFLY_BANNER', true, CONFIG) && <Banner {...props} />}
-      <section className={`mx-auto w-full ${PAGE} px-3 pb-16 pt-4`}>
+      {siteConfig('FIREFLY_BANNER', true, CONFIG) && (
+        <ConstellationHomeHero {...props} />
+      )}
+      <section
+        id='home-feed'
+        className={`mx-auto w-full ${PAGE} scroll-mt-[5rem] px-3 pb-16 pt-5`}
+      >
         <div className='grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_260px] xl:grid-cols-[260px_minmax(0,1fr)_280px]'>
           {showLeft && (
             <div className='hidden xl:block'>
@@ -434,7 +500,10 @@ const LayoutSlug = props => {
         <article className='min-w-0 flex-1'>
           <div className='card-base ff-card-shadow px-5 py-7 md:px-8 md:py-9'>
             {post.pageCover && (
-              <div className='mb-6 w-full overflow-hidden rounded-xl' style={{ aspectRatio: '16 / 7' }}>
+              <div
+                className='mb-6 w-full overflow-hidden rounded-xl'
+                style={{ aspectRatio: '16 / 7' }}
+              >
                 <LazyImage
                   src={post.pageCover}
                   alt={post.title || ''}
@@ -444,7 +513,10 @@ const LayoutSlug = props => {
               </div>
             )}
             <ArticleMeta post={post} />
-            <div className='my-6 h-px w-full' style={{ background: 'var(--line-divider)' }} />
+            <div
+              className='my-6 h-px w-full'
+              style={{ background: 'var(--line-divider)' }}
+            />
             <div id='article-wrapper'>
               <NotionPage post={post} />
             </div>
@@ -458,21 +530,39 @@ const LayoutSlug = props => {
           {(prev || next) && (
             <div className='mt-4 grid gap-3 md:grid-cols-2'>
               {prev && (
-                <SmartLink href={prev.href} className='card-base ff-card-shadow block px-4 py-3 no-underline'>
-                  <div className='text-[0.6875rem]' style={{ color: 'var(--content-meta)' }}>
+                <SmartLink
+                  href={prev.href}
+                  className='card-base ff-card-shadow block px-4 py-3 no-underline'
+                >
+                  <div
+                    className='text-[0.6875rem]'
+                    style={{ color: 'var(--content-meta)' }}
+                  >
                     <i className='fas fa-angle-left mr-1' /> 上一篇
                   </div>
-                  <div className='mt-1 line-clamp-1 text-[0.8125rem] font-semibold' style={{ color: 'var(--deep-text)' }}>
+                  <div
+                    className='mt-1 line-clamp-1 text-[0.8125rem] font-semibold'
+                    style={{ color: 'var(--deep-text)' }}
+                  >
                     {prev.title}
                   </div>
                 </SmartLink>
               )}
               {next && (
-                <SmartLink href={next.href} className='card-base ff-card-shadow block px-4 py-3 text-right no-underline'>
-                  <div className='text-[0.6875rem]' style={{ color: 'var(--content-meta)' }}>
+                <SmartLink
+                  href={next.href}
+                  className='card-base ff-card-shadow block px-4 py-3 text-right no-underline'
+                >
+                  <div
+                    className='text-[0.6875rem]'
+                    style={{ color: 'var(--content-meta)' }}
+                  >
                     下一篇 <i className='fas fa-angle-right ml-1' />
                   </div>
-                  <div className='mt-1 line-clamp-1 text-[0.8125rem] font-semibold' style={{ color: 'var(--deep-text)' }}>
+                  <div
+                    className='mt-1 line-clamp-1 text-[0.8125rem] font-semibold'
+                    style={{ color: 'var(--deep-text)' }}
+                  >
                     {next.title}
                   </div>
                 </SmartLink>
@@ -503,13 +593,19 @@ const Layout404 = () => {
   const { locale } = useGlobal()
   return (
     <section className='relative z-10 mx-auto flex min-h-[60vh] w-full max-w-[680px] flex-col items-center justify-center px-4 text-center'>
-      <div className='text-[96px] font-extrabold leading-none md:text-[140px]' style={{ color: 'var(--primary)' }}>
+      <div
+        className='text-[96px] font-extrabold leading-none md:text-[140px]'
+        style={{ color: 'var(--primary)' }}
+      >
         404
       </div>
       <p className='mt-3 text-sm' style={{ color: 'var(--content-meta)' }}>
         {locale.NAV.PAGE_NOT_FOUND}
       </p>
-      <SmartLink href='/' className='ff-btn-regular mt-6 px-4 py-2 text-sm no-underline'>
+      <SmartLink
+        href='/'
+        className='ff-btn-regular mt-6 px-4 py-2 text-sm no-underline'
+      >
         返回首页
       </SmartLink>
     </section>
@@ -520,7 +616,10 @@ const LayoutCategoryIndex = ({ categoryOptions = [] }) => {
   const { locale } = useGlobal()
   return (
     <section className={`mx-auto w-full ${PAGE} px-3 pb-16 pt-6`}>
-      <h1 className='mb-5 text-2xl font-extrabold' style={{ color: 'var(--deep-text)' }}>
+      <h1
+        className='mb-5 text-2xl font-extrabold'
+        style={{ color: 'var(--deep-text)' }}
+      >
         {locale.COMMON.CATEGORY}
       </h1>
       <div className='flex flex-wrap gap-2'>
@@ -529,7 +628,8 @@ const LayoutCategoryIndex = ({ categoryOptions = [] }) => {
             key={category.name}
             href={`/category/${category.name}`}
             className='card-base ff-card-shadow px-4 py-2.5 text-sm font-semibold no-underline'
-            style={{ color: 'var(--deep-text)' }}>
+            style={{ color: 'var(--deep-text)' }}
+          >
             {category.name}
             <span className='ml-1.5' style={{ color: 'var(--primary)' }}>
               {category.count}
@@ -545,7 +645,10 @@ const LayoutTagIndex = ({ tagOptions = [] }) => {
   const { locale } = useGlobal()
   return (
     <section className={`mx-auto w-full ${PAGE} px-3 pb-16 pt-6`}>
-      <h1 className='mb-5 text-2xl font-extrabold' style={{ color: 'var(--deep-text)' }}>
+      <h1
+        className='mb-5 text-2xl font-extrabold'
+        style={{ color: 'var(--deep-text)' }}
+      >
         {locale.COMMON.TAGS}
       </h1>
       <div className='flex flex-wrap gap-2'>
@@ -554,7 +657,8 @@ const LayoutTagIndex = ({ tagOptions = [] }) => {
             key={tag.name}
             href={`/tag/${encodeURIComponent(tag.name)}`}
             className='ff-chip no-underline'
-            style={{ fontSize: '0.8125rem', height: '1.75rem' }}>
+            style={{ fontSize: '0.8125rem', height: '1.75rem' }}
+          >
             #{tag.name}
             {tag.count ? <span className='opacity-60'>{tag.count}</span> : null}
           </SmartLink>
@@ -577,7 +681,10 @@ const LayoutDashboard = props => {
 
 const AuthPlaceholder = ({ text }) => (
   <section className='relative z-10 mx-auto flex min-h-[50vh] w-full max-w-[520px] items-center px-4'>
-    <div className='card-base w-full px-6 py-10 text-center text-sm' style={{ color: 'var(--content-meta)' }}>
+    <div
+      className='card-base w-full px-6 py-10 text-center text-sm'
+      style={{ color: 'var(--content-meta)' }}
+    >
       {text}
     </div>
   </section>

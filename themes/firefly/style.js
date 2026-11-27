@@ -105,8 +105,14 @@ export const Style = () => {
         min-height: 100vh;
         background-color: var(--page-bg);
         color: var(--deep-text);
-        font-family: 'Roboto', 'Inter', 'HarmonyOS Sans SC', 'PingFang SC',
-          'Microsoft YaHei', -apple-system, sans-serif;
+        font-family:
+          'Roboto',
+          'Inter',
+          'HarmonyOS Sans SC',
+          'PingFang SC',
+          'Microsoft YaHei',
+          -apple-system,
+          sans-serif;
         -webkit-font-smoothing: antialiased;
         overflow-x: clip;
       }
@@ -325,7 +331,8 @@ export const Style = () => {
         display: inline-flex;
         align-items: center;
         gap: 3px;
-        font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+        font-family:
+          ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
         font-size: clamp(1.15rem, 2.4vw, 1.85rem);
         letter-spacing: 0.06em;
         color: var(--deep-text, #3a1f2b);
@@ -381,7 +388,8 @@ export const Style = () => {
         justify-content: space-between;
         gap: 12px;
         padding: 0 5vw;
-        font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+        font-family:
+          ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
         font-size: clamp(0.6rem, 1.1vw, 0.78rem);
         letter-spacing: 0.06em;
         text-transform: none;
@@ -438,7 +446,6 @@ export const Style = () => {
       .lenis.lenis-scrolling iframe {
         pointer-events: none;
       }
-
 
       /* 轻量花瓣（CSS only，不用 canvas；替代原樱花特效） */
       .ff-petals {
@@ -513,6 +520,99 @@ export const Style = () => {
         height: 100%;
         object-fit: cover;
         transform: scale(1.04);
+      }
+
+      #theme-firefly .ff-space-ambient {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 420ms var(--ease-standard);
+      }
+
+      .dark #theme-firefly .ff-space-ambient {
+        opacity: 0.46;
+      }
+
+      #theme-firefly .ff-space-ambient img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.42) saturate(0.76);
+        transform: scale(1.04);
+      }
+
+      #theme-firefly .ff-theme-orb {
+        position: relative;
+        display: grid;
+        width: 2.35rem;
+        height: 2.35rem;
+        flex: 0 0 2.35rem;
+        place-items: center;
+        border: 1px solid var(--line-color);
+        border-radius: 50%;
+        background: color-mix(in oklch, var(--card-bg) 42%, transparent);
+        color: var(--deep-text);
+        cursor: pointer;
+        isolation: isolate;
+      }
+
+      #theme-firefly .ff-theme-orb::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        width: calc(1.25rem + var(--constellation-orb, 0) * 1.35rem);
+        height: calc(1.25rem + var(--constellation-orb, 0) * 1.35rem);
+        border-radius: 50%;
+        background: color-mix(in oklch, var(--primary) 22%, transparent);
+        box-shadow:
+          0 0 calc((0.5rem + var(--constellation-orb, 0) * 1.5rem))
+            color-mix(in oklch, var(--primary) 52%, transparent),
+          0 0 calc((1rem + var(--constellation-orb, 0) * 3rem))
+            color-mix(in oklch, var(--primary) 24%, transparent);
+        opacity: calc(0.2 + var(--constellation-orb, 0) * 0.8);
+        transition: opacity 160ms linear;
+      }
+
+      #theme-firefly .ff-theme-orb-core {
+        position: relative;
+        display: block;
+        width: calc(0.7rem + var(--constellation-orb, 0) * 0.5rem);
+        height: calc(0.7rem + var(--constellation-orb, 0) * 0.5rem);
+        overflow: hidden;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #fffce5, #d5f8ec);
+        box-shadow: 0 0 12px rgba(255, 248, 206, 0.58);
+      }
+
+      #theme-firefly .ff-theme-orb-core::after {
+        content: '';
+        position: absolute;
+        top: -14%;
+        left: 18%;
+        width: 92%;
+        height: 92%;
+        border-radius: 50%;
+        background: var(--float-panel-bg);
+        opacity: calc(0.82 * var(--constellation-orb, 0));
+      }
+
+      .light #theme-firefly .ff-theme-orb-core {
+        background: radial-gradient(
+          circle at 35% 30%,
+          #fff9ce,
+          #f7b82d 66%,
+          #c77a00
+        );
+        box-shadow:
+          0 0 12px rgba(251, 186, 45, 0.8),
+          0 0 30px rgba(251, 186, 45, 0.24);
+      }
+
+      .light #theme-firefly .ff-theme-orb-core::after {
+        opacity: 0;
       }
 
       @keyframes ff-fade-up {
