@@ -1,7 +1,7 @@
 'use client'
 
 import SmartLink from '@/components/SmartLink'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const FAV_KEY = 'gallery-favorites'
 const ADULT_KEY = 'gallery-adult-confirmed'
@@ -38,7 +38,6 @@ export default function GalleryWall({ config }) {
   const [showSensitive, setShowSensitive] = useState(true)
   const [loadedCount, setLoadedCount] = useState(INITIAL_PAGE_SIZE)
   const [failedItems, setFailedItems] = useState([])
-  const sentinelRef = useRef(null)
 
   const hasSensitive = useMemo(
     () => items.some(item => item.sensitive),
@@ -96,19 +95,23 @@ export default function GalleryWall({ config }) {
   }, [visible.length])
 
   useEffect(() => {
-    const node = sentinelRef.current
-    if (!node || !hasMore || typeof IntersectionObserver === 'undefined') {
-      return
+    let lastLoadAt = 0
+    const onScroll = () => {
+      if (window.scrollY <= 0) return
+      const now = performance.now()
+      if (now - lastLoadAt < 400) return
+      const remaining =
+        document.documentElement.scrollHeight -
+        window.scrollY -
+        window.innerHeight
+      if (remaining <= 700) {
+        lastLoadAt = now
+        loadMore()
+      }
     }
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0]?.isIntersecting) loadMore()
-      },
-      { rootMargin: '700px 0px' }
-    )
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [hasMore, loadMore, loadedCount])
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [loadMore])
 
   const resolveSrc = useCallback(src => {
     const value = String(src || '')
@@ -373,7 +376,7 @@ export default function GalleryWall({ config }) {
             })}
           </div>
           {hasMore && (
-            <div ref={sentinelRef} className='mt-6 flex justify-center'>
+            <div className='mt-6 flex justify-center'>
               <button
                 type='button'
                 onClick={loadMore}
